@@ -43,14 +43,37 @@
             }
           },
           "400": {
-            "description": "bad request",
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/services/{id}": {
+      "get": {
+        "summary": "Get details for a service",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Details for a single service",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/empty"
+                  "$ref": "#/components/schemas/ServiceInput"
                 }
               }
             }
+          },
+          "404": {
+            "description": "Service not found"
           }
         }
       }
@@ -100,6 +123,9 @@
                 "schema": { "$ref": "#/components/schemas/Dependency" }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       }
@@ -118,6 +144,44 @@
         "responses": {
           "200": {
             "description": "List of releases",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Release" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/releases/{startDate}/{endDate}": {
+      "get": {
+        "summary": "Get all releases that happened in a date range",
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All releases in a date range",
             "content": {
               "application/json": {
                 "schema": {
