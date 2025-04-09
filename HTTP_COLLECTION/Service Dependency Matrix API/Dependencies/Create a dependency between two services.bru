@@ -1,0 +1,28 @@
+meta {
+  name: Create a dependency between two services
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/dependencies
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "source_service_id": "",
+    "target_service_id": "",
+    "type": "",
+    "notes": ""
+  }
+}
+
+docs {
+  # Create Dependency
+  This endpoint will create a dependency connection between two entities (service, database, etc.)
+  
+  ## Return Data
+  This will return a `201 CREATED` status code
+}

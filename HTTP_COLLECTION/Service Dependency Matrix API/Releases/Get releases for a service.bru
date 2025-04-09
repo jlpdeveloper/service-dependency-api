@@ -1,0 +1,21 @@
+meta {
+  name: Get releases for a service
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/services/:id/releases
+  body: none
+  auth: none
+}
+
+params:path {
+  id: 
+}
+
+docs {
+  # Get All Releases for a Service
+  
+  This will return a list of releases associated with a service
+}

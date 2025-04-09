@@ -1,0 +1,25 @@
+meta {
+  name: Delete dependency for a service
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{baseUrl}}/services/:id/dependencies/:targetId
+  body: none
+  auth: none
+}
+
+params:path {
+  targetId: 
+  id: 
+}
+
+docs {
+  # Delete Service Dependencies
+  
+  Allows you to remove a dependency from a service
+  
+  ## Returns
+  This will return a `204 NO CONTENT` 
+}

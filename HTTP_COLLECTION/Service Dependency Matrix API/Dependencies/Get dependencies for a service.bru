@@ -1,0 +1,38 @@
+meta {
+  name: Get dependencies for a service
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/services/:id/dependencies
+  body: none
+  auth: none
+}
+
+params:path {
+  id: 
+}
+
+docs {
+  # Get Service Dependencies
+  
+  Allows you to get all dependencies for a service
+  
+  ## Returns
+  This will return an array of first level linked dependencies
+  ```json
+  [
+    {
+      "name": "service 1",
+      "id": "1",
+      "type": "service"
+    },
+    {
+      "name": "database 1",
+      "id": "2",
+      "type": "database"
+    }
+  ]
+  ```
+}
