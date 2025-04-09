@@ -1,0 +1,15 @@
+meta {
+  name: Get releases for a service
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/services/:id/releases
+  body: none
+  auth: none
+}
+
+params:path {
+  id: 
+}

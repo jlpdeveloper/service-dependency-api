@@ -1,0 +1,21 @@
+meta {
+  name: Add a new release
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/releases
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "service_id": "",
+    "tag": "",
+    "release_date": "",
+    "github_url": "",
+    "notes": ""
+  }
+}

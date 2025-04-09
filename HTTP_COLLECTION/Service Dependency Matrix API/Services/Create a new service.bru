@@ -1,0 +1,19 @@
+meta {
+  name: Create a new service
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/services
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "",
+    "type": "",
+    "description": ""
+  }
+}

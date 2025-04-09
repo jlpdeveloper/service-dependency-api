@@ -1,0 +1,20 @@
+meta {
+  name: Create a dependency between two services
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/dependencies
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "source_service_id": "",
+    "target_service_id": "",
+    "type": "",
+    "notes": ""
+  }
+}
