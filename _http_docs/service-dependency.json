@@ -8,6 +8,7 @@
   "paths": {
     "/services": {
       "get": {
+        "tags": ["Services"],  
         "summary": "List all services",
         "responses": {
           "200": {
@@ -24,6 +25,7 @@
         }
       },
       "post": {
+        "tags": ["Services"],  
         "summary": "Create a new service",
         "requestBody": {
           "required": true,
@@ -50,6 +52,7 @@
     },
     "/services/{id}": {
       "get": {
+        "tags": ["Services"],  
         "summary": "Get details for a service",
         "parameters": [
           {
@@ -80,6 +83,7 @@
     },
     "/services/{id}/dependencies": {
       "get": {
+        "tags": ["Dependencies"],
         "summary": "Get dependencies for a service",
         "parameters": [
           {
@@ -109,6 +113,7 @@
     },
     "/dependencies": {
       "post": {
+        "tags": ["Dependencies"], 
         "summary": "Create a dependency between two services",
         "requestBody": {
           "required": true,
@@ -135,6 +140,7 @@
     },
     "/services/{id}/releases": {
       "get": {
+        "tags": ["Releases"],  
         "summary": "Get releases for a service",
         "parameters": [
           {
@@ -164,6 +170,7 @@
     },
     "/releases/{startDate}/{endDate}": {
       "get": {
+        "tags": ["Releases"], 
         "summary": "Get all releases that happened in a date range",
         "parameters": [
           {
@@ -205,6 +212,7 @@
     },
     "/releases": {
       "post": {
+        "tags": ["Releases"], 
         "summary": "Add a new release",
         "requestBody": {
           "required": true,
