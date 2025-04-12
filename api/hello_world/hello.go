@@ -13,6 +13,7 @@ func HelloWorld(rw http.ResponseWriter, req *http.Request) {
 		response = "hello " + name
 	}
 	_, err := io.WriteString(rw, response)
+	rw.WriteHeader(http.StatusOK)
 	if err != nil {
 		log.Println(err)
 	}
