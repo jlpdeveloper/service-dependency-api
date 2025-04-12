@@ -1,6 +1,8 @@
 package hello_world
 
 import (
+	"io"
+	"log"
 	"net/http"
 )
 
@@ -10,8 +12,8 @@ func HelloWorld(rw http.ResponseWriter, req *http.Request) {
 	if name != "" {
 		response = "hello " + name
 	}
-	_, err := rw.Write([]byte(response))
+	_, err := io.WriteString(rw, response)
 	if err != nil {
-		return
+		log.Println(err)
 	}
 }
