@@ -1,0 +1,14 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run Web Server" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="service-dependency-api" />
+    <working_directory value="$PROJECT_DIR$" />
+    <envs>
+      <env name="NEO4J_URL" value="neo4j://localhost" />
+    </envs>
+    <kind value="PACKAGE" />
+    <package value="service-dependency-api/cmd/service-dependency-api" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/cmd/service-dependency-api/main.go" />
+    <method v="2" />
+  </configuration>
+</component>

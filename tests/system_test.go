@@ -1,0 +1,61 @@
+package tests
+
+import (
+	"net/http"
+	"net/http/httptest"
+	"os"
+	"service-dependency-api/api/system"
+	"strconv"
+	"strings"
+	"testing"
+	"time"
+)
+
+func TestSystemGetTime(t *testing.T) {
+	req, err := http.NewRequest("GET", "/time", nil)
+	rw := httptest.NewRecorder()
+	system.GetTime(rw, req)
+	if err != nil {
+		t.Errorf("GetTime errored with %s", err.Error())
+	}
+	if rw.Code != http.StatusOK {
+		t.Errorf("GetTime errored with %s", string(rune(rw.Code)))
+	}
+	r_time, t_err := time.Parse("2006-01-02 15:04:05", rw.Body.String())
+	if t_err != nil {
+		t.Errorf("Time returned by GetTime errored with %s", t_err.Error())
+	}
+	if !time.Now().After(r_time) {
+		t.Errorf("GetTime time is not before current time, return val: %s", rw.Body.String())
+	}
+}
+
+func TestGetDbAddress(t *testing.T) {
+	req, err := http.NewRequest("GET", "/database", nil)
+	rw := httptest.NewRecorder()
+	err = os.Setenv("NEO4J_URL", "test_url")
+	system.GetDbAddress(rw, req)
+	if err != nil {
+		t.Errorf("GetDbAddress errored with %s", err.Error())
+	}
+	if rw.Code != http.StatusOK {
+		t.Errorf("GetDbAddress errored with %s", strconv.Itoa(rw.Code))
+	}
+}
+
+func TestGetDbAddressError(t *testing.T) {
+	req, err := http.NewRequest("GET", "/database", nil)
+	rw := httptest.NewRecorder()
+	_ = os.Unsetenv("NEO4J_URL")
+	system.GetDbAddress(rw, req)
+	if err != nil {
+		t.Errorf("GetDbAddress errored with %s", err.Error())
+	}
+	if rw.Code != http.StatusInternalServerError {
+		t.Errorf("GetDbAddress errored with %s", strconv.Itoa(rw.Code))
+	}
+	b := rw.Body.String()
+	if !strings.HasPrefix(b, "Could not find environment variable") {
+		t.Errorf("GetDbAddress errored with %s", b)
+	}
+}
