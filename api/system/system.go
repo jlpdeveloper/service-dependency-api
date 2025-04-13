@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func GetTime(rw http.ResponseWriter, req *http.Request) {
+func GetTime(rw http.ResponseWriter, _ *http.Request) {
 	now := time.Now().Format("2006-01-02 15:04:05")
 	_, err := io.WriteString(rw, now)
 	if err != nil {
@@ -19,7 +19,7 @@ func GetTime(rw http.ResponseWriter, req *http.Request) {
 	rw.Header().Set("Content-Type", "text/plain")
 }
 
-func GetDbAddress(rw http.ResponseWriter, req *http.Request) {
+func GetDbAddress(rw http.ResponseWriter, _ *http.Request) {
 	url := config.GetConfigValue("neo4j_url")
 
 	if url == "" {
