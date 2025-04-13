@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"service-dependency-api/api/hello_world"
+	"strconv"
 	"testing"
 )
 
@@ -15,7 +16,7 @@ func TestHelloWorldEmptyName(t *testing.T) {
 		t.Errorf("HelloWorld errored with %s", err.Error())
 	}
 	if rw.Code != http.StatusOK {
-		t.Errorf("HelloWorld errored with %s", string(rune(rw.Code)))
+		t.Errorf("HelloWorld errored with %s", strconv.Itoa(rw.Code))
 	}
 	if rw.Body.String() != "hello world" {
 		t.Errorf("HelloWorld errored with %s", rw.Body.String())
@@ -31,7 +32,7 @@ func TestHelloWorldWithName(t *testing.T) {
 		t.Errorf("HelloWorld errored with %s", err.Error())
 	}
 	if rw.Code != http.StatusOK {
-		t.Errorf("HelloWorld errored with %s", string(rune(rw.Code)))
+		t.Errorf("HelloWorld errored with %s", strconv.Itoa(rw.Code))
 	}
 	if rw.Body.String() != "hello test" {
 		t.Errorf("HelloWorld errored with %s", rw.Body.String())
