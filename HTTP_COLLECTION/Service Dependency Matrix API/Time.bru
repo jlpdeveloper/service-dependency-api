@@ -1,0 +1,27 @@
+meta {
+  name: Time
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/time
+  body: none
+  auth: inherit
+}
+
+assert {
+  res.status: eq 200
+}
+
+docs {
+  # Current Time
+  
+  Gets current time of the server
+  
+  ## Parameters
+  **none**
+  
+  ## Return
+  String of the current time
+}
