@@ -26,5 +26,5 @@ I had to add wrapper classes around
 Each of these structs take in its counterpart neo4j struct and store it as a private property.
 Then it mimics the required methods to implement the appropriate interface. 
 
-> [!attention]
+> [!WARNING]
 > There has to be an easier way to do all this, it seems excessive
