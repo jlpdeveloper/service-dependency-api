@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
+	"service-dependency-api/internal/database"
 )
 
 type Service struct {
@@ -22,7 +23,7 @@ type ServiceRepository interface {
 
 // the type implements the interface
 type ServiceNeo4jService struct {
-	Driver neo4j.DriverWithContext
+	Driver database.Neo4jDriver
 	ctx    context.Context
 }
 
@@ -40,7 +41,7 @@ func (d *ServiceNeo4jService) CreateService(service Service) (id string, err err
 	defer func() {
 		err = session.Close(d.ctx)
 	}()
-	createServiceTransaction := func(tx neo4j.ManagedTransaction) (any, error) {
+	createServiceTransaction := func(tx database.Neo4jTransaction) (any, error) {
 		result, err := tx.Run(
 			d.ctx, `
         CREATE (n: Service {id: randomuuid(), createdDate: datetime(), name: $name, type: $type, description: $description})
