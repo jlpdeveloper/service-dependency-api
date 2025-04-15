@@ -10,7 +10,7 @@ import (
 func Register(mux *http.ServeMux, driver *neo4j.DriverWithContext, ctx *context.Context) {
 
 	serviceRepo := ServiceNeo4jService{
-		ctx:    *ctx,
+		Ctx:    *ctx,
 		Driver: &database.Neo4jWrapper{Driver: *driver},
 	}
 	//getAllHandler := GetAllServicesHandler{

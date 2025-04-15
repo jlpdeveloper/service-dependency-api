@@ -1,8 +1,9 @@
-package services
+package tests
 
 import (
 	"context"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
+	"service-dependency-api/api/services"
 	"service-dependency-api/internal/database"
 	"testing"
 )
@@ -62,17 +63,17 @@ func (d *mockDriver) NewSession(ctx context.Context, config neo4j.SessionConfig)
 }
 
 func TestCreateService(t *testing.T) {
-	svc := &ServiceNeo4jService{
+	svc := &services.ServiceNeo4jService{
 		Driver: &mockDriver{
 			data: map[string]any{
 				"id":   "mock-id-123",
 				"name": "Test Service",
 			},
 		},
-		ctx: context.Background(),
+		Ctx: context.Background(),
 	}
 
-	service := Service{
+	service := services.Service{
 		Name:        "MockService",
 		ServiceType: "Internal",
 		Description: "Unit test service",

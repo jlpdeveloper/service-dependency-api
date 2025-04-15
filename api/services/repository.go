@@ -24,7 +24,7 @@ type ServiceRepository interface {
 // the type implements the interface
 type ServiceNeo4jService struct {
 	Driver database.Neo4jDriver
-	ctx    context.Context
+	Ctx    context.Context
 }
 
 //https://github.com/neo4j-examples/golang-neo4j-realworld-example/blob/main/pkg/users/login.go
@@ -37,13 +37,13 @@ type ServiceNeo4jService struct {
 //}
 
 func (d *ServiceNeo4jService) CreateService(service Service) (id string, err error) {
-	session := d.Driver.NewSession(d.ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
+	session := d.Driver.NewSession(d.Ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
 	defer func() {
-		err = session.Close(d.ctx)
+		err = session.Close(d.Ctx)
 	}()
 	createServiceTransaction := func(tx database.Neo4jTransaction) (any, error) {
 		result, err := tx.Run(
-			d.ctx, `
+			d.Ctx, `
         CREATE (n: Service {id: randomuuid(), createdDate: datetime(), name: $name, type: $type, description: $description})
         RETURN n.id AS id
         `, map[string]any{
@@ -54,14 +54,14 @@ func (d *ServiceNeo4jService) CreateService(service Service) (id string, err err
 		if err != nil {
 			return "", err
 		}
-		svc, err := result.Single(d.ctx)
+		svc, err := result.Single(d.Ctx)
 		if err != nil {
 			return "", err
 		}
 		svcId, _ := svc.AsMap()["id"]
 		return svcId.(string), err
 	}
-	newId, insertErr := session.ExecuteWrite(d.ctx, createServiceTransaction)
+	newId, insertErr := session.ExecuteWrite(d.Ctx, createServiceTransaction)
 	if insertErr != nil {
 		return "", insertErr
 	}
