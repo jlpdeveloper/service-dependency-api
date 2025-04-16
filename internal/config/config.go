@@ -14,6 +14,10 @@ func GetConfigValue(key string) string {
 		return address
 	case "neo4j_url":
 		return getEnvVarValue("NEO4J_URL")
+	case "neo4j_username":
+		return getEnvVarValue("NEO4J_USERNAME")
+	case "neo4j_password":
+		return getEnvVarValue("NEO4J_PASSWORD")
 
 	}
 	return ""
