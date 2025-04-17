@@ -12,14 +12,18 @@ import (
 	"testing"
 )
 
-func TestSuccessCreate(t *testing.T) {
+func TestPOSTSuccess(t *testing.T) {
 
 	handler := services.POSTServicesHandler{
 
 		Path: "/services",
 		Repository: MockServiceRepository{
-			Data: map[string]any{
-				"id": "1",
+			Data: func() []map[string]any {
+				var m []map[string]any
+				m = append(m, map[string]any{
+					"id": "1",
+				})
+				return m
 			},
 			Err: nil,
 		},
@@ -59,13 +63,17 @@ func TestSuccessCreate(t *testing.T) {
 
 }
 
-func TestErrorCreate(t *testing.T) {
+func TestPOSTError(t *testing.T) {
 	handler := services.POSTServicesHandler{
 
 		Path: "/services",
 		Repository: MockServiceRepository{
-			Data: map[string]any{
-				"id": "1",
+			Data: func() []map[string]any {
+				var m []map[string]any
+				m = append(m, map[string]any{
+					"id": "1",
+				})
+				return m
 			},
 			Err: errors.New("test error"),
 		},
@@ -88,13 +96,17 @@ func TestErrorCreate(t *testing.T) {
 	}
 }
 
-func TestInvalidBody(t *testing.T) {
+func TestPOSTInvalidBody(t *testing.T) {
 	handler := services.POSTServicesHandler{
 
 		Path: "/services",
 		Repository: MockServiceRepository{
-			Data: map[string]any{
-				"id": "1",
+			Data: func() []map[string]any {
+				var m []map[string]any
+				m = append(m, map[string]any{
+					"id": "1",
+				})
+				return m
 			},
 			Err: nil,
 		},
