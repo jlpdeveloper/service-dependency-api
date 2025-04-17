@@ -25,12 +25,15 @@ func (u *POSTServicesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 	id, err := u.Repository.CreateService(*createServiceRequest)
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusCreated)
+
 	if err != nil {
 		log.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
+
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusCreated)
 	createServiceRequest.Id = id
 	err = json.NewEncoder(w).Encode(createServiceRequest)
 	if err != nil {

@@ -3,7 +3,6 @@ package services
 import (
 	"context"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
-	"service-dependency-api/internal/database"
 )
 
 type Service struct {
@@ -22,26 +21,44 @@ type ServiceRepository interface {
 }
 
 // the type implements the interface
-type ServiceNeo4jService struct {
-	Driver database.Neo4jDriver
+type ServiceNeo4jRepository struct {
+	Driver neo4j.DriverWithContext
 	Ctx    context.Context
 }
 
-//https://github.com/neo4j-examples/golang-neo4j-realworld-example/blob/main/pkg/users/login.go
-//https://neo4j.com/docs/go-manual/current/
-//func (d *ServiceNeo4jService) GetAllServices(page int) (services []Service, err error) {
+// https://github.com/neo4j-examples/golang-neo4j-realworld-example/blob/main/pkg/users/login.go
+// https://neo4j.com/docs/go-manual/current/
+//func (d *ServiceNeo4jRepository) GetAllServices(page int, page_size int) (services []Service, err error) {
 //	session := d.Driver.NewSession(d.ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeRead})
 //	defer func() {
 //		err = session.Close(d.ctx)
 //	}()
+//	getPagedData := func(tx database.Neo4jTransaction) ([]any, error) {
+//
+//	}
+//	data, readErr := session.ExecuteRead(d.Ctx, getPagedData)
+//	if readErr != nil {
+//		return nil, readErr
+//	}
+//	for k, v := range data {
+//		services = append(services, v.(Service))
+//	}
 //}
 
-func (d *ServiceNeo4jService) CreateService(service Service) (id string, err error) {
+func (d *ServiceNeo4jRepository) CreateService(service Service) (id string, err error) {
 	session := d.Driver.NewSession(d.Ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
 	defer func() {
 		err = session.Close(d.Ctx)
 	}()
-	createServiceTransaction := func(tx database.Neo4jTransaction) (any, error) {
+	newId, insertErr := session.ExecuteWrite(d.Ctx, d.writeService(service))
+	if insertErr != nil {
+		return "", insertErr
+	}
+	return newId.(string), nil
+}
+
+func (d *ServiceNeo4jRepository) writeService(service Service) func(tx neo4j.ManagedTransaction) (any, error) {
+	return func(tx neo4j.ManagedTransaction) (any, error) {
 		result, err := tx.Run(
 			d.Ctx, `
         CREATE (n: Service {id: randomuuid(), createdDate: datetime(), name: $name, type: $type, description: $description})
@@ -61,9 +78,4 @@ func (d *ServiceNeo4jService) CreateService(service Service) (id string, err err
 		svcId, _ := svc.AsMap()["id"]
 		return svcId.(string), err
 	}
-	newId, insertErr := session.ExecuteWrite(d.Ctx, createServiceTransaction)
-	if insertErr != nil {
-		return "", insertErr
-	}
-	return newId.(string), nil
 }
