@@ -18,16 +18,30 @@ func (repo MockServiceRepository) GetAllServices(page int, pageSize int) ([]serv
 	if repo.Err != nil {
 		return []services.Service{}, repo.Err
 	}
-	var serviceList []services.Service
 	d := repo.Data()
+
+	// Convert all data to Service objects
+	var allServices []services.Service
 	for _, v := range d {
-		serviceList = append(serviceList, services.Service{
+		allServices = append(allServices, services.Service{
 			Id:          v["id"].(string),
 			Name:        v["name"].(string),
 			Description: v["description"].(string),
-			ServiceType: v["service_type"].(string),
+			ServiceType: v["type"].(string),
 		})
 	}
 
-	return serviceList, nil
+	// Apply pagination
+	startIndex := (page - 1) * pageSize
+	endIndex := startIndex + pageSize
+
+	// Handle edge cases
+	if startIndex >= len(allServices) {
+		return []services.Service{}, nil
+	}
+	if endIndex > len(allServices) {
+		endIndex = len(allServices)
+	}
+
+	return allServices[startIndex:endIndex], nil
 }

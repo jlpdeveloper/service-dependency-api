@@ -22,9 +22,21 @@ func (u *GetAllServicesHandler) ServeHTTP(rw http.ResponseWriter, req *http.Requ
 		http.Error(rw, err.Error(), http.StatusBadRequest)
 		return
 	}
+
+	// Validate that page is positive
+	if page < 1 {
+		http.Error(rw, "page must be positive", http.StatusBadRequest)
+		return
+	}
 	pageSize, err := strconv.Atoi(req.URL.Query().Get("pageSize"))
 	if err != nil {
 		pageSize = 10
+	}
+
+	// Validate that pageSize is between 1 and 100
+	if pageSize < 1 || pageSize > 100 {
+		http.Error(rw, "pageSize must be between 1 and 100", http.StatusBadRequest)
+		return
 	}
 	services, err := u.Repository.GetAllServices(page, pageSize)
 	if err != nil {
