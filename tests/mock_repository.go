@@ -10,7 +10,7 @@ type MockServiceRepository struct {
 	Err  error
 }
 
-func (repo MockServiceRepository) CreateService(service services.Service) (string, error) {
+func (repo MockServiceRepository) CreateService(_ services.Service) (string, error) {
 	if repo.Err != nil {
 		return "", repo.Err
 	}
