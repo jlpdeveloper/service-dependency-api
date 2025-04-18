@@ -12,8 +12,10 @@ import (
 )
 
 func TestGetAllSuccess(t *testing.T) {
-	handler := services.GetAllServicesHandler{
-		Path: "/returnedServices",
+	handler := services.ServiceCallsHandler{
+		IdValidator: func(_ string, _ *http.Request) (string, bool) {
+			return "", false
+		},
 		Repository: MockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
@@ -37,7 +39,7 @@ func TestGetAllSuccess(t *testing.T) {
 	}
 
 	rw := httptest.NewRecorder()
-	handler.ServeHTTP(rw, req)
+	handler.GetAllServices(rw, req)
 
 	if rw.Code != http.StatusOK {
 		t.Errorf("Expected status code %d, got %d", http.StatusOK, rw.Code)
@@ -57,8 +59,10 @@ func TestGetAllSuccess(t *testing.T) {
 }
 
 func TestGetAllBadRequest(t *testing.T) {
-	handler := services.GetAllServicesHandler{
-		Path: "/services",
+	handler := services.ServiceCallsHandler{
+		IdValidator: func(_ string, _ *http.Request) (string, bool) {
+			return "", false
+		},
 		Repository: MockServiceRepository{
 			Data: func() []map[string]any {
 				return []map[string]any{}
@@ -74,7 +78,7 @@ func TestGetAllBadRequest(t *testing.T) {
 	}
 
 	rw := httptest.NewRecorder()
-	handler.ServeHTTP(rw, req)
+	handler.GetAllServices(rw, req)
 
 	if rw.Code != http.StatusBadRequest {
 		t.Errorf("Expected status code %d, got %d", http.StatusBadRequest, rw.Code)
@@ -82,8 +86,10 @@ func TestGetAllBadRequest(t *testing.T) {
 }
 
 func TestGetAllInternalServerError(t *testing.T) {
-	handler := services.GetAllServicesHandler{
-		Path: "/services",
+	handler := services.ServiceCallsHandler{
+		IdValidator: func(_ string, _ *http.Request) (string, bool) {
+			return "", false
+		},
 		Repository: MockServiceRepository{
 			Data: func() []map[string]any {
 				return []map[string]any{}
@@ -98,7 +104,7 @@ func TestGetAllInternalServerError(t *testing.T) {
 	}
 
 	rw := httptest.NewRecorder()
-	handler.ServeHTTP(rw, req)
+	handler.GetAllServices(rw, req)
 
 	if rw.Code != http.StatusInternalServerError {
 		t.Errorf("Expected status code %d, got %d", http.StatusInternalServerError, rw.Code)
@@ -106,8 +112,10 @@ func TestGetAllInternalServerError(t *testing.T) {
 }
 
 func TestGetAllWithZeroPageSize(t *testing.T) {
-	handler := services.GetAllServicesHandler{
-		Path: "/services",
+	handler := services.ServiceCallsHandler{
+		IdValidator: func(_ string, _ *http.Request) (string, bool) {
+			return "", false
+		},
 		Repository: MockServiceRepository{
 			Data: func() []map[string]any {
 				return []map[string]any{}
@@ -123,7 +131,7 @@ func TestGetAllWithZeroPageSize(t *testing.T) {
 	}
 
 	rw := httptest.NewRecorder()
-	handler.ServeHTTP(rw, req)
+	handler.GetAllServices(rw, req)
 
 	if rw.Code != http.StatusBadRequest {
 		t.Errorf("Expected status code %d, got %d", http.StatusBadRequest, rw.Code)
@@ -131,8 +139,10 @@ func TestGetAllWithZeroPageSize(t *testing.T) {
 }
 
 func TestGetAllWithLargePageSize(t *testing.T) {
-	handler := services.GetAllServicesHandler{
-		Path: "/services",
+	handler := services.ServiceCallsHandler{
+		IdValidator: func(_ string, _ *http.Request) (string, bool) {
+			return "", false
+		},
 		Repository: MockServiceRepository{
 			Data: func() []map[string]any {
 				return []map[string]any{}
@@ -148,7 +158,7 @@ func TestGetAllWithLargePageSize(t *testing.T) {
 	}
 
 	rw := httptest.NewRecorder()
-	handler.ServeHTTP(rw, req)
+	handler.GetAllServices(rw, req)
 
 	if rw.Code != http.StatusBadRequest {
 		t.Errorf("Expected status code %d, got %d", http.StatusBadRequest, rw.Code)
@@ -156,8 +166,10 @@ func TestGetAllWithLargePageSize(t *testing.T) {
 }
 
 func TestGetAllWithNegativePage(t *testing.T) {
-	handler := services.GetAllServicesHandler{
-		Path: "/services",
+	handler := services.ServiceCallsHandler{
+		IdValidator: func(_ string, _ *http.Request) (string, bool) {
+			return "", false
+		},
 		Repository: MockServiceRepository{
 			Data: func() []map[string]any {
 				return []map[string]any{}
@@ -173,7 +185,7 @@ func TestGetAllWithNegativePage(t *testing.T) {
 	}
 
 	rw := httptest.NewRecorder()
-	handler.ServeHTTP(rw, req)
+	handler.GetAllServices(rw, req)
 
 	if rw.Code != http.StatusBadRequest {
 		t.Errorf("Expected status code %d, got %d", http.StatusBadRequest, rw.Code)
@@ -181,8 +193,10 @@ func TestGetAllWithNegativePage(t *testing.T) {
 }
 
 func TestGetAllWithNegativePageSize(t *testing.T) {
-	handler := services.GetAllServicesHandler{
-		Path: "/services",
+	handler := services.ServiceCallsHandler{
+		IdValidator: func(_ string, _ *http.Request) (string, bool) {
+			return "", false
+		},
 		Repository: MockServiceRepository{
 			Data: func() []map[string]any {
 				return []map[string]any{}
@@ -198,7 +212,7 @@ func TestGetAllWithNegativePageSize(t *testing.T) {
 	}
 
 	rw := httptest.NewRecorder()
-	handler.ServeHTTP(rw, req)
+	handler.GetAllServices(rw, req)
 
 	if rw.Code != http.StatusBadRequest {
 		t.Errorf("Expected status code %d, got %d", http.StatusBadRequest, rw.Code)
@@ -206,8 +220,10 @@ func TestGetAllWithNegativePageSize(t *testing.T) {
 }
 
 func TestGetAllWithNonNumericValues(t *testing.T) {
-	handler := services.GetAllServicesHandler{
-		Path: "/services",
+	handler := services.ServiceCallsHandler{
+		IdValidator: func(_ string, _ *http.Request) (string, bool) {
+			return "", false
+		},
 		Repository: MockServiceRepository{
 			Data: func() []map[string]any {
 				return []map[string]any{}
@@ -223,7 +239,7 @@ func TestGetAllWithNonNumericValues(t *testing.T) {
 	}
 
 	rw := httptest.NewRecorder()
-	handler.ServeHTTP(rw, req)
+	handler.GetAllServices(rw, req)
 
 	if rw.Code != http.StatusBadRequest {
 		t.Errorf("Expected status code %d, got %d", http.StatusBadRequest, rw.Code)
@@ -236,7 +252,7 @@ func TestGetAllWithNonNumericValues(t *testing.T) {
 	}
 
 	rw = httptest.NewRecorder()
-	handler.ServeHTTP(rw, req)
+	handler.GetAllServices(rw, req)
 
 	// This should succeed with default pageSize
 	if rw.Code != http.StatusOK {
@@ -245,8 +261,10 @@ func TestGetAllWithNonNumericValues(t *testing.T) {
 }
 
 func TestGetAllWithEmptyResultSet(t *testing.T) {
-	handler := services.GetAllServicesHandler{
-		Path: "/services",
+	handler := services.ServiceCallsHandler{
+		IdValidator: func(_ string, _ *http.Request) (string, bool) {
+			return "", false
+		},
 		Repository: MockServiceRepository{
 			Data: func() []map[string]any {
 				return []map[string]any{} // Empty data set
@@ -261,7 +279,7 @@ func TestGetAllWithEmptyResultSet(t *testing.T) {
 	}
 
 	rw := httptest.NewRecorder()
-	handler.ServeHTTP(rw, req)
+	handler.GetAllServices(rw, req)
 
 	if rw.Code != http.StatusOK {
 		t.Errorf("Expected status code %d, got %d", http.StatusOK, rw.Code)
@@ -283,8 +301,10 @@ func TestGetAllWithEmptyResultSet(t *testing.T) {
 }
 
 func TestGetAllWithPageBeyondAvailableData(t *testing.T) {
-	handler := services.GetAllServicesHandler{
-		Path: "/services",
+	handler := services.ServiceCallsHandler{
+		IdValidator: func(_ string, _ *http.Request) (string, bool) {
+			return "", false
+		},
 		Repository: MockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
@@ -310,7 +330,7 @@ func TestGetAllWithPageBeyondAvailableData(t *testing.T) {
 	}
 
 	rw := httptest.NewRecorder()
-	handler.ServeHTTP(rw, req)
+	handler.GetAllServices(rw, req)
 
 	if rw.Code != http.StatusOK {
 		t.Errorf("Expected status code %d, got %d", http.StatusOK, rw.Code)
@@ -329,8 +349,10 @@ func TestGetAllWithPageBeyondAvailableData(t *testing.T) {
 }
 
 func TestGetAllWithDefaultPageSize(t *testing.T) {
-	handler := services.GetAllServicesHandler{
-		Path: "/services",
+	handler := services.ServiceCallsHandler{
+		IdValidator: func(_ string, _ *http.Request) (string, bool) {
+			return "", false
+		},
 		Repository: MockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
@@ -356,7 +378,7 @@ func TestGetAllWithDefaultPageSize(t *testing.T) {
 	}
 
 	rw := httptest.NewRecorder()
-	handler.ServeHTTP(rw, req)
+	handler.GetAllServices(rw, req)
 
 	if rw.Code != http.StatusOK {
 		t.Errorf("Expected status code %d, got %d", http.StatusOK, rw.Code)
