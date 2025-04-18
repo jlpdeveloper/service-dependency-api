@@ -15,6 +15,7 @@ type ServiceCallsHandler struct {
 func (u *ServiceCallsHandler) Register(mux *http.ServeMux) {
 	paths := map[string]func(http.ResponseWriter, *http.Request){
 		"GET /services/{id}": u.GetById,
+		"GET /services":      u.GetAllServices,
 	}
 	for path, f := range paths {
 		mux.HandleFunc(path, f)
@@ -38,13 +39,6 @@ func Register(mux *http.ServeMux, driver *neo4j.DriverWithContext, ctx *context.
 		Repository:  serviceRepo,
 		IdValidator: getGuidFromRequestPath,
 	}
-
-	getAllHandler := GetAllServicesHandler{
-		Path:       "GET /services",
-		Repository: serviceRepo,
-	}
-
-	getAllHandler.Register(mux)
 
 	postHandler := POSTServicesHandler{
 		Path:       "POST /services",
