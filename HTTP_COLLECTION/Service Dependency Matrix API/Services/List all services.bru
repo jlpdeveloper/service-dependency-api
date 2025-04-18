@@ -5,7 +5,12 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/services
+  url: {{baseUrl}}/services?page=1&pageSize=10
   body: none
   auth: none
+}
+
+params:query {
+  page: 1
+  pageSize: 10
 }
