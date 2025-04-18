@@ -1,0 +1,33 @@
+meta {
+  name: Hello World
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/helloworld
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~name: user
+}
+
+assert {
+  res.status: eq 200
+}
+
+docs {
+  # Hello World
+  
+  First API Call for this project
+  
+  ## Parameters
+  | Name | Type | Location | Notes | 
+  | ---- | ------ | -------- | ----- |
+  | name | string | query | will be part of return string | 
+  
+  ## Returns
+  Returns a string. It will be either "hello world" or "hello " + name query parameter
+}

@@ -1,0 +1,32 @@
+meta {
+  name: Database URL
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/database
+  body: none
+  auth: inherit
+}
+
+assert {
+  res.status: eq 200
+}
+
+docs {
+  # Get Database URL
+  
+  Gets the database url stored in the `NEO4J_URL` environment variable
+  
+  ## Params
+  
+  **none**
+  
+  ## Return
+  
+  | Status | Notes|
+  | ---| ---|
+  | 200 | URL of database | 
+  | 500 | Could not find environment variable |
+}
