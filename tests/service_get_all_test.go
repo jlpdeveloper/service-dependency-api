@@ -8,6 +8,7 @@ import (
 	"service-dependency-api/api/services"
 	"strconv"
 	"testing"
+	"time"
 )
 
 func TestGetAllSuccess(t *testing.T) {
@@ -22,6 +23,7 @@ func TestGetAllSuccess(t *testing.T) {
 						"name":        "service" + strconv.Itoa(i),
 						"description": "test desc",
 						"type":        "service",
+						"createdDate": time.Now(),
 					})
 				}
 				return m
@@ -292,6 +294,7 @@ func TestGetAllWithPageBeyondAvailableData(t *testing.T) {
 						"name":        "service" + strconv.Itoa(i),
 						"description": "test desc",
 						"type":        "service",
+						"createdDate": time.Now(),
 					})
 				}
 				return m
@@ -337,6 +340,7 @@ func TestGetAllWithDefaultPageSize(t *testing.T) {
 						"name":        "service" + strconv.Itoa(i),
 						"description": "test desc",
 						"type":        "service",
+						"createdDate": time.Now(),
 					})
 				}
 				return m

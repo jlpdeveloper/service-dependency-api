@@ -4,13 +4,15 @@ import (
 	"context"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 	"sync"
+	"time"
 )
 
 type Service struct {
-	Id          string `json:"id,omitempty"`
-	Name        string `json:"name"`
-	ServiceType string `json:"type"`
-	Description string `json:"description"`
+	Id          string    `json:"id,omitempty"`
+	Name        string    `json:"name"`
+	ServiceType string    `json:"type"`
+	Description string    `json:"description"`
+	CreatedDate time.Time `json:"created_date"`
 }
 
 type ServiceRepository interface {
@@ -66,11 +68,40 @@ func (d *ServiceNeo4jRepository) GetAllServices(page int, pageSize int) (service
 				continue
 			}
 
-			svc := Service{
-				Name:        n.Props["name"].(string),
-				Description: n.Props["description"].(string),
-				ServiceType: n.Props["type"].(string),
-				Id:          n.Props["id"].(string),
+			svc := Service{}
+
+			// Safely extract name with validation
+			if name, ok := n.Props["name"]; ok {
+				if nameStr, ok := name.(string); ok {
+					svc.Name = nameStr
+				}
+			}
+
+			// Safely extract description with validation
+			if desc, ok := n.Props["description"]; ok {
+				if descStr, ok := desc.(string); ok {
+					svc.Description = descStr
+				}
+			}
+
+			// Safely extract service type with validation
+			if svcType, ok := n.Props["type"]; ok {
+				if typeStr, ok := svcType.(string); ok {
+					svc.ServiceType = typeStr
+				}
+			}
+
+			// Safely extract ID with validation
+			if id, ok := n.Props["id"]; ok {
+				if idStr, ok := id.(string); ok {
+					svc.Id = idStr
+				}
+			}
+
+			if date, ok := n.Props["createdDate"]; ok {
+				if dateStr, ok := date.(time.Time); ok {
+					svc.CreatedDate = dateStr
+				}
 			}
 
 			services = append(services, svc)
@@ -78,6 +109,7 @@ func (d *ServiceNeo4jRepository) GetAllServices(page int, pageSize int) (service
 		return services, nil
 	}
 	_, readErr := session.ExecuteRead(d.Ctx, getPagedData)
+	wg.Wait()
 	if readErr != nil {
 		return nil, readErr
 	}
@@ -107,8 +139,13 @@ func (d *ServiceNeo4jRepository) CreateService(service Service) (id string, err 
 		if err != nil {
 			return "", err
 		}
-		svcId, _ := svc.AsMap()["id"]
-		return svcId.(string), err
+		svcMap := svc.AsMap()
+		if svcId, ok := svcMap["id"]; ok {
+			if idStr, ok := svcId.(string); ok {
+				return idStr, err
+			}
+		}
+		return "", err
 
 	}
 	newId, insertErr := session.ExecuteWrite(d.Ctx, createServiceTransaction)
