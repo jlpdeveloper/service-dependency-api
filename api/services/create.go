@@ -6,16 +6,7 @@ import (
 	"net/http"
 )
 
-type POSTServicesHandler struct {
-	Path       string
-	Repository ServiceRepository
-}
-
-func (u *POSTServicesHandler) Register(mux *http.ServeMux) {
-	mux.HandleFunc(u.Path, u.ServeHTTP)
-}
-
-func (u *POSTServicesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (u *ServiceCallsHandler) CreateService(w http.ResponseWriter, r *http.Request) {
 
 	createServiceRequest := &Service{}
 	err := json.NewDecoder(r.Body).Decode(createServiceRequest)
