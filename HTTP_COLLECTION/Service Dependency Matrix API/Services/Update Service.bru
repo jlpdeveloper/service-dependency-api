@@ -1,0 +1,54 @@
+meta {
+  name: Update Service
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/services/:id
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: 5931d4b0-dd0a-4654-85fe-78f42890da0d
+}
+
+body:json {
+  {
+    "id": "5931d4b0-dd0a-4654-85fe-78f42890da0d",
+    "name": "Newark3",
+    "type": "service",
+    "description": "this is a test form bruno"
+  }
+}
+
+docs {
+  # Allows updating a service
+  
+  Will update the following properties
+  
+  - name
+  - description
+  - type
+  
+  ### Sample Body
+  
+  ```json
+  {
+    "id": "5931d4b0-dd0a-4654-85fe-78f42890da0d",
+    "name": "Newark3",
+    "type": "service",
+    "description": "this is a test form bruno"
+  }
+  ```
+  
+  ## Response Codes
+  
+  | Status | Notes | 
+  | ----- | ----- |
+  | 204 | Successful update | 
+  | 400 | Id in path isn't a guid or doesn't match id in body | 
+  | 404 | Service with that id wasn't found | 
+  
+}

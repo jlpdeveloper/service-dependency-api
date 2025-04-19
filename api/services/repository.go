@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"errors"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 	"sync"
 	"time"
@@ -12,13 +13,14 @@ type Service struct {
 	Name        string    `json:"name"`
 	ServiceType string    `json:"type"`
 	Description string    `json:"description"`
-	CreatedDate time.Time `json:"created_date"`
+	Created     time.Time `json:"created"`
+	Updated     time.Time `json:"updated,omitempty"`
 }
 
 type ServiceRepository interface {
 	GetAllServices(page int, pageSize int) ([]Service, error)
 	CreateService(service Service) (string, error)
-	//UpdateService(service Service) error
+	UpdateService(service Service) (bool, error)
 	//DeleteService(service Service) error
 	GetServiceById(id string) (Service, error)
 }
@@ -27,6 +29,65 @@ type ServiceRepository interface {
 type ServiceNeo4jRepository struct {
 	Driver neo4j.DriverWithContext
 	Ctx    context.Context
+}
+
+func (d *ServiceNeo4jRepository) UpdateService(service Service) (found bool, err error) {
+	session := d.Driver.NewSession(d.Ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
+	defer func() {
+		err = session.Close(d.Ctx)
+	}()
+	updateServiceTransaction := func(tx neo4j.ManagedTransaction) (any, error) {
+		// First check if the service exists
+		result, err := tx.Run(d.Ctx, `
+			MATCH (s:Service)
+			WHERE s.id = $id
+			RETURN s
+		`, map[string]any{
+			"id": service.Id,
+		})
+
+		if err != nil {
+			return found, err
+		}
+
+		found = result.Next(d.Ctx)
+
+		if found {
+
+			// Service exists, update it
+			updateResult, updateErr := tx.Run(d.Ctx, `
+			MATCH (s:Service)
+			WHERE s.id = $id
+			SET s.name = $name, 
+				s.type = $type, 
+				s.description = $description,
+				s.updated = datetime()
+			RETURN s
+		`, map[string]any{
+				"id":          service.Id,
+				"name":        service.Name,
+				"type":        service.ServiceType,
+				"description": service.Description,
+			})
+
+			if updateErr != nil {
+				err = updateErr
+			}
+
+			// Confirm update was successful
+			if !updateResult.Next(d.Ctx) {
+				err = errors.New("update Service failed")
+			}
+		}
+		return found, err
+	}
+
+	result, execErr := session.ExecuteWrite(d.Ctx, updateServiceTransaction)
+	if execErr != nil {
+		return false, execErr
+	}
+
+	return result.(bool), nil
 }
 
 func (d *ServiceNeo4jRepository) GetServiceById(id string) (svc Service, err error) {
@@ -111,12 +172,17 @@ func (d *ServiceNeo4jRepository) mapNodeToService(n neo4j.Node) Service {
 	}
 
 	// Safely extract created date with validation
-	if date, ok := n.Props["createdDate"]; ok {
+	if date, ok := n.Props["created"]; ok {
 		if dateStr, ok := date.(time.Time); ok {
-			svc.CreatedDate = dateStr
+			svc.Created = dateStr
 		}
 	}
 
+	if date, ok := n.Props["updated"]; ok {
+		if dateStr, ok := date.(time.Time); ok {
+			svc.Updated = dateStr
+		}
+	}
 	return svc
 }
 
@@ -181,7 +247,7 @@ func (d *ServiceNeo4jRepository) CreateService(service Service) (id string, err 
 	createServiceTransaction := func(tx neo4j.ManagedTransaction) (any, error) {
 		result, err := tx.Run(
 			d.Ctx, `
-        CREATE (n: Service {id: randomuuid(), createdDate: datetime(), name: $name, type: $type, description: $description})
+        CREATE (n: Service {id: randomuuid(), created: datetime(), name: $name, type: $type, description: $description})
         RETURN n.id AS id
         `, map[string]any{
 				"name":        service.Name,
