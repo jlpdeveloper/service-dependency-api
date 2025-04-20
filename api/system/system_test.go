@@ -1,10 +1,9 @@
-package tests
+package system
 
 import (
 	"net/http"
 	"net/http/httptest"
 	"os"
-	"service-dependency-api/api/system"
 	"strconv"
 	"strings"
 	"testing"
@@ -14,7 +13,7 @@ import (
 func TestSystemGetTime(t *testing.T) {
 	req, err := http.NewRequest("GET", "/time", nil)
 	rw := httptest.NewRecorder()
-	system.GetTime(rw, req)
+	GetTime(rw, req)
 	if err != nil {
 		t.Errorf("GetTime errored with %s", err.Error())
 	}
@@ -34,7 +33,7 @@ func TestGetDbAddress(t *testing.T) {
 	req, err := http.NewRequest("GET", "/database", nil)
 	rw := httptest.NewRecorder()
 	err = os.Setenv("NEO4J_URL", "test_url")
-	system.GetDbAddress(rw, req)
+	GetDbAddress(rw, req)
 	if err != nil {
 		t.Errorf("GetDbAddress errored with %s", err.Error())
 	}
@@ -47,7 +46,7 @@ func TestGetDbAddressError(t *testing.T) {
 	req, err := http.NewRequest("GET", "/database", nil)
 	rw := httptest.NewRecorder()
 	_ = os.Unsetenv("NEO4J_URL")
-	system.GetDbAddress(rw, req)
+	GetDbAddress(rw, req)
 	if err != nil {
 		t.Errorf("GetDbAddress errored with %s", err.Error())
 	}

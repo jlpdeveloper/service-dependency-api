@@ -1,18 +1,21 @@
-package tests
+package services
 
 import (
 	"encoding/json"
 	"errors"
+	"github.com/google/uuid"
 	"net/http"
 	"net/http/httptest"
-	"service-dependency-api/api/services"
 	"strconv"
+	"strings"
 	"testing"
 	"time"
 )
 
+// Tests for GetAllServices
+
 func TestGetAllSuccess(t *testing.T) {
-	handler := services.ServiceCallsHandler{
+	handler := ServiceCallsHandler{
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false
 		},
@@ -46,7 +49,7 @@ func TestGetAllSuccess(t *testing.T) {
 	}
 
 	// Decode the response body
-	var returnedServices []services.Service
+	var returnedServices []Service
 	if err := json.NewDecoder(rw.Body).Decode(&returnedServices); err != nil {
 		t.Fatalf("Failed to decode response body: %v", err)
 	}
@@ -59,7 +62,7 @@ func TestGetAllSuccess(t *testing.T) {
 }
 
 func TestGetAllBadRequest(t *testing.T) {
-	handler := services.ServiceCallsHandler{
+	handler := ServiceCallsHandler{
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false
 		},
@@ -86,7 +89,7 @@ func TestGetAllBadRequest(t *testing.T) {
 }
 
 func TestGetAllInternalServerError(t *testing.T) {
-	handler := services.ServiceCallsHandler{
+	handler := ServiceCallsHandler{
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false
 		},
@@ -112,7 +115,7 @@ func TestGetAllInternalServerError(t *testing.T) {
 }
 
 func TestGetAllWithZeroPageSize(t *testing.T) {
-	handler := services.ServiceCallsHandler{
+	handler := ServiceCallsHandler{
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false
 		},
@@ -139,7 +142,7 @@ func TestGetAllWithZeroPageSize(t *testing.T) {
 }
 
 func TestGetAllWithLargePageSize(t *testing.T) {
-	handler := services.ServiceCallsHandler{
+	handler := ServiceCallsHandler{
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false
 		},
@@ -166,7 +169,7 @@ func TestGetAllWithLargePageSize(t *testing.T) {
 }
 
 func TestGetAllWithNegativePage(t *testing.T) {
-	handler := services.ServiceCallsHandler{
+	handler := ServiceCallsHandler{
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false
 		},
@@ -193,7 +196,7 @@ func TestGetAllWithNegativePage(t *testing.T) {
 }
 
 func TestGetAllWithNegativePageSize(t *testing.T) {
-	handler := services.ServiceCallsHandler{
+	handler := ServiceCallsHandler{
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false
 		},
@@ -220,7 +223,7 @@ func TestGetAllWithNegativePageSize(t *testing.T) {
 }
 
 func TestGetAllWithNonNumericValues(t *testing.T) {
-	handler := services.ServiceCallsHandler{
+	handler := ServiceCallsHandler{
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false
 		},
@@ -261,7 +264,7 @@ func TestGetAllWithNonNumericValues(t *testing.T) {
 }
 
 func TestGetAllWithEmptyResultSet(t *testing.T) {
-	handler := services.ServiceCallsHandler{
+	handler := ServiceCallsHandler{
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false
 		},
@@ -286,7 +289,7 @@ func TestGetAllWithEmptyResultSet(t *testing.T) {
 	}
 
 	// Decode the response body
-	var returnedServices []services.Service
+	var returnedServices []Service
 	if err := json.NewDecoder(rw.Body).Decode(&returnedServices); err != nil {
 		t.Fatalf("Failed to decode response body: %v", err)
 	}
@@ -301,7 +304,7 @@ func TestGetAllWithEmptyResultSet(t *testing.T) {
 }
 
 func TestGetAllWithPageBeyondAvailableData(t *testing.T) {
-	handler := services.ServiceCallsHandler{
+	handler := ServiceCallsHandler{
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false
 		},
@@ -337,7 +340,7 @@ func TestGetAllWithPageBeyondAvailableData(t *testing.T) {
 	}
 
 	// Decode the response body
-	var returnedServices []services.Service
+	var returnedServices []Service
 	if err := json.NewDecoder(rw.Body).Decode(&returnedServices); err != nil {
 		t.Fatalf("Failed to decode response body: %v", err)
 	}
@@ -349,7 +352,7 @@ func TestGetAllWithPageBeyondAvailableData(t *testing.T) {
 }
 
 func TestGetAllWithDefaultPageSize(t *testing.T) {
-	handler := services.ServiceCallsHandler{
+	handler := ServiceCallsHandler{
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false
 		},
@@ -385,7 +388,7 @@ func TestGetAllWithDefaultPageSize(t *testing.T) {
 	}
 
 	// Decode the response body
-	var returnedServices []services.Service
+	var returnedServices []Service
 	if err := json.NewDecoder(rw.Body).Decode(&returnedServices); err != nil {
 		t.Fatalf("Failed to decode response body: %v", err)
 	}
@@ -394,5 +397,164 @@ func TestGetAllWithDefaultPageSize(t *testing.T) {
 	expectedCount := 10
 	if len(returnedServices) != expectedCount {
 		t.Errorf("Expected %d services (default pageSize), got %d", expectedCount, len(returnedServices))
+	}
+}
+
+// Tests for GetById
+
+func TestGetByIdSuccess(t *testing.T) {
+	id := uuid.New().String()
+	handler := ServiceCallsHandler{
+		Repository: MockServiceRepository{
+			Data: func() []map[string]any {
+				var m []map[string]any
+
+				m = append(m, map[string]any{
+					"id":          id,
+					"name":        "service",
+					"description": "test desc",
+					"type":        "service",
+					"createdDate": time.Now(),
+				})
+
+				return m
+			},
+			Err: nil,
+		},
+		IdValidator: func(_ string, _ *http.Request) (string, bool) {
+			return id, true
+		},
+	}
+
+	req, err := http.NewRequest("GET", "/services/"+id, nil)
+	if err != nil {
+		t.Fatalf("Failed to create request: %v", err)
+	}
+
+	rw := httptest.NewRecorder()
+	handler.GetById(rw, req)
+
+	if rw.Code != http.StatusOK {
+		t.Errorf("Expected status code %d, got %d", http.StatusOK, rw.Code)
+	}
+
+	// Check that response contains expected data
+	responseBody := rw.Body.String()
+	if !strings.Contains(responseBody, id) {
+		t.Errorf("Response does not contain service ID: %s", responseBody)
+	}
+	if !strings.Contains(responseBody, "service") {
+		t.Errorf("Response does not contain service name: %s", responseBody)
+	}
+	if !strings.Contains(responseBody, "test desc") {
+		t.Errorf("Response does not contain service description: %s", responseBody)
+	}
+}
+
+func TestGetByIdInvalidId(t *testing.T) {
+	handler := ServiceCallsHandler{
+		Repository: MockServiceRepository{
+			Data: func() []map[string]any {
+				return []map[string]any{}
+			},
+			Err: nil,
+		},
+		IdValidator: func(_ string, _ *http.Request) (string, bool) {
+			return "", false // Invalid ID
+		},
+	}
+
+	req, err := http.NewRequest("GET", "/services/invalid-id", nil)
+	if err != nil {
+		t.Fatalf("Failed to create request: %v", err)
+	}
+
+	rw := httptest.NewRecorder()
+	handler.GetById(rw, req)
+
+	if rw.Code != http.StatusBadRequest {
+		t.Errorf("Expected status code %d, got %d", http.StatusBadRequest, rw.Code)
+	}
+
+	expectedError := "Service id is required"
+	if !strings.Contains(rw.Body.String(), expectedError) {
+		t.Errorf("Expected error message '%s', got '%s'", expectedError, rw.Body.String())
+	}
+}
+
+func TestGetByIdRepositoryError(t *testing.T) {
+	id := uuid.New().String()
+	expectedError := "database connection error"
+
+	handler := ServiceCallsHandler{
+		Repository: MockServiceRepository{
+			Data: func() []map[string]any {
+				return []map[string]any{}
+			},
+			Err: errors.New(expectedError),
+		},
+		IdValidator: func(_ string, _ *http.Request) (string, bool) {
+			return id, true
+		},
+	}
+
+	req, err := http.NewRequest("GET", "/services/"+id, nil)
+	if err != nil {
+		t.Fatalf("Failed to create request: %v", err)
+	}
+
+	rw := httptest.NewRecorder()
+	handler.GetById(rw, req)
+
+	if rw.Code != http.StatusInternalServerError {
+		t.Errorf("Expected status code %d, got %d", http.StatusInternalServerError, rw.Code)
+	}
+
+	if !strings.Contains(rw.Body.String(), expectedError) {
+		t.Errorf("Expected error message '%s', got '%s'", expectedError, rw.Body.String())
+	}
+}
+
+func TestGetByIdServiceNotFound(t *testing.T) {
+	id := uuid.New().String()
+	nonExistentId := uuid.New().String()
+
+	handler := ServiceCallsHandler{
+		Repository: MockServiceRepository{
+			Data: func() []map[string]any {
+				var m []map[string]any
+
+				m = append(m, map[string]any{
+					"id":          id, // Different ID than the one we'll request
+					"name":        "service",
+					"description": "test desc",
+					"type":        "service",
+					"createdDate": time.Now(),
+				})
+
+				return m
+			},
+			Err: nil,
+		},
+		IdValidator: func(_ string, _ *http.Request) (string, bool) {
+			return nonExistentId, true // Valid but non-existent ID
+		},
+	}
+
+	req, err := http.NewRequest("GET", "/services/"+nonExistentId, nil)
+	if err != nil {
+		t.Fatalf("Failed to create request: %v", err)
+	}
+
+	rw := httptest.NewRecorder()
+	handler.GetById(rw, req)
+
+	if rw.Code != http.StatusNotFound {
+		t.Errorf("Expected status code %d, got %d", http.StatusNotFound, rw.Code)
+	}
+
+	expectedError := "Service not found"
+	if !strings.Contains(rw.Body.String(), expectedError) {
+		t.Errorf("Expected error message '%s', got '%s'", expectedError, rw.Body.String())
 	}
 }
