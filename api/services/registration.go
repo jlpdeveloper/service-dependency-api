@@ -17,6 +17,7 @@ func (u *ServiceCallsHandler) Register(mux *http.ServeMux) {
 		"GET /services/{id}": u.GetById,
 		"GET /services":      u.GetAllServices,
 		"POST /services":     u.CreateService,
+		"PUT /services/{id}": u.UpdateService,
 	}
 	for path, f := range paths {
 		mux.HandleFunc(path, f)

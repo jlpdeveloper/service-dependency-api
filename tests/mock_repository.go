@@ -67,10 +67,10 @@ func (repo MockServiceRepository) GetServiceById(id string) (services.Service, e
 					}
 				}
 
-				// Safely extract createdDate with validation
-				if date, ok := v["createdDate"]; ok {
+				// Safely extract created date with validation
+				if date, ok := v["created"]; ok {
 					if dateTime, ok := date.(time.Time); ok {
-						service.CreatedDate = dateTime
+						service.Created = dateTime
 					}
 				}
 
@@ -81,6 +81,28 @@ func (repo MockServiceRepository) GetServiceById(id string) (services.Service, e
 
 	// Service not found
 	return services.Service{}, nil
+}
+
+func (repo MockServiceRepository) UpdateService(service services.Service) (bool, error) {
+	if repo.Err != nil {
+		return false, repo.Err
+	}
+
+	d := repo.Data()
+
+	// Search for service with matching ID
+	for _, v := range d {
+		// Check if ID matches
+		if serviceId, ok := v["id"]; ok {
+			if idStr, ok := serviceId.(string); ok && idStr == service.Id {
+				// Service found, update would be successful
+				return true, nil
+			}
+		}
+	}
+
+	// Service not found
+	return false, nil
 }
 
 func (repo MockServiceRepository) GetAllServices(page int, pageSize int) ([]services.Service, error) {
@@ -122,10 +144,10 @@ func (repo MockServiceRepository) GetAllServices(page int, pageSize int) ([]serv
 			}
 		}
 
-		// Safely extract createdDate with validation
-		if date, ok := v["createdDate"]; ok {
+		// Safely extract created date with validation
+		if date, ok := v["created"]; ok {
 			if dateTime, ok := date.(time.Time); ok {
-				service.CreatedDate = dateTime
+				service.Created = dateTime
 			}
 		}
 
