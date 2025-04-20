@@ -14,10 +14,11 @@ type ServiceCallsHandler struct {
 
 func (u *ServiceCallsHandler) Register(mux *http.ServeMux) {
 	paths := map[string]func(http.ResponseWriter, *http.Request){
-		"GET /services/{id}": u.GetById,
-		"GET /services":      u.GetAllServices,
-		"POST /services":     u.CreateService,
-		"PUT /services/{id}": u.UpdateService,
+		"GET /services/{id}":    u.GetById,
+		"GET /services":         u.GetAllServices,
+		"POST /services":        u.CreateService,
+		"PUT /services/{id}":    u.UpdateService,
+		"DELETE /services/{id}": u.DeleteServiceById,
 	}
 	for path, f := range paths {
 		mux.HandleFunc(path, f)

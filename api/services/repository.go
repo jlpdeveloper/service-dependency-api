@@ -21,14 +21,33 @@ type ServiceRepository interface {
 	GetAllServices(page int, pageSize int) ([]Service, error)
 	CreateService(service Service) (string, error)
 	UpdateService(service Service) (bool, error)
-	//DeleteService(service Service) error
+	DeleteService(id string) error
 	GetServiceById(id string) (Service, error)
 }
 
-// the type implements the interface
+// ServiceNeo4jRepository type implements the interface for service repository above
 type ServiceNeo4jRepository struct {
 	Driver neo4j.DriverWithContext
 	Ctx    context.Context
+}
+
+func (d *ServiceNeo4jRepository) DeleteService(id string) (err error) {
+	session := d.Driver.NewSession(d.Ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
+	defer func() {
+		err = session.Close(d.Ctx)
+	}()
+	deleteServiceTransaction := func(tx neo4j.ManagedTransaction) (any, error) {
+		_, err := tx.Run(d.Ctx, `
+		MATCH(s:Service { id = $id})
+		DELETE s;`, map[string]interface{}{"id": id})
+		if err != nil {
+			return nil, err
+		}
+		return nil, nil
+	}
+
+	_, err = session.ExecuteWrite(d.Ctx, deleteServiceTransaction)
+	return err
 }
 
 func (d *ServiceNeo4jRepository) UpdateService(service Service) (found bool, err error) {
