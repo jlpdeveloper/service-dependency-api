@@ -1,7 +1,6 @@
-package tests
+package services
 
 import (
-	"service-dependency-api/api/services"
 	"time"
 )
 
@@ -10,7 +9,7 @@ type MockServiceRepository struct {
 	Err  error
 }
 
-func (repo MockServiceRepository) CreateService(_ services.Service) (string, error) {
+func (repo MockServiceRepository) CreateService(_ Service) (string, error) {
 	if repo.Err != nil {
 		return "", repo.Err
 	}
@@ -29,9 +28,9 @@ func (repo MockServiceRepository) CreateService(_ services.Service) (string, err
 	return "", nil
 }
 
-func (repo MockServiceRepository) GetServiceById(id string) (services.Service, error) {
+func (repo MockServiceRepository) GetServiceById(id string) (Service, error) {
 	if repo.Err != nil {
-		return services.Service{}, repo.Err
+		return Service{}, repo.Err
 	}
 
 	d := repo.Data()
@@ -41,7 +40,7 @@ func (repo MockServiceRepository) GetServiceById(id string) (services.Service, e
 		// Check if ID matches
 		if serviceId, ok := v["id"]; ok {
 			if idStr, ok := serviceId.(string); ok && idStr == id {
-				service := services.Service{}
+				service := Service{}
 
 				// Set the ID
 				service.Id = idStr
@@ -80,10 +79,10 @@ func (repo MockServiceRepository) GetServiceById(id string) (services.Service, e
 	}
 
 	// Service not found
-	return services.Service{}, nil
+	return Service{}, nil
 }
 
-func (repo MockServiceRepository) UpdateService(service services.Service) (bool, error) {
+func (repo MockServiceRepository) UpdateService(service Service) (bool, error) {
 	if repo.Err != nil {
 		return false, repo.Err
 	}
@@ -105,16 +104,16 @@ func (repo MockServiceRepository) UpdateService(service services.Service) (bool,
 	return false, nil
 }
 
-func (repo MockServiceRepository) GetAllServices(page int, pageSize int) ([]services.Service, error) {
+func (repo MockServiceRepository) GetAllServices(page int, pageSize int) ([]Service, error) {
 	if repo.Err != nil {
-		return []services.Service{}, repo.Err
+		return []Service{}, repo.Err
 	}
 	d := repo.Data()
 
 	// Convert all data to Service objects
-	var allServices []services.Service
+	var allServices []Service
 	for _, v := range d {
-		service := services.Service{}
+		service := Service{}
 
 		// Safely extract ID with validation
 		if id, ok := v["id"]; ok {
@@ -160,7 +159,7 @@ func (repo MockServiceRepository) GetAllServices(page int, pageSize int) ([]serv
 
 	// Handle edge cases
 	if startIndex >= len(allServices) {
-		return []services.Service{}, nil
+		return []Service{}, nil
 	}
 	if endIndex > len(allServices) {
 		endIndex = len(allServices)

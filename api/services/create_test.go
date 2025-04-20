@@ -1,4 +1,4 @@
-package tests
+package services
 
 import (
 	"encoding/json"
@@ -6,7 +6,6 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
-	"service-dependency-api/api/services"
 	"strconv"
 	"strings"
 	"testing"
@@ -14,7 +13,7 @@ import (
 
 func TestPOSTSuccess(t *testing.T) {
 
-	handler := services.ServiceCallsHandler{
+	handler := ServiceCallsHandler{
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false
 		},
@@ -30,7 +29,7 @@ func TestPOSTSuccess(t *testing.T) {
 		},
 	}
 
-	service := services.Service{
+	service := Service{
 		Name:        "MockService",
 		ServiceType: "Internal",
 		Description: "Unit test service",
@@ -46,7 +45,7 @@ func TestPOSTSuccess(t *testing.T) {
 	if rw.Code != http.StatusCreated {
 		t.Errorf("Service POST errored with %s", strconv.Itoa(rw.Code))
 	}
-	returnedService := &services.Service{}
+	returnedService := &Service{}
 	err = json.Unmarshal(rw.Body.Bytes(), &returnedService)
 	switch {
 	case err != nil:
@@ -65,7 +64,7 @@ func TestPOSTSuccess(t *testing.T) {
 }
 
 func TestPOSTError(t *testing.T) {
-	handler := services.ServiceCallsHandler{
+	handler := ServiceCallsHandler{
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false
 		},
@@ -81,7 +80,7 @@ func TestPOSTError(t *testing.T) {
 		},
 	}
 
-	service := services.Service{
+	service := Service{
 		Name:        "MockService",
 		ServiceType: "Internal",
 		Description: "Unit test service",
@@ -99,7 +98,7 @@ func TestPOSTError(t *testing.T) {
 }
 
 func TestPOSTInvalidBody(t *testing.T) {
-	handler := services.ServiceCallsHandler{
+	handler := ServiceCallsHandler{
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false
 		},

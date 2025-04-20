@@ -1,4 +1,4 @@
-package tests
+package services
 
 import (
 	"encoding/json"
@@ -6,13 +6,12 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
-	"service-dependency-api/api/services"
 	"strings"
 	"testing"
 )
 
 func TestUpdateServiceSuccess(t *testing.T) {
-	handler := services.ServiceCallsHandler{
+	handler := ServiceCallsHandler{
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "1", true // Return valid ID and false for no error
 		},
@@ -32,7 +31,7 @@ func TestUpdateServiceSuccess(t *testing.T) {
 	}
 
 	// Create a service update request
-	service := services.Service{
+	service := Service{
 		Id:          "1", // Must match the ID in the mock data
 		Name:        "UpdatedService",
 		ServiceType: "External",
@@ -52,7 +51,7 @@ func TestUpdateServiceSuccess(t *testing.T) {
 }
 
 func TestUpdateServiceNotFound(t *testing.T) {
-	handler := services.ServiceCallsHandler{
+	handler := ServiceCallsHandler{
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "999", true // Return non-existent ID
 		},
@@ -72,7 +71,7 @@ func TestUpdateServiceNotFound(t *testing.T) {
 	}
 
 	// Create a service update request with non-existent ID
-	service := services.Service{
+	service := Service{
 		Id:          "999",
 		Name:        "UpdatedService",
 		ServiceType: "External",
@@ -92,7 +91,7 @@ func TestUpdateServiceNotFound(t *testing.T) {
 }
 
 func TestUpdateServiceError(t *testing.T) {
-	handler := services.ServiceCallsHandler{
+	handler := ServiceCallsHandler{
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "1", true
 		},
@@ -108,7 +107,7 @@ func TestUpdateServiceError(t *testing.T) {
 		},
 	}
 
-	service := services.Service{
+	service := Service{
 		Id:          "1",
 		Name:        "UpdatedService",
 		ServiceType: "External",
@@ -127,7 +126,7 @@ func TestUpdateServiceError(t *testing.T) {
 }
 
 func TestUpdateServiceInvalidBody(t *testing.T) {
-	handler := services.ServiceCallsHandler{
+	handler := ServiceCallsHandler{
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "1", false
 		},
@@ -156,7 +155,7 @@ func TestUpdateServiceInvalidBody(t *testing.T) {
 }
 
 func TestUpdateServiceInvalidId(t *testing.T) {
-	handler := services.ServiceCallsHandler{
+	handler := ServiceCallsHandler{
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false // Return error for invalid ID
 		},
@@ -172,7 +171,7 @@ func TestUpdateServiceInvalidId(t *testing.T) {
 		},
 	}
 
-	service := services.Service{
+	service := Service{
 		Id:          "invalid",
 		Name:        "UpdatedService",
 		ServiceType: "External",
@@ -193,7 +192,7 @@ func TestUpdateServiceInvalidId(t *testing.T) {
 }
 
 func TestUpdateServiceIdMismatch(t *testing.T) {
-	handler := services.ServiceCallsHandler{
+	handler := ServiceCallsHandler{
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "1", true // Return valid ID from path
 		},
@@ -213,7 +212,7 @@ func TestUpdateServiceIdMismatch(t *testing.T) {
 	}
 
 	// Create a service update request with ID that doesn't match the path ID
-	service := services.Service{
+	service := Service{
 		Id:          "2", // Different from the ID in the path (1)
 		Name:        "UpdatedService",
 		ServiceType: "External",
