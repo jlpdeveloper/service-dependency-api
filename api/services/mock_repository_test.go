@@ -167,3 +167,26 @@ func (repo MockServiceRepository) GetAllServices(page int, pageSize int) ([]Serv
 
 	return allServices[startIndex:endIndex], nil
 }
+
+func (repo MockServiceRepository) DeleteService(id string) error {
+	if repo.Err != nil {
+		return repo.Err
+	}
+
+	d := repo.Data()
+
+	// Search for service with matching ID
+	for _, v := range d {
+		// Check if ID matches
+		if serviceId, ok := v["id"]; ok {
+			if idStr, ok := serviceId.(string); ok && idStr == id {
+				// Service found, delete would be successful
+				return nil
+			}
+		}
+	}
+
+	// Service not found, but not returning an error as the delete operation
+	// is idempotent - deleting a non-existent resource is not an error
+	return nil
+}
