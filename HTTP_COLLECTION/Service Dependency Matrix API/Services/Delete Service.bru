@@ -1,0 +1,40 @@
+meta {
+  name: Delete Service
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{baseUrl}}/services/:id
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: 3c97c510-c748-477b-a05c-a81bc94dd216
+}
+
+body:json {
+  {
+    "id": "5931d4b0-dd0a-4654-85fe-78f42890da0d",
+    "name": "Newark3",
+    "type": "service",
+    "description": "this is a test form bruno"
+  }
+}
+
+docs {
+  # Allows deleting a service
+  
+  deletes the services from the database. 
+  
+  ## Response Codes
+  
+  | Status | Notes | 
+  | ----- | ----- |
+  | 204 | Successful update | 
+  | 400 | Id in path isn't a guid | 
+  | 500 | Error deleting |
+  
+  
+}

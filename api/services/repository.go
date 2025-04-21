@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
+	"log"
+	"service-dependency-api/internal"
 	"sync"
 	"time"
 )
@@ -34,14 +36,47 @@ type ServiceNeo4jRepository struct {
 func (d *ServiceNeo4jRepository) DeleteService(id string) (err error) {
 	session := d.Driver.NewSession(d.Ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
 	defer func() {
-		err = session.Close(d.Ctx)
+		closeErr := session.Close(d.Ctx)
+		if err == nil {
+			err = closeErr
+		}
 	}()
 	deleteServiceTransaction := func(tx neo4j.ManagedTransaction) (any, error) {
-		_, err := tx.Run(d.Ctx, `
-		MATCH(s:Service { id = $id})
-		DELETE s;`, map[string]interface{}{"id": id})
+
+		result, err := tx.Run(d.Ctx, `
+    		MATCH (s:Service { id: $id })
+    		RETURN count(s) as count
+		`, map[string]interface{}{"id": id})
+
 		if err != nil {
 			return nil, err
+		}
+
+		if record, err := result.Single(d.Ctx); err == nil {
+			count, _ := record.Get("count")
+			if count.(int64) == 0 {
+				return nil, &internal.HTTPError{
+					Status: 404,
+					Msg:    "Service not found",
+				}
+			}
+		}
+		result, err = tx.Run(d.Ctx, `
+		MATCH(s:Service { id: $id})
+		DELETE s;`, map[string]interface{}{"id": id})
+		if err != nil {
+			log.Println("Error deleting service: " + id)
+			return nil, err
+		}
+
+		summary, err := result.Consume(d.Ctx)
+		if err != nil {
+			return nil, &internal.HTTPError{Status: 500, Msg: "Error deleting service: " + id}
+		}
+
+		if summary.Counters().NodesDeleted() == 0 {
+			log.Println("Error deleting service: " + id + ". Database transaction not successful")
+			return nil, &internal.HTTPError{Status: 500, Msg: "Error deleting service: " + id}
 		}
 		return nil, nil
 	}
@@ -53,7 +88,10 @@ func (d *ServiceNeo4jRepository) DeleteService(id string) (err error) {
 func (d *ServiceNeo4jRepository) UpdateService(service Service) (found bool, err error) {
 	session := d.Driver.NewSession(d.Ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
 	defer func() {
-		err = session.Close(d.Ctx)
+		closeErr := session.Close(d.Ctx)
+		if err == nil {
+			err = closeErr
+		}
 	}()
 	updateServiceTransaction := func(tx neo4j.ManagedTransaction) (any, error) {
 		// First check if the service exists
@@ -112,7 +150,10 @@ func (d *ServiceNeo4jRepository) UpdateService(service Service) (found bool, err
 func (d *ServiceNeo4jRepository) GetServiceById(id string) (svc Service, err error) {
 	session := d.Driver.NewSession(d.Ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeRead})
 	defer func() {
-		err = session.Close(d.Ctx)
+		closeErr := session.Close(d.Ctx)
+		if err == nil {
+			err = closeErr
+		}
 	}()
 
 	getServiceById := func(tx neo4j.ManagedTransaction) (any, error) {
@@ -208,7 +249,10 @@ func (d *ServiceNeo4jRepository) mapNodeToService(n neo4j.Node) Service {
 func (d *ServiceNeo4jRepository) GetAllServices(page int, pageSize int) (services []Service, err error) {
 	session := d.Driver.NewSession(d.Ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeRead})
 	defer func() {
-		err = session.Close(d.Ctx)
+		closeErr := session.Close(d.Ctx)
+		if err == nil {
+			err = closeErr
+		}
 	}()
 	services = []Service{}
 	wg := sync.WaitGroup{}
@@ -260,7 +304,10 @@ func (d *ServiceNeo4jRepository) GetAllServices(page int, pageSize int) (service
 func (d *ServiceNeo4jRepository) CreateService(service Service) (id string, err error) {
 	session := d.Driver.NewSession(d.Ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
 	defer func() {
-		err = session.Close(d.Ctx)
+		closeErr := session.Close(d.Ctx)
+		if err == nil {
+			err = closeErr
+		}
 	}()
 
 	createServiceTransaction := func(tx neo4j.ManagedTransaction) (any, error) {
