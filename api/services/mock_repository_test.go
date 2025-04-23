@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"service-dependency-api/api/services/service_repository"
+	"service-dependency-api/internal"
 	"time"
 )
 
@@ -84,9 +85,9 @@ func (repo MockServiceRepository) GetServiceById(_ context.Context, id string) (
 	return service_repository.Service{}, nil
 }
 
-func (repo MockServiceRepository) UpdateService(_ context.Context, service service_repository.Service) (bool, error) {
+func (repo MockServiceRepository) UpdateService(_ context.Context, service service_repository.Service) error {
 	if repo.Err != nil {
-		return false, repo.Err
+		return repo.Err
 	}
 
 	d := repo.Data()
@@ -97,13 +98,16 @@ func (repo MockServiceRepository) UpdateService(_ context.Context, service servi
 		if serviceId, ok := v["id"]; ok {
 			if idStr, ok := serviceId.(string); ok && idStr == service.Id {
 				// Service found, update would be successful
-				return true, nil
+				return nil
 			}
 		}
 	}
 
 	// Service not found
-	return false, nil
+	return &internal.HTTPError{
+		Status: 404,
+		Msg:    "Service not found",
+	}
 }
 
 func (repo MockServiceRepository) GetAllServices(_ context.Context, page int, pageSize int) ([]service_repository.Service, error) {
