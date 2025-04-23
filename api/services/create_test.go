@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"service-dependency-api/api/services/internal/serviceRepository"
 	"strconv"
 	"strings"
 	"testing"
@@ -17,7 +18,7 @@ func TestPOSTSuccess(t *testing.T) {
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false
 		},
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
 				m = append(m, map[string]any{
@@ -29,7 +30,7 @@ func TestPOSTSuccess(t *testing.T) {
 		},
 	}
 
-	service := Service{
+	service := serviceRepository.Service{
 		Name:        "MockService",
 		ServiceType: "Internal",
 		Description: "Unit test service",
@@ -45,7 +46,7 @@ func TestPOSTSuccess(t *testing.T) {
 	if rw.Code != http.StatusCreated {
 		t.Errorf("Service POST errored with %s", strconv.Itoa(rw.Code))
 	}
-	returnedService := &Service{}
+	returnedService := &serviceRepository.Service{}
 	err = json.Unmarshal(rw.Body.Bytes(), &returnedService)
 	switch {
 	case err != nil:
@@ -68,7 +69,7 @@ func TestPOSTError(t *testing.T) {
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false
 		},
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
 				m = append(m, map[string]any{
@@ -80,7 +81,7 @@ func TestPOSTError(t *testing.T) {
 		},
 	}
 
-	service := Service{
+	service := serviceRepository.Service{
 		Name:        "MockService",
 		ServiceType: "Internal",
 		Description: "Unit test service",
@@ -102,7 +103,7 @@ func TestPOSTInvalidBody(t *testing.T) {
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false
 		},
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
 				m = append(m, map[string]any{

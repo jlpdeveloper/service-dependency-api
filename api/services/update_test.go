@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"service-dependency-api/api/services/internal/serviceRepository"
 	"strings"
 	"testing"
 )
@@ -15,7 +16,7 @@ func TestUpdateServiceSuccess(t *testing.T) {
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "1", true // Return valid ID and false for no error
 		},
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
 				m = append(m, map[string]any{
@@ -31,7 +32,7 @@ func TestUpdateServiceSuccess(t *testing.T) {
 	}
 
 	// Create a service update request
-	service := Service{
+	service := serviceRepository.Service{
 		Id:          "1", // Must match the ID in the mock data
 		Name:        "UpdatedService",
 		ServiceType: "External",
@@ -55,7 +56,7 @@ func TestUpdateServiceNotFound(t *testing.T) {
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "999", true // Return non-existent ID
 		},
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
 				m = append(m, map[string]any{
@@ -71,7 +72,7 @@ func TestUpdateServiceNotFound(t *testing.T) {
 	}
 
 	// Create a service update request with non-existent ID
-	service := Service{
+	service := serviceRepository.Service{
 		Id:          "999",
 		Name:        "UpdatedService",
 		ServiceType: "External",
@@ -95,7 +96,7 @@ func TestUpdateServiceError(t *testing.T) {
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "1", true
 		},
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
 				m = append(m, map[string]any{
@@ -107,7 +108,7 @@ func TestUpdateServiceError(t *testing.T) {
 		},
 	}
 
-	service := Service{
+	service := serviceRepository.Service{
 		Id:          "1",
 		Name:        "UpdatedService",
 		ServiceType: "External",
@@ -130,7 +131,7 @@ func TestUpdateServiceInvalidBody(t *testing.T) {
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "1", false
 		},
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
 				m = append(m, map[string]any{
@@ -159,7 +160,7 @@ func TestUpdateServiceInvalidId(t *testing.T) {
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false // Return error for invalid ID
 		},
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
 				m = append(m, map[string]any{
@@ -171,7 +172,7 @@ func TestUpdateServiceInvalidId(t *testing.T) {
 		},
 	}
 
-	service := Service{
+	service := serviceRepository.Service{
 		Id:          "invalid",
 		Name:        "UpdatedService",
 		ServiceType: "External",
@@ -196,7 +197,7 @@ func TestUpdateServiceIdMismatch(t *testing.T) {
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "1", true // Return valid ID from path
 		},
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
 				m = append(m, map[string]any{
@@ -212,7 +213,7 @@ func TestUpdateServiceIdMismatch(t *testing.T) {
 	}
 
 	// Create a service update request with ID that doesn't match the path ID
-	service := Service{
+	service := serviceRepository.Service{
 		Id:          "2", // Different from the ID in the path (1)
 		Name:        "UpdatedService",
 		ServiceType: "External",

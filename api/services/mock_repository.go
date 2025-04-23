@@ -1,15 +1,18 @@
 package services
 
 import (
+	"context"
+	"service-dependency-api/api/services/internal/serviceRepository"
+	"service-dependency-api/internal"
 	"time"
 )
 
-type MockServiceRepository struct {
+type mockServiceRepository struct {
 	Data func() []map[string]any
 	Err  error
 }
 
-func (repo MockServiceRepository) CreateService(_ Service) (string, error) {
+func (repo mockServiceRepository) CreateService(_ context.Context, _ serviceRepository.Service) (string, error) {
 	if repo.Err != nil {
 		return "", repo.Err
 	}
@@ -28,9 +31,9 @@ func (repo MockServiceRepository) CreateService(_ Service) (string, error) {
 	return "", nil
 }
 
-func (repo MockServiceRepository) GetServiceById(id string) (Service, error) {
+func (repo mockServiceRepository) GetServiceById(_ context.Context, id string) (serviceRepository.Service, error) {
 	if repo.Err != nil {
-		return Service{}, repo.Err
+		return serviceRepository.Service{}, repo.Err
 	}
 
 	d := repo.Data()
@@ -40,7 +43,7 @@ func (repo MockServiceRepository) GetServiceById(id string) (Service, error) {
 		// Check if ID matches
 		if serviceId, ok := v["id"]; ok {
 			if idStr, ok := serviceId.(string); ok && idStr == id {
-				service := Service{}
+				service := serviceRepository.Service{}
 
 				// Set the ID
 				service.Id = idStr
@@ -79,12 +82,12 @@ func (repo MockServiceRepository) GetServiceById(id string) (Service, error) {
 	}
 
 	// Service not found
-	return Service{}, nil
+	return serviceRepository.Service{}, nil
 }
 
-func (repo MockServiceRepository) UpdateService(service Service) (bool, error) {
+func (repo mockServiceRepository) UpdateService(_ context.Context, service serviceRepository.Service) error {
 	if repo.Err != nil {
-		return false, repo.Err
+		return repo.Err
 	}
 
 	d := repo.Data()
@@ -95,25 +98,28 @@ func (repo MockServiceRepository) UpdateService(service Service) (bool, error) {
 		if serviceId, ok := v["id"]; ok {
 			if idStr, ok := serviceId.(string); ok && idStr == service.Id {
 				// Service found, update would be successful
-				return true, nil
+				return nil
 			}
 		}
 	}
 
 	// Service not found
-	return false, nil
+	return &internal.HTTPError{
+		Status: 404,
+		Msg:    "Service not found",
+	}
 }
 
-func (repo MockServiceRepository) GetAllServices(page int, pageSize int) ([]Service, error) {
+func (repo mockServiceRepository) GetAllServices(_ context.Context, page int, pageSize int) ([]serviceRepository.Service, error) {
 	if repo.Err != nil {
-		return []Service{}, repo.Err
+		return []serviceRepository.Service{}, repo.Err
 	}
 	d := repo.Data()
 
 	// Convert all data to Service objects
-	var allServices []Service
+	var allServices []serviceRepository.Service
 	for _, v := range d {
-		service := Service{}
+		service := serviceRepository.Service{}
 
 		// Safely extract ID with validation
 		if id, ok := v["id"]; ok {
@@ -159,7 +165,7 @@ func (repo MockServiceRepository) GetAllServices(page int, pageSize int) ([]Serv
 
 	// Handle edge cases
 	if startIndex >= len(allServices) {
-		return []Service{}, nil
+		return []serviceRepository.Service{}, nil
 	}
 	if endIndex > len(allServices) {
 		endIndex = len(allServices)
@@ -168,7 +174,7 @@ func (repo MockServiceRepository) GetAllServices(page int, pageSize int) ([]Serv
 	return allServices[startIndex:endIndex], nil
 }
 
-func (repo MockServiceRepository) DeleteService(id string) error {
+func (repo mockServiceRepository) DeleteService(_ context.Context, id string) error {
 	if repo.Err != nil {
 		return repo.Err
 	}

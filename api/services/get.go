@@ -29,7 +29,7 @@ func (u *ServiceCallsHandler) GetAllServices(rw http.ResponseWriter, req *http.R
 		http.Error(rw, "pageSize must be between 1 and 100", http.StatusBadRequest)
 		return
 	}
-	services, err := u.Repository.GetAllServices(page, pageSize)
+	services, err := u.Repository.GetAllServices(req.Context(), page, pageSize)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 		return
@@ -49,7 +49,7 @@ func (u *ServiceCallsHandler) GetById(rw http.ResponseWriter, req *http.Request)
 		return
 	}
 
-	service, err := u.Repository.GetServiceById(id)
+	service, err := u.Repository.GetServiceById(req.Context(), id)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 		return

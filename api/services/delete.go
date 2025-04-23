@@ -16,7 +16,7 @@ func (u *ServiceCallsHandler) DeleteServiceById(rw http.ResponseWriter, req *htt
 		return
 	}
 
-	err := u.Repository.DeleteService(id)
+	err := u.Repository.DeleteService(req.Context(), id)
 	var httpErr *internal.HTTPError
 	if err != nil {
 		if errors.As(err, &httpErr) {
