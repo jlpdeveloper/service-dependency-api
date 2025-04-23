@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
-	"service-dependency-api/api/services/service_repository"
+	"service-dependency-api/api/services/serviceRepository"
 	"service-dependency-api/internal"
 )
 
 func (u *ServiceCallsHandler) UpdateService(rw http.ResponseWriter, req *http.Request) {
-	updateServiceRequest := &service_repository.Service{}
+	updateServiceRequest := &serviceRepository.Service{}
 	err := json.NewDecoder(req.Body).Decode(updateServiceRequest)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusBadRequest)

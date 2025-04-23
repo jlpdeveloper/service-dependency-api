@@ -6,7 +6,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
-	"service-dependency-api/api/services/service_repository"
+	"service-dependency-api/api/services/serviceRepository"
 	"strconv"
 	"strings"
 	"testing"
@@ -30,7 +30,7 @@ func TestPOSTSuccess(t *testing.T) {
 		},
 	}
 
-	service := service_repository.Service{
+	service := serviceRepository.Service{
 		Name:        "MockService",
 		ServiceType: "Internal",
 		Description: "Unit test service",
@@ -46,7 +46,7 @@ func TestPOSTSuccess(t *testing.T) {
 	if rw.Code != http.StatusCreated {
 		t.Errorf("Service POST errored with %s", strconv.Itoa(rw.Code))
 	}
-	returnedService := &service_repository.Service{}
+	returnedService := &serviceRepository.Service{}
 	err = json.Unmarshal(rw.Body.Bytes(), &returnedService)
 	switch {
 	case err != nil:
@@ -81,7 +81,7 @@ func TestPOSTError(t *testing.T) {
 		},
 	}
 
-	service := service_repository.Service{
+	service := serviceRepository.Service{
 		Name:        "MockService",
 		ServiceType: "Internal",
 		Description: "Unit test service",

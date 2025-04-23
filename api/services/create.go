@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"service-dependency-api/api/services/service_repository"
+	"service-dependency-api/api/services/serviceRepository"
 )
 
 func (u *ServiceCallsHandler) CreateService(w http.ResponseWriter, req *http.Request) {
 
-	createServiceRequest := &service_repository.Service{}
+	createServiceRequest := &serviceRepository.Service{}
 	err := json.NewDecoder(req.Body).Decode(createServiceRequest)
 	if err != nil {
 		// return HTTP 400 bad request
