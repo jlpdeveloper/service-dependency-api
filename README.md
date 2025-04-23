@@ -1,30 +1,80 @@
 # Service Dependency API
-_This is a work in progress_
 
+A RESTful API service designed to map dependencies between services and provide basic information about services in your ecosystem.
 
-This api is designed allow mapping dependencies between services, as well as provide 
-basic information about the services such as
+## Overview
 
-- name
-- database dependencies
-- owner
-- github repo
+This API allows you to:
 
-Alternatively, you will be able to associate a GitHub Release with a service
+- Track services and their metadata (name, owner, GitHub repo, etc.)
+- Map dependencies between services
+- Associate GitHub releases with services
+- Query service relationships and dependencies
 
+## Features
 
-## Neo4j Schenanigans
-To make everything unit testable, `neo4j_interfaces` and `neo4j_wrappers` were implemented.
-The interfaces mimic the basic required methods from the neo4j library. To get around a types error,
-I had to add wrapper classes around
-- Driver
-- Session
-- Transaction
-- Result
-- Record
+- Create, read, update, and delete services
+- Map dependencies between services
+- Track service metadata including:
+  - Name
+  - Database dependencies
+  - Owner
+  - GitHub repository
+- Associate GitHub releases with services
 
-Each of these structs take in its counterpart neo4j struct and store it as a private property.
-Then it mimics the required methods to implement the appropriate interface. 
+## Installation
 
-> [!WARNING]
-> There has to be an easier way to do all this, it seems excessive
+### Prerequisites
+
+- Go 1.21 or higher
+- Neo4j database
+- Docker and Docker Compose (optional, for local development)
+
+### Using Docker Compose
+
+1. Clone the repository
+2. Start the Neo4j database:
+   ```
+   docker-compose up -d
+   ```
+3. Set the required environment variables:
+   ```
+   export NEO4J_URL=bolt://localhost:7687
+   export NEO4J_USERNAME=neo4j
+   export NEO4J_PASSWORD=1234%qwerT
+   ```
+4. Build and run the application:
+   ```
+   go build -o service-dependency-api ./cmd/service-dependency-api
+   ./service-dependency-api
+   ```
+
+## Configuration
+
+The application is configured using environment variables:
+
+- `NEO4J_URL`: URL of the Neo4j database (default: none, required)
+- `NEO4J_USERNAME`: Username for Neo4j authentication (default: none, required)
+- `NEO4J_PASSWORD`: Password for Neo4j authentication (default: none, required)
+
+The server listens on port 8080 by default.
+
+## API Endpoints
+
+### System Endpoints
+
+- `GET /helloworld` - Simple health check endpoint
+- `GET /time` - Returns the current server time
+- `GET /database` - Returns the database address
+
+### Service Endpoints
+
+- `GET /services` - List all services
+- `GET /services/{id}` - Get a service by ID
+- `POST /services` - Create a new service
+- `PUT /services/{id}` - Update an existing service
+- `DELETE /services/{id}` - Delete a service
+
+## Development
+
+This project is a work in progress. 
