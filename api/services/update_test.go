@@ -16,7 +16,7 @@ func TestUpdateServiceSuccess(t *testing.T) {
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "1", true // Return valid ID and false for no error
 		},
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
 				m = append(m, map[string]any{
@@ -56,7 +56,7 @@ func TestUpdateServiceNotFound(t *testing.T) {
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "999", true // Return non-existent ID
 		},
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
 				m = append(m, map[string]any{
@@ -96,7 +96,7 @@ func TestUpdateServiceError(t *testing.T) {
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "1", true
 		},
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
 				m = append(m, map[string]any{
@@ -131,7 +131,7 @@ func TestUpdateServiceInvalidBody(t *testing.T) {
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "1", false
 		},
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
 				m = append(m, map[string]any{
@@ -160,7 +160,7 @@ func TestUpdateServiceInvalidId(t *testing.T) {
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false // Return error for invalid ID
 		},
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
 				m = append(m, map[string]any{
@@ -197,7 +197,7 @@ func TestUpdateServiceIdMismatch(t *testing.T) {
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "1", true // Return valid ID from path
 		},
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
 				m = append(m, map[string]any{

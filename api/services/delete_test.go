@@ -12,7 +12,7 @@ func TestDeleteServiceSuccess(t *testing.T) {
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "1", true // Return valid ID
 		},
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
 				m = append(m, map[string]any{
@@ -50,7 +50,7 @@ func TestDeleteServiceInvalidId(t *testing.T) {
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false // Return error for invalid ID
 		},
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
 				m = append(m, map[string]any{
@@ -80,7 +80,7 @@ func TestDeleteServiceError(t *testing.T) {
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "1", true
 		},
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
 				m = append(m, map[string]any{
@@ -110,7 +110,7 @@ func TestDeleteNonExistentService(t *testing.T) {
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "999", true // Return valid but non-existent ID
 		},
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
 				m = append(m, map[string]any{

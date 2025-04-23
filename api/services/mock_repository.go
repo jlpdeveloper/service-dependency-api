@@ -7,12 +7,12 @@ import (
 	"time"
 )
 
-type MockServiceRepository struct {
+type mockServiceRepository struct {
 	Data func() []map[string]any
 	Err  error
 }
 
-func (repo MockServiceRepository) CreateService(_ context.Context, _ serviceRepository.Service) (string, error) {
+func (repo mockServiceRepository) CreateService(_ context.Context, _ serviceRepository.Service) (string, error) {
 	if repo.Err != nil {
 		return "", repo.Err
 	}
@@ -31,7 +31,7 @@ func (repo MockServiceRepository) CreateService(_ context.Context, _ serviceRepo
 	return "", nil
 }
 
-func (repo MockServiceRepository) GetServiceById(_ context.Context, id string) (serviceRepository.Service, error) {
+func (repo mockServiceRepository) GetServiceById(_ context.Context, id string) (serviceRepository.Service, error) {
 	if repo.Err != nil {
 		return serviceRepository.Service{}, repo.Err
 	}
@@ -85,7 +85,7 @@ func (repo MockServiceRepository) GetServiceById(_ context.Context, id string) (
 	return serviceRepository.Service{}, nil
 }
 
-func (repo MockServiceRepository) UpdateService(_ context.Context, service serviceRepository.Service) error {
+func (repo mockServiceRepository) UpdateService(_ context.Context, service serviceRepository.Service) error {
 	if repo.Err != nil {
 		return repo.Err
 	}
@@ -110,7 +110,7 @@ func (repo MockServiceRepository) UpdateService(_ context.Context, service servi
 	}
 }
 
-func (repo MockServiceRepository) GetAllServices(_ context.Context, page int, pageSize int) ([]serviceRepository.Service, error) {
+func (repo mockServiceRepository) GetAllServices(_ context.Context, page int, pageSize int) ([]serviceRepository.Service, error) {
 	if repo.Err != nil {
 		return []serviceRepository.Service{}, repo.Err
 	}
@@ -174,7 +174,7 @@ func (repo MockServiceRepository) GetAllServices(_ context.Context, page int, pa
 	return allServices[startIndex:endIndex], nil
 }
 
-func (repo MockServiceRepository) DeleteService(_ context.Context, id string) error {
+func (repo mockServiceRepository) DeleteService(_ context.Context, id string) error {
 	if repo.Err != nil {
 		return repo.Err
 	}

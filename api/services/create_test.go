@@ -18,7 +18,7 @@ func TestPOSTSuccess(t *testing.T) {
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false
 		},
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
 				m = append(m, map[string]any{
@@ -69,7 +69,7 @@ func TestPOSTError(t *testing.T) {
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false
 		},
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
 				m = append(m, map[string]any{
@@ -103,7 +103,7 @@ func TestPOSTInvalidBody(t *testing.T) {
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false
 		},
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
 				m = append(m, map[string]any{

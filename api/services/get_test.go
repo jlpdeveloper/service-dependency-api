@@ -20,7 +20,7 @@ func TestGetAllSuccess(t *testing.T) {
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false
 		},
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
 				for i := 0; i < 10; i++ {
@@ -67,7 +67,7 @@ func TestGetAllBadRequest(t *testing.T) {
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false
 		},
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				return []map[string]any{}
 			},
@@ -94,7 +94,7 @@ func TestGetAllInternalServerError(t *testing.T) {
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false
 		},
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				return []map[string]any{}
 			},
@@ -120,7 +120,7 @@ func TestGetAllWithZeroPageSize(t *testing.T) {
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false
 		},
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				return []map[string]any{}
 			},
@@ -147,7 +147,7 @@ func TestGetAllWithLargePageSize(t *testing.T) {
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false
 		},
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				return []map[string]any{}
 			},
@@ -174,7 +174,7 @@ func TestGetAllWithNegativePage(t *testing.T) {
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false
 		},
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				return []map[string]any{}
 			},
@@ -201,7 +201,7 @@ func TestGetAllWithNegativePageSize(t *testing.T) {
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false
 		},
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				return []map[string]any{}
 			},
@@ -228,7 +228,7 @@ func TestGetAllWithNonNumericValues(t *testing.T) {
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false
 		},
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				return []map[string]any{}
 			},
@@ -269,7 +269,7 @@ func TestGetAllWithEmptyResultSet(t *testing.T) {
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false
 		},
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				return []map[string]any{} // Empty data set
 			},
@@ -309,7 +309,7 @@ func TestGetAllWithPageBeyondAvailableData(t *testing.T) {
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false
 		},
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
 				for i := 0; i < 10; i++ {
@@ -357,7 +357,7 @@ func TestGetAllWithDefaultPageSize(t *testing.T) {
 		IdValidator: func(_ string, _ *http.Request) (string, bool) {
 			return "", false
 		},
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
 				for i := 0; i < 20; i++ {
@@ -406,7 +406,7 @@ func TestGetAllWithDefaultPageSize(t *testing.T) {
 func TestGetByIdSuccess(t *testing.T) {
 	id := uuid.New().String()
 	handler := ServiceCallsHandler{
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
 
@@ -454,7 +454,7 @@ func TestGetByIdSuccess(t *testing.T) {
 
 func TestGetByIdInvalidId(t *testing.T) {
 	handler := ServiceCallsHandler{
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				return []map[string]any{}
 			},
@@ -488,7 +488,7 @@ func TestGetByIdRepositoryError(t *testing.T) {
 	expectedError := "database connection error"
 
 	handler := ServiceCallsHandler{
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				return []map[string]any{}
 			},
@@ -521,7 +521,7 @@ func TestGetByIdServiceNotFound(t *testing.T) {
 	nonExistentId := uuid.New().String()
 
 	handler := ServiceCallsHandler{
-		Repository: MockServiceRepository{
+		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
 
