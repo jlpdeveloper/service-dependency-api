@@ -2,7 +2,7 @@ package services
 
 import (
 	"context"
-	"service-dependency-api/api/services/serviceRepository"
+	"service-dependency-api/api/services/internal/serviceRepository"
 	"service-dependency-api/internal"
 	"time"
 )

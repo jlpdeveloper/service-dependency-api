@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
-	"service-dependency-api/api/services/serviceRepository"
+	"service-dependency-api/api/services/internal/serviceRepository"
 	"service-dependency-api/internal"
 )
 

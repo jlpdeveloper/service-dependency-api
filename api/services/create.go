@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"service-dependency-api/api/services/serviceRepository"
+	"service-dependency-api/api/services/internal/serviceRepository"
 )
 
 func (u *ServiceCallsHandler) CreateService(w http.ResponseWriter, req *http.Request) {

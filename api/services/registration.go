@@ -4,11 +4,11 @@ import (
 	"github.com/google/uuid"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 	"net/http"
-	"service-dependency-api/api/services/serviceRepository"
+	serviceRepository2 "service-dependency-api/api/services/internal/serviceRepository"
 )
 
 type ServiceCallsHandler struct {
-	Repository  serviceRepository.ServiceRepository
+	Repository  serviceRepository2.ServiceRepository
 	IdValidator func(string, *http.Request) (string, bool)
 }
 
@@ -33,7 +33,7 @@ func getGuidFromRequestPath(varName string, req *http.Request) (string, bool) {
 
 func Register(mux *http.ServeMux, driver *neo4j.DriverWithContext) {
 
-	serviceRepo := &serviceRepository.ServiceNeo4jRepository{
+	serviceRepo := &serviceRepository2.ServiceNeo4jRepository{
 		Driver: *driver,
 	}
 

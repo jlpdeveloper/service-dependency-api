@@ -6,7 +6,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
-	"service-dependency-api/api/services/serviceRepository"
+	"service-dependency-api/api/services/internal/serviceRepository"
 	"strconv"
 	"strings"
 	"testing"
