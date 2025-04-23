@@ -2,8 +2,10 @@ package services
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"service-dependency-api/api/services/service_repository"
+	"service-dependency-api/internal"
 )
 
 func (u *ServiceCallsHandler) UpdateService(rw http.ResponseWriter, req *http.Request) {
@@ -18,14 +20,15 @@ func (u *ServiceCallsHandler) UpdateService(rw http.ResponseWriter, req *http.Re
 		return
 	}
 
-	found, err := u.Repository.UpdateService(req.Context(), *updateServiceRequest)
+	err = u.Repository.UpdateService(req.Context(), *updateServiceRequest)
 
+	var httpErr *internal.HTTPError
 	if err != nil {
-		http.Error(rw, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	if !found {
-		http.Error(rw, "Service not found", http.StatusNotFound)
+		if errors.As(err, &httpErr) {
+			http.Error(rw, httpErr.Error(), httpErr.Status)
+		} else {
+			http.Error(rw, err.Error(), http.StatusInternalServerError)
+		}
 		return
 	}
 	rw.WriteHeader(http.StatusNoContent)

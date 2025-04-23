@@ -4,9 +4,10 @@ import (
 	"context"
 	"errors"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
+	"service-dependency-api/internal"
 )
 
-func (d *ServiceNeo4jRepository) UpdateService(ctx context.Context, service Service) (found bool, err error) {
+func (d *ServiceNeo4jRepository) UpdateService(ctx context.Context, service Service) (err error) {
 	session := d.Driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
 	defer func() {
 		closeErr := session.Close(ctx)
@@ -25,15 +26,18 @@ func (d *ServiceNeo4jRepository) UpdateService(ctx context.Context, service Serv
 		})
 
 		if err != nil {
-			return found, err
+			return nil, err
 		}
 
-		found = result.Next(ctx)
-
-		if found {
-
-			// Service exists, update it
-			updateResult, updateErr := tx.Run(ctx, `
+		found := result.Next(ctx)
+		if !found {
+			return nil, &internal.HTTPError{
+				Status: 404,
+				Msg:    "Service not found",
+			}
+		}
+		// Service exists, update it
+		updateResult, updateErr := tx.Run(ctx, `
 			MATCH (s:Service)
 			WHERE s.id = $id
 			SET s.name = $name, 
@@ -42,28 +46,28 @@ func (d *ServiceNeo4jRepository) UpdateService(ctx context.Context, service Serv
 				s.updated = datetime()
 			RETURN s
 		`, map[string]any{
-				"id":          service.Id,
-				"name":        service.Name,
-				"type":        service.ServiceType,
-				"description": service.Description,
-			})
+			"id":          service.Id,
+			"name":        service.Name,
+			"type":        service.ServiceType,
+			"description": service.Description,
+		})
 
-			if updateErr != nil {
-				err = updateErr
-			}
-
-			// Confirm update was successful
-			if !updateResult.Next(ctx) {
-				err = errors.New("update Service failed")
-			}
+		if updateErr != nil {
+			err = updateErr
 		}
-		return found, err
+
+		// Confirm update was successful
+		if !updateResult.Next(ctx) {
+			err = errors.New("update Service failed")
+		}
+
+		return nil, err
 	}
 
-	result, execErr := session.ExecuteWrite(ctx, updateServiceTransaction)
+	_, execErr := session.ExecuteWrite(ctx, updateServiceTransaction)
 	if execErr != nil {
-		return false, execErr
+		return execErr
 	}
 
-	return result.(bool), nil
+	return nil
 }
