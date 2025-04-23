@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"net/http"
 	"net/http/httptest"
+	"service-dependency-api/api/services/service_repository"
 	"strconv"
 	"strings"
 	"testing"
@@ -49,7 +50,7 @@ func TestGetAllSuccess(t *testing.T) {
 	}
 
 	// Decode the response body
-	var returnedServices []Service
+	var returnedServices []service_repository.Service
 	if err := json.NewDecoder(rw.Body).Decode(&returnedServices); err != nil {
 		t.Fatalf("Failed to decode response body: %v", err)
 	}
@@ -289,7 +290,7 @@ func TestGetAllWithEmptyResultSet(t *testing.T) {
 	}
 
 	// Decode the response body
-	var returnedServices []Service
+	var returnedServices []service_repository.Service
 	if err := json.NewDecoder(rw.Body).Decode(&returnedServices); err != nil {
 		t.Fatalf("Failed to decode response body: %v", err)
 	}
@@ -340,7 +341,7 @@ func TestGetAllWithPageBeyondAvailableData(t *testing.T) {
 	}
 
 	// Decode the response body
-	var returnedServices []Service
+	var returnedServices []service_repository.Service
 	if err := json.NewDecoder(rw.Body).Decode(&returnedServices); err != nil {
 		t.Fatalf("Failed to decode response body: %v", err)
 	}
@@ -388,7 +389,7 @@ func TestGetAllWithDefaultPageSize(t *testing.T) {
 	}
 
 	// Decode the response body
-	var returnedServices []Service
+	var returnedServices []service_repository.Service
 	if err := json.NewDecoder(rw.Body).Decode(&returnedServices); err != nil {
 		t.Fatalf("Failed to decode response body: %v", err)
 	}

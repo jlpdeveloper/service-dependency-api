@@ -4,18 +4,19 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"service-dependency-api/api/services/service_repository"
 )
 
-func (u *ServiceCallsHandler) CreateService(w http.ResponseWriter, r *http.Request) {
+func (u *ServiceCallsHandler) CreateService(w http.ResponseWriter, req *http.Request) {
 
-	createServiceRequest := &Service{}
-	err := json.NewDecoder(r.Body).Decode(createServiceRequest)
+	createServiceRequest := &service_repository.Service{}
+	err := json.NewDecoder(req.Body).Decode(createServiceRequest)
 	if err != nil {
 		// return HTTP 400 bad request
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	id, err := u.Repository.CreateService(*createServiceRequest)
+	id, err := u.Repository.CreateService(req.Context(), *createServiceRequest)
 
 	if err != nil {
 		log.Println(err)

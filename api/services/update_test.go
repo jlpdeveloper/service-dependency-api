@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"service-dependency-api/api/services/service_repository"
 	"strings"
 	"testing"
 )
@@ -31,7 +32,7 @@ func TestUpdateServiceSuccess(t *testing.T) {
 	}
 
 	// Create a service update request
-	service := Service{
+	service := service_repository.Service{
 		Id:          "1", // Must match the ID in the mock data
 		Name:        "UpdatedService",
 		ServiceType: "External",
@@ -71,7 +72,7 @@ func TestUpdateServiceNotFound(t *testing.T) {
 	}
 
 	// Create a service update request with non-existent ID
-	service := Service{
+	service := service_repository.Service{
 		Id:          "999",
 		Name:        "UpdatedService",
 		ServiceType: "External",
@@ -107,7 +108,7 @@ func TestUpdateServiceError(t *testing.T) {
 		},
 	}
 
-	service := Service{
+	service := service_repository.Service{
 		Id:          "1",
 		Name:        "UpdatedService",
 		ServiceType: "External",
@@ -171,7 +172,7 @@ func TestUpdateServiceInvalidId(t *testing.T) {
 		},
 	}
 
-	service := Service{
+	service := service_repository.Service{
 		Id:          "invalid",
 		Name:        "UpdatedService",
 		ServiceType: "External",
@@ -212,7 +213,7 @@ func TestUpdateServiceIdMismatch(t *testing.T) {
 	}
 
 	// Create a service update request with ID that doesn't match the path ID
-	service := Service{
+	service := service_repository.Service{
 		Id:          "2", // Different from the ID in the path (1)
 		Name:        "UpdatedService",
 		ServiceType: "External",

@@ -3,10 +3,11 @@ package services
 import (
 	"encoding/json"
 	"net/http"
+	"service-dependency-api/api/services/service_repository"
 )
 
 func (u *ServiceCallsHandler) UpdateService(rw http.ResponseWriter, req *http.Request) {
-	updateServiceRequest := &Service{}
+	updateServiceRequest := &service_repository.Service{}
 	err := json.NewDecoder(req.Body).Decode(updateServiceRequest)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusBadRequest)
@@ -17,7 +18,7 @@ func (u *ServiceCallsHandler) UpdateService(rw http.ResponseWriter, req *http.Re
 		return
 	}
 
-	found, err := u.Repository.UpdateService(*updateServiceRequest)
+	found, err := u.Repository.UpdateService(req.Context(), *updateServiceRequest)
 
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
