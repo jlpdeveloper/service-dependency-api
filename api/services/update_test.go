@@ -37,6 +37,7 @@ func TestUpdateServiceSuccess(t *testing.T) {
 		Name:        "UpdatedService",
 		ServiceType: "External",
 		Description: "Updated service description",
+		Url:         "http://test.com",
 	}
 	serviceJson, err := json.Marshal(&service)
 	req, err := http.NewRequest("PUT", "/services/1", io.NopCloser(strings.NewReader(string(serviceJson))))
@@ -77,6 +78,7 @@ func TestUpdateServiceNotFound(t *testing.T) {
 		Name:        "UpdatedService",
 		ServiceType: "External",
 		Description: "Updated service description",
+		Url:         "http://test.com",
 	}
 	serviceJson, err := json.Marshal(&service)
 	req, err := http.NewRequest("PUT", "/services/999", io.NopCloser(strings.NewReader(string(serviceJson))))
@@ -113,6 +115,7 @@ func TestUpdateServiceError(t *testing.T) {
 		Name:        "UpdatedService",
 		ServiceType: "External",
 		Description: "Updated service description",
+		Url:         "http://test.com",
 	}
 	serviceJson, err := json.Marshal(&service)
 	req, err := http.NewRequest("PUT", "/services/1", io.NopCloser(strings.NewReader(string(serviceJson))))
@@ -177,6 +180,7 @@ func TestUpdateServiceInvalidId(t *testing.T) {
 		Name:        "UpdatedService",
 		ServiceType: "External",
 		Description: "Updated service description",
+		Url:         "http://test.com",
 	}
 	serviceJson, err := json.Marshal(&service)
 	req, err := http.NewRequest("PUT", "/services/invalid", io.NopCloser(strings.NewReader(string(serviceJson))))
@@ -218,6 +222,7 @@ func TestUpdateServiceIdMismatch(t *testing.T) {
 		Name:        "UpdatedService",
 		ServiceType: "External",
 		Description: "Updated service description",
+		Url:         "http://test.com",
 	}
 	serviceJson, err := json.Marshal(&service)
 	req, err := http.NewRequest("PUT", "/services/1", io.NopCloser(strings.NewReader(string(serviceJson))))

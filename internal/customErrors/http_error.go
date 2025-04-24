@@ -1,4 +1,4 @@
-package internal
+package customErrors
 
 type HTTPError struct {
 	Status int
