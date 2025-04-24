@@ -16,6 +16,11 @@ func (u *ServiceCallsHandler) CreateService(w http.ResponseWriter, req *http.Req
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+	err = createServiceRequest.Validate()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 	id, err := u.Repository.CreateService(req.Context(), *createServiceRequest)
 
 	if err != nil {

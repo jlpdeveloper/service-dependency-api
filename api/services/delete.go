@@ -4,7 +4,7 @@ import (
 	"errors"
 	"log"
 	"net/http"
-	"service-dependency-api/internal"
+	errors2 "service-dependency-api/internal/customErrors"
 )
 
 func (u *ServiceCallsHandler) DeleteServiceById(rw http.ResponseWriter, req *http.Request) {
@@ -17,7 +17,7 @@ func (u *ServiceCallsHandler) DeleteServiceById(rw http.ResponseWriter, req *htt
 	}
 
 	err := u.Repository.DeleteService(req.Context(), id)
-	var httpErr *internal.HTTPError
+	var httpErr *errors2.HTTPError
 	if err != nil {
 		if errors.As(err, &httpErr) {
 			http.Error(rw, httpErr.Error(), httpErr.Status)

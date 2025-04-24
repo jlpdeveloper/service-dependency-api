@@ -5,7 +5,7 @@ import (
 	"errors"
 	"net/http"
 	"service-dependency-api/api/services/internal/serviceRepository"
-	"service-dependency-api/internal"
+	errors2 "service-dependency-api/internal/customErrors"
 )
 
 func (u *ServiceCallsHandler) UpdateService(rw http.ResponseWriter, req *http.Request) {
@@ -19,10 +19,15 @@ func (u *ServiceCallsHandler) UpdateService(rw http.ResponseWriter, req *http.Re
 		http.Error(rw, "Service Id is not valid", http.StatusBadRequest)
 		return
 	}
+	err = updateServiceRequest.Validate()
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusBadRequest)
+		return
+	}
 
 	err = u.Repository.UpdateService(req.Context(), *updateServiceRequest)
 
-	var httpErr *internal.HTTPError
+	var httpErr *errors2.HTTPError
 	if err != nil {
 		if errors.As(err, &httpErr) {
 			http.Error(rw, httpErr.Error(), httpErr.Status)

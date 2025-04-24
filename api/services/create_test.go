@@ -22,7 +22,10 @@ func TestPOSTSuccess(t *testing.T) {
 			Data: func() []map[string]any {
 				var m []map[string]any
 				m = append(m, map[string]any{
-					"id": "1",
+					"id":   "1",
+					"name": "test",
+					"url":  "http://test.com",
+					"type": "service",
 				})
 				return m
 			},
@@ -34,6 +37,7 @@ func TestPOSTSuccess(t *testing.T) {
 		Name:        "MockService",
 		ServiceType: "Internal",
 		Description: "Unit test service",
+		Url:         "http://test.com",
 	}
 	serviceJson, err := json.Marshal(&service)
 	req, err := http.NewRequest("POST", "/hello/world?name=test", io.NopCloser(strings.NewReader(string(serviceJson))))
@@ -59,6 +63,8 @@ func TestPOSTSuccess(t *testing.T) {
 		t.Errorf("Service POST errored with Description inconsistency %s", returnedService.Description)
 	case returnedService.ServiceType != "Internal":
 		t.Errorf("Service POST errored with ServiceType inconsistency %s", returnedService.ServiceType)
+	case returnedService.Url != "http://test.com":
+		t.Errorf("Service POST errored with Url inconsistency %s", returnedService.Url)
 
 	}
 
@@ -73,7 +79,10 @@ func TestPOSTError(t *testing.T) {
 			Data: func() []map[string]any {
 				var m []map[string]any
 				m = append(m, map[string]any{
-					"id": "1",
+					"id":   "1",
+					"name": "test",
+					"url":  "http://test.com",
+					"type": "service",
 				})
 				return m
 			},
@@ -85,6 +94,7 @@ func TestPOSTError(t *testing.T) {
 		Name:        "MockService",
 		ServiceType: "Internal",
 		Description: "Unit test service",
+		Url:         "http://test.com",
 	}
 	serviceJson, err := json.Marshal(&service)
 	req, err := http.NewRequest("POST", "/hello/world?name=test", io.NopCloser(strings.NewReader(string(serviceJson))))
