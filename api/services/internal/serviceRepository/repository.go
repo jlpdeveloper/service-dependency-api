@@ -42,6 +42,12 @@ func (d *ServiceNeo4jRepository) mapNodeToService(n neo4j.Node) Service {
 		}
 	}
 
+	if url, ok := n.Props["url"]; ok {
+		if urlStr, ok := url.(string); ok {
+			svc.Url = urlStr
+		}
+	}
+
 	// Safely extract created date with validation
 	if date, ok := n.Props["created"]; ok {
 		if dateStr, ok := date.(time.Time); ok {

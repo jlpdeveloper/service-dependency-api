@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
-	"service-dependency-api/internal"
+	errors2 "service-dependency-api/internal/errors"
 )
 
 func (d *ServiceNeo4jRepository) UpdateService(ctx context.Context, service Service) (err error) {
@@ -31,7 +31,7 @@ func (d *ServiceNeo4jRepository) UpdateService(ctx context.Context, service Serv
 
 		found := result.Next(ctx)
 		if !found {
-			return nil, &internal.HTTPError{
+			return nil, &errors2.HTTPError{
 				Status: 404,
 				Msg:    "Service not found",
 			}
@@ -43,6 +43,7 @@ func (d *ServiceNeo4jRepository) UpdateService(ctx context.Context, service Serv
 			SET s.name = $name, 
 				s.type = $type, 
 				s.description = $description,
+				s.url = $url,
 				s.updated = datetime()
 			RETURN s
 		`, map[string]any{
@@ -50,6 +51,7 @@ func (d *ServiceNeo4jRepository) UpdateService(ctx context.Context, service Serv
 			"name":        service.Name,
 			"type":        service.ServiceType,
 			"description": service.Description,
+			"url":         service.Url,
 		})
 
 		if updateErr != nil {
