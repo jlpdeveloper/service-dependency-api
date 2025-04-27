@@ -1,6 +1,7 @@
 package dependencyRepository
 
 import (
+	"context"
 	"errors"
 )
 
@@ -17,5 +18,6 @@ func (d *Dependency) Validate() error {
 }
 
 type DependencyRepository interface {
-	AddDependency(id string, dependency *Dependency) error
+	AddDependency(ctx context.Context, id string, dependency *Dependency) error
+	GetDependencies(ctx context.Context, id string) ([]*Dependency, error)
 }

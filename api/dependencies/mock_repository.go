@@ -1,6 +1,7 @@
 package dependencies
 
 import (
+	"context"
 	"service-dependency-api/api/dependencies/internal/dependencyRepository"
 )
 
@@ -9,7 +10,7 @@ type mockDependencyRepository struct {
 	Err  error
 }
 
-func (repo mockDependencyRepository) AddDependency(_ string, _ *dependencyRepository.Dependency) error {
+func (repo mockDependencyRepository) AddDependency(_ context.Context, _ string, _ *dependencyRepository.Dependency) error {
 	if repo.Err != nil {
 		return repo.Err
 	}
