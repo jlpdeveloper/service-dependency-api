@@ -7,8 +7,7 @@ import (
 	"service-dependency-api/internal/customErrors"
 )
 
-func (d *Neo4jDependencyRepository) AddDependency(id string, dependency *Dependency) error {
-	ctx := context.Background()
+func (d *Neo4jDependencyRepository) AddDependency(ctx context.Context, id string, dependency *Dependency) error {
 	session := d.driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
 	defer func() {
 		_ = session.Close(ctx)
