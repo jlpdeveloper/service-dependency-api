@@ -13,7 +13,38 @@ func (d *Neo4jDependencyRepository) GetDependencies(ctx context.Context, id stri
 		_ = session.Close(ctx)
 	}()
 
-	getDependenciesTransaction := func(tx neo4j.ManagedTransaction) (any, error) {
+	query := `
+			MATCH (s1:Service {id: $serviceId})-[r:DEPENDS_ON]->(s2:Service)
+			RETURN s2.id as id, s2.name as name, r.version as version
+		`
+	result, err := session.ExecuteRead(ctx, makeGetTransaction(ctx, id, query))
+	if err != nil {
+		return nil, err
+	}
+
+	return result.([]*Dependency), nil
+}
+
+func (d *Neo4jDependencyRepository) GetDependents(ctx context.Context, id string) ([]*Dependency, error) {
+	session := d.driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeRead})
+	defer func() {
+		_ = session.Close(ctx)
+	}()
+
+	query := `
+			MATCH (s1:Service)-[r:DEPENDS_ON]->(s2:Service {id: $serviceId})
+			RETURN s1.id as id, s1.name as name, r.version as version
+		`
+	result, err := session.ExecuteRead(ctx, makeGetTransaction(ctx, id, query))
+	if err != nil {
+		return nil, err
+	}
+
+	return result.([]*Dependency), nil
+}
+
+func makeGetTransaction(ctx context.Context, id string, query string) func(tx neo4j.ManagedTransaction) (any, error) {
+	return func(tx neo4j.ManagedTransaction) (any, error) {
 		// First check if the service exists
 		checkQuery := `
 			MATCH (s:Service {id: $serviceId})
@@ -39,10 +70,7 @@ func (d *Neo4jDependencyRepository) GetDependencies(ctx context.Context, id stri
 		}
 
 		// Find all services that depend on the service with the given ID
-		query := `
-			MATCH (s1:Service)-[r:DEPENDS_ON]->(s2:Service {id: $serviceId})
-			RETURN s1.id as id, s1.name as name, r.version as version
-		`
+
 		result, err = tx.Run(ctx, query, map[string]any{
 			"serviceId": id,
 		})
@@ -78,11 +106,4 @@ func (d *Neo4jDependencyRepository) GetDependencies(ctx context.Context, id stri
 
 		return dependencies, nil
 	}
-
-	result, err := session.ExecuteRead(ctx, getDependenciesTransaction)
-	if err != nil {
-		return nil, err
-	}
-
-	return result.([]*Dependency), nil
 }
