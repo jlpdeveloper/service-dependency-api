@@ -8,6 +8,7 @@ import (
 type Dependency struct {
 	Id      string `json:"id"`
 	Version string `json:"version,omitempty"`
+	Name    string `json:"name,omitempty"`
 }
 
 func (d *Dependency) Validate() error {
