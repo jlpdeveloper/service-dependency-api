@@ -1,0 +1,48 @@
+meta {
+  name: Get dependents
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/services/:id/dependents
+  body: none
+  auth: none
+}
+
+params:query {
+  ~version: 1.5.0
+}
+
+params:path {
+  id: 12973952-0165-400b-9178-a0fdbd90f967
+}
+
+docs {
+  # Get Service Dependents
+  
+  Allows you to get all services that depend on this service
+  
+  ## Parameters
+  | Name | Location | Notes | 
+  | ---- | -------- | ---- |
+  | id | path | id of service to find dependents of |
+  | version | query | optional search to limit return data to dependents that require a specific version | 
+  
+  ## Returns
+  This will return an array of first level linked dependencies
+  ```json
+  [
+    {
+      "name": "service 1",
+      "id": "1",
+      "type": "service"
+    },
+    {
+      "name": "database 1",
+      "id": "2",
+      "type": "database"
+    }
+  ]
+  ```
+}

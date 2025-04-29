@@ -47,3 +47,31 @@ func (repo mockDependencyRepository) GetDependencies(_ context.Context, _ string
 
 	return dependencies, nil
 }
+
+func (repo mockDependencyRepository) GetDependents(_ context.Context, _ string) ([]*dependencyRepository.Dependency, error) {
+	if repo.Err != nil {
+		return nil, repo.Err
+	}
+
+	// Convert the mock data to the expected return type
+	data := repo.Data()
+	dependencies := make([]*dependencyRepository.Dependency, 0, len(data))
+
+	for _, item := range data {
+		dep := &dependencyRepository.Dependency{}
+
+		if id, ok := item["id"].(string); ok {
+			dep.Id = id
+		}
+		if name, ok := item["name"].(string); ok {
+			dep.Name = name
+		}
+		if version, ok := item["version"].(string); ok {
+			dep.Version = version
+		}
+
+		dependencies = append(dependencies, dep)
+	}
+
+	return dependencies, nil
+}

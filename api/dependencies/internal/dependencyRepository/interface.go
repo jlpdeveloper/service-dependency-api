@@ -6,9 +6,10 @@ import (
 )
 
 type Dependency struct {
-	Id      string `json:"id"`
-	Version string `json:"version,omitempty"`
-	Name    string `json:"name,omitempty"`
+	Id          string `json:"id"`
+	Version     string `json:"version,omitempty"`
+	Name        string `json:"name,omitempty"`
+	ServiceType string `json:"type,omitempty"`
 }
 
 func (d *Dependency) Validate() error {
@@ -21,4 +22,5 @@ func (d *Dependency) Validate() error {
 type DependencyRepository interface {
 	AddDependency(ctx context.Context, id string, dependency *Dependency) error
 	GetDependencies(ctx context.Context, id string) ([]*Dependency, error)
+	GetDependents(ctx context.Context, id string) ([]*Dependency, error)
 }

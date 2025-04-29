@@ -15,7 +15,8 @@ type ServiceCallsHandler struct {
 func (s *ServiceCallsHandler) Register(mux *http.ServeMux) {
 	paths := map[string]func(http.ResponseWriter, *http.Request){
 		"POST /services/{id}/dependency":  s.createDependency,
-		"GET /services/{id}/dependencies": s.getById,
+		"GET /services/{id}/dependencies": s.getDependencies,
+		"GET /services/{id}/dependents":   s.getDependents,
 	}
 	for k, v := range paths {
 		mux.HandleFunc(k, v)
