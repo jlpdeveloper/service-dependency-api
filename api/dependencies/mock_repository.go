@@ -2,12 +2,16 @@ package dependencies
 
 import (
 	"context"
+	"fmt"
 	"service-dependency-api/api/dependencies/internal/dependencyRepository"
+	"service-dependency-api/internal/customErrors"
 )
 
 type mockDependencyRepository struct {
 	Data func() []map[string]any
 	Err  error
+	// DependencyExists is used to determine if a dependency exists in the mock repository
+	DependencyExists bool
 }
 
 func (repo mockDependencyRepository) AddDependency(_ context.Context, _ string, _ *dependencyRepository.Dependency) error {
@@ -74,4 +78,21 @@ func (repo mockDependencyRepository) GetDependents(_ context.Context, _ string) 
 	}
 
 	return dependencies, nil
+}
+
+func (repo mockDependencyRepository) DeleteDependency(_ context.Context, id string, dependsOnID string) error {
+	if repo.Err != nil {
+		return repo.Err
+	}
+
+	// If DependencyExists is false, return a 404 error
+	if !repo.DependencyExists {
+		return &customErrors.HTTPError{
+			Status: 404,
+			Msg:    fmt.Sprintf("Dependency relationship not found between services: %s -> %s", id, dependsOnID),
+		}
+	}
+
+	// If no error and dependency exists, we consider the operation successful
+	return nil
 }
