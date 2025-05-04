@@ -42,11 +42,8 @@ func (r *Neo4jReleaseRepository) CreateRelease(ctx context.Context, release Rele
 		query := `
 			MATCH (s:Service {id: $serviceId})
 			CREATE (r:Release {
-				serviceId: $serviceId,
-				tag: $tag,
 				releaseDate: datetime($releaseDate),
-				githubUrl: $githubUrl,
-				notes: $notes
+				url: $url
 			})
 			CREATE (s)-[rel:RELEASED]->(r)
 			RETURN r
@@ -54,7 +51,7 @@ func (r *Neo4jReleaseRepository) CreateRelease(ctx context.Context, release Rele
 		params := map[string]any{
 			"serviceId":   release.ServiceId,
 			"releaseDate": release.ReleaseDate.Format("2006-01-02T15:04:05Z"),
-			"githubUrl":   release.Url,
+			"url":         release.Url,
 		}
 
 		_, err = tx.Run(ctx, query, params)

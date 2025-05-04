@@ -5,17 +5,17 @@ meta {
 }
 
 post {
-  url: {{baseUrl}}/releases
+  url: {{baseUrl}}/services/:serviceId/release
   body: json
   auth: none
 }
 
+params:path {
+  serviceId: 5931d4b0-dd0a-4654-85fe-78f42890da0d
+}
+
 body:json {
   {
-    "service_id": "",
-    "tag": "",
-    "release_date": "",
-    "github_url": "",
-    "notes": ""
+    "url": "{{$randomUrl}}"
   }
 }

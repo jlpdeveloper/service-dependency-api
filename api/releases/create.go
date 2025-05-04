@@ -8,12 +8,22 @@ import (
 )
 
 func (s *ServiceCallsHandler) createRelease(rw http.ResponseWriter, req *http.Request) {
+	serviceId, ok := s.PathValidator("id", req)
+	if !ok {
+		http.Error(rw, "Invalid service ID", http.StatusBadRequest)
+		return
+	}
+
 	r := &releaseRepository.Release{}
 	err := json.NewDecoder(req.Body).Decode(r)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusBadRequest)
 		return
 	}
+
+	// Set the service ID from the path parameter
+	r.ServiceId = serviceId
+
 	if err = r.Validate(); err != nil {
 		http.Error(rw, err.Error(), http.StatusBadRequest)
 		return

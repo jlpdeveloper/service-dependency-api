@@ -14,24 +14,27 @@ import (
 
 func TestCreateReleaseSuccess(t *testing.T) {
 	// Create a handler with mocked dependencies
+	validServiceId := "123e4567-e89b-12d3-a456-426614174000" // Valid GUID
 	handler := ServiceCallsHandler{
 		Repository: mockReleaseRepository{
 			Err: nil, // No error
 		},
+		PathValidator: func(name string, req *http.Request) (string, bool) {
+			return validServiceId, true // Mock successful path validation
+		},
 	}
 
-	// Create a release request
+	// Create a release request (without ServiceId as it comes from the path)
 	release := &releaseRepository.Release{
-		ServiceId: "123e4567-e89b-12d3-a456-426614174000", // Valid GUID
-		Url:       "https://example.com/release",
+		Url: "https://example.com/release",
 	}
 	releaseJSON, err := json.Marshal(release)
 	if err != nil {
 		t.Fatalf("Failed to marshal release: %v", err)
 	}
 
-	// Create a request
-	req, err := http.NewRequest("POST", "/releases",
+	// Create a request with the new path pattern
+	req, err := http.NewRequest("POST", "/services/"+validServiceId+"/release",
 		io.NopCloser(strings.NewReader(string(releaseJSON))))
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
@@ -51,14 +54,18 @@ func TestCreateReleaseSuccess(t *testing.T) {
 
 func TestCreateReleaseInvalidBody(t *testing.T) {
 	// Create a handler with mocked dependencies
+	validServiceId := "123e4567-e89b-12d3-a456-426614174000" // Valid GUID
 	handler := ServiceCallsHandler{
 		Repository: mockReleaseRepository{
 			Err: nil, // No error
 		},
+		PathValidator: func(name string, req *http.Request) (string, bool) {
+			return validServiceId, true // Mock successful path validation
+		},
 	}
 
 	// Create a request with invalid JSON
-	req, err := http.NewRequest("POST", "/releases",
+	req, err := http.NewRequest("POST", "/services/"+validServiceId+"/release",
 		io.NopCloser(strings.NewReader("invalid json")))
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
@@ -76,18 +83,20 @@ func TestCreateReleaseInvalidBody(t *testing.T) {
 	}
 }
 
-func TestCreateReleaseInvalidRelease(t *testing.T) {
+func TestCreateReleaseInvalidPathParameter(t *testing.T) {
 	// Create a handler with mocked dependencies
 	handler := ServiceCallsHandler{
 		Repository: mockReleaseRepository{
 			Err: nil, // No error
 		},
+		PathValidator: func(name string, req *http.Request) (string, bool) {
+			return "invalid-id", false // Mock failed path validation
+		},
 	}
 
-	// Create an invalid release (invalid service ID)
+	// Create a release request
 	release := &releaseRepository.Release{
-		ServiceId: "invalid-id", // Not a valid GUID
-		Url:       "https://example.com/release",
+		Url: "https://example.com/release",
 	}
 	releaseJSON, err := json.Marshal(release)
 	if err != nil {
@@ -95,7 +104,7 @@ func TestCreateReleaseInvalidRelease(t *testing.T) {
 	}
 
 	// Create a request
-	req, err := http.NewRequest("POST", "/releases",
+	req, err := http.NewRequest("POST", "/services/invalid-id/release",
 		io.NopCloser(strings.NewReader(string(releaseJSON))))
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
@@ -115,24 +124,27 @@ func TestCreateReleaseInvalidRelease(t *testing.T) {
 
 func TestCreateReleaseRepositoryError(t *testing.T) {
 	// Create a handler with mocked dependencies
+	validServiceId := "123e4567-e89b-12d3-a456-426614174000" // Valid GUID
 	handler := ServiceCallsHandler{
 		Repository: mockReleaseRepository{
 			Err: errors.New("repository error"), // Simulate a repository error
 		},
+		PathValidator: func(name string, req *http.Request) (string, bool) {
+			return validServiceId, true // Mock successful path validation
+		},
 	}
 
-	// Create a release request
+	// Create a release request (without ServiceId as it comes from the path)
 	release := &releaseRepository.Release{
-		ServiceId: "123e4567-e89b-12d3-a456-426614174000", // Valid GUID
-		Url:       "https://example.com/release",
+		Url: "https://example.com/release",
 	}
 	releaseJSON, err := json.Marshal(release)
 	if err != nil {
 		t.Fatalf("Failed to marshal release: %v", err)
 	}
 
-	// Create a request
-	req, err := http.NewRequest("POST", "/releases",
+	// Create a request with the new path pattern
+	req, err := http.NewRequest("POST", "/services/"+validServiceId+"/release",
 		io.NopCloser(strings.NewReader(string(releaseJSON))))
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
@@ -152,6 +164,7 @@ func TestCreateReleaseRepositoryError(t *testing.T) {
 
 func TestCreateReleaseHTTPError(t *testing.T) {
 	// Create a handler with mocked dependencies
+	validServiceId := "123e4567-e89b-12d3-a456-426614174000" // Valid GUID
 	handler := ServiceCallsHandler{
 		Repository: mockReleaseRepository{
 			Err: &customErrors.HTTPError{
@@ -159,20 +172,22 @@ func TestCreateReleaseHTTPError(t *testing.T) {
 				Msg:    "Service not found",
 			}, // Simulate an HTTP error
 		},
+		PathValidator: func(name string, req *http.Request) (string, bool) {
+			return validServiceId, true // Mock successful path validation
+		},
 	}
 
-	// Create a release request
+	// Create a release request (without ServiceId as it comes from the path)
 	release := &releaseRepository.Release{
-		ServiceId: "123e4567-e89b-12d3-a456-426614174000", // Valid GUID
-		Url:       "https://example.com/release",
+		Url: "https://example.com/release",
 	}
 	releaseJSON, err := json.Marshal(release)
 	if err != nil {
 		t.Fatalf("Failed to marshal release: %v", err)
 	}
 
-	// Create a request
-	req, err := http.NewRequest("POST", "/releases",
+	// Create a request with the new path pattern
+	req, err := http.NewRequest("POST", "/services/"+validServiceId+"/release",
 		io.NopCloser(strings.NewReader(string(releaseJSON))))
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
