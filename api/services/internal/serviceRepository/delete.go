@@ -37,7 +37,7 @@ func (d *ServiceNeo4jRepository) DeleteService(ctx context.Context, id string) (
 		}
 		result, err = tx.Run(ctx, `
 		MATCH(s:Service { id: $id})
-		DELETE s;`, map[string]interface{}{"id": id})
+		DETACH DELETE s;`, map[string]interface{}{"id": id})
 		if err != nil {
 			log.Println("Error deleting service: " + id)
 			return nil, err
