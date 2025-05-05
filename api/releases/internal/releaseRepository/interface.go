@@ -9,6 +9,7 @@ import (
 
 type ReleaseRepository interface {
 	CreateRelease(ctx context.Context, release Release) error
+	GetReleasesByServiceId(ctx context.Context, serviceId string, page, pageSize int) ([]*Release, error)
 }
 
 type Release struct {

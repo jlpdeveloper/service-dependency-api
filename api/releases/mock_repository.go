@@ -6,7 +6,8 @@ import (
 )
 
 type mockReleaseRepository struct {
-	Err error
+	Err      error
+	Releases []*releaseRepository.Release
 }
 
 func (repo mockReleaseRepository) CreateRelease(_ context.Context, _ releaseRepository.Release) error {
@@ -16,4 +17,27 @@ func (repo mockReleaseRepository) CreateRelease(_ context.Context, _ releaseRepo
 
 	// If no error, we consider the operation successful
 	return nil
+}
+
+func (repo mockReleaseRepository) GetReleasesByServiceId(_ context.Context, _ string, page, pageSize int) ([]*releaseRepository.Release, error) {
+	if repo.Err != nil {
+		return nil, repo.Err
+	}
+
+	// Calculate start and end indices for pagination
+	start := (page - 1) * pageSize
+	end := start + pageSize
+
+	// Check if start is beyond the array length
+	if start >= len(repo.Releases) {
+		return []*releaseRepository.Release{}, nil
+	}
+
+	// Ensure end doesn't exceed array length
+	if end > len(repo.Releases) {
+		end = len(repo.Releases)
+	}
+
+	// Return the paginated mock releases
+	return repo.Releases[start:end], nil
 }
