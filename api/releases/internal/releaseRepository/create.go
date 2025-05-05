@@ -38,21 +38,27 @@ func (r *Neo4jReleaseRepository) CreateRelease(ctx context.Context, release Rele
 			}
 		}
 
-		// Create the release node and connect it to the service
-		query := `
-			MATCH (s:Service {id: $serviceId})
-			CREATE (r:Release {
-				releaseDate: datetime($releaseDate),
-				url: $url
-			})
-			CREATE (s)-[rel:RELEASED]->(r)
-			RETURN r
-		`
 		params := map[string]any{
 			"serviceId":   release.ServiceId,
 			"releaseDate": release.ReleaseDate.Format("2006-01-02T15:04:05Z"),
-			"url":         release.Url,
 		}
+		// Build the Cypher query dynamically
+		propertiesString := "releaseDate: datetime($releaseDate)"
+		if release.Url != "" {
+			propertiesString += ", url: $url"
+			params["url"] = release.Url
+		}
+		if release.Version != "" {
+			propertiesString += ", version: $version"
+			params["version"] = release.Version
+		}
+
+		query := fmt.Sprintf(`
+			MATCH (s:Service {id: $serviceId})
+			CREATE (r:Release {%s})
+			CREATE (s)-[rel:RELEASED]->(r)
+			RETURN r
+		`, propertiesString)
 
 		_, err = tx.Run(ctx, query, params)
 		if err != nil {

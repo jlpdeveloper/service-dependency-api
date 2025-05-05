@@ -15,6 +15,7 @@ type Release struct {
 	ServiceId   string    `json:"service_id"`
 	ReleaseDate time.Time `json:"release_date"`
 	Url         string    `json:"url"`
+	Version     string    `json:"version"`
 }
 
 func (r *Release) Validate() error {
@@ -23,6 +24,9 @@ func (r *Release) Validate() error {
 	}
 	if r.ReleaseDate.IsZero() {
 		r.ReleaseDate = time.Now().UTC()
+	}
+	if r.Url == "" && r.Version == "" {
+		return errors.New("missing URL or Version")
 	}
 	return nil
 }
