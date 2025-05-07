@@ -6,9 +6,9 @@ A RESTful API service designed to map dependencies between services and provide 
 
 This API allows you to:
 
-- Track services and their metadata (name, owner, GitHub repo, etc.)
+- Track services and their metadata (name, description, GitHub repo, etc.)
 - Map dependencies between services
-- Associate GitHub releases with services
+- Associate releases with services
 - Query service relationships and dependencies
 
 ## Features
@@ -16,11 +16,11 @@ This API allows you to:
 - Create, read, update, and delete services
 - Map dependencies between services
 - Track service metadata including:
-  - Name
-  - Database dependencies
-  - Owner
-  - GitHub repository
-- Associate GitHub releases with services
+    - Name
+    - Description
+    - Database dependencies
+    - GitHub repository
+- Associate releases with services
 
 ## Installation
 
@@ -34,17 +34,17 @@ This API allows you to:
 
 1. Clone the repository
 2. Start the Neo4j database:
-   ```
+   ```sh
    docker-compose up -d
    ```
 3. Set the required environment variables:
-   ```
+   ```sh
    export NEO4J_URL=bolt://localhost:7687
    export NEO4J_USERNAME=neo4j
    export NEO4J_PASSWORD=1234%qwerT
    ```
 4. Build and run the application:
-   ```
+   ```sh
    go build -o service-dependency-api ./cmd/service-dependency-api
    ./service-dependency-api
    ```
@@ -74,7 +74,3 @@ The server listens on port 8080 by default.
 - `POST /services` - Create a new service
 - `PUT /services/{id}` - Update an existing service
 - `DELETE /services/{id}` - Delete a service
-
-## Development
-
-This project is a work in progress. 
