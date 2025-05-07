@@ -3,11 +3,13 @@ package releases
 import (
 	"context"
 	"service-dependency-api/api/releases/internal/releaseRepository"
+	"time"
 )
 
 type mockReleaseRepository struct {
-	Err      error
-	Releases []*releaseRepository.Release
+	Err         error
+	Releases    []*releaseRepository.Release
+	ServiceInfo []*releaseRepository.ServiceReleaseInfo
 }
 
 func (repo mockReleaseRepository) CreateRelease(_ context.Context, _ releaseRepository.Release) error {
@@ -40,4 +42,26 @@ func (repo mockReleaseRepository) GetReleasesByServiceId(_ context.Context, _ st
 
 	// Return the paginated mock releases
 	return repo.Releases[start:end], nil
+}
+
+func (repo mockReleaseRepository) GetReleasesInDateRange(_ context.Context, _ time.Time, _ time.Time, page, pageSize int) ([]*releaseRepository.ServiceReleaseInfo, error) {
+	if repo.Err != nil {
+		return nil, repo.Err
+	}
+	// Calculate start and end indices for pagination
+	start := (page - 1) * pageSize
+	end := start + pageSize
+
+	// Check if start is beyond the array length
+	if start >= len(repo.ServiceInfo) {
+		return []*releaseRepository.ServiceReleaseInfo{}, nil
+	}
+
+	// Ensure end doesn't exceed array length
+	if end > len(repo.ServiceInfo) {
+		end = len(repo.ServiceInfo)
+	}
+
+	// Return the paginated mock releases
+	return repo.ServiceInfo[start:end], nil
 }
