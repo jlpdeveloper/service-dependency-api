@@ -14,3 +14,40 @@ params:query {
   page: 1
   pageSize: 10
 }
+
+docs {
+  # Get All Sevices
+  This call gets a paginated list of all service objects (which can include databases or any other custom types that have been inserted).
+
+  
+  ## Parameters
+  | Parameter | Type | Description |
+  |-----------|------|-------------|
+  | page      | int  | The page number. Must be positive. (default: 1) |
+  | pageSize  | int  | The number of items per page. Must be between 1 and 100. (default: 10) |
+  
+  ## Sample Request
+  ```
+  GET {{baseUrl}}/services?page=1&pageSize=10
+  ```
+  
+  ## Response Body
+  ```json
+  [
+    {
+      "id": "service_id",
+      "name": "Service Name",
+      "type": "service_type",
+      "description": "Description of the service",
+      "url": "http://service_url"
+    }
+  ]
+  ```
+  
+  ## Status Codes
+  | Status Code | Description |
+  |-------------|-------------|
+  | 200 OK      | Services retrieved successfully. |
+  | 400 Bad Request | Invalid page or pageSize parameter. |
+  | 500 Internal Server Error | Failed to retrieve services due to an internal server error. |
+}
