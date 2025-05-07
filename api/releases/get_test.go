@@ -344,3 +344,175 @@ func TestGetReleasesByServiceIdZeroPageSizeParameter(t *testing.T) {
 		t.Errorf("Expected status code %d, got %d", http.StatusBadRequest, rw.Code)
 	}
 }
+
+func TestGetReleasesInDateRangeSuccess(t *testing.T) {
+	// Create a handler with mocked dependencies
+	validServiceId := "123e4567-e89b-12d3-a456-426614174000" // Valid GUID
+	mockServiceInfo := []*releaseRepository.ServiceReleaseInfo{
+		{
+			ServiceType: "service-type-1",
+			ServiceName: "service-name-1",
+			Release: releaseRepository.Release{
+				ServiceId:   validServiceId,
+				ReleaseDate: time.Now().UTC(),
+				Url:         "https://example.com/release1",
+				Version:     "1.0.0",
+			},
+		},
+		{
+			ServiceType: "service-type-2",
+			ServiceName: "service-name-2",
+			Release: releaseRepository.Release{
+				ServiceId:   validServiceId,
+				ReleaseDate: time.Now().UTC(),
+				Url:         "https://example.com/release2",
+				Version:     "2.0.0",
+			},
+		},
+	}
+
+	handler := ServiceCallsHandler{
+		Repository: mockReleaseRepository{
+			Err:         nil, // No error
+			ServiceInfo: mockServiceInfo,
+		},
+		PathValidator: func(name string, req *http.Request) (string, bool) {
+			return validServiceId, true // Mock successful path validation
+		},
+	}
+	// Create a request with no pagination parameters (should use defaults)
+	req, err := http.NewRequest("GET", "/releases/2025-01-01/2025-02-02", nil)
+	if err != nil {
+		t.Fatalf("Failed to create request: %v", err)
+	}
+
+	// Set path values for the request
+	req = req.WithContext(req.Context())
+	req.SetPathValue("startDate", "2025-01-01")
+	req.SetPathValue("endDate", "2025-02-02")
+
+	// Create a response recorder
+	rw := httptest.NewRecorder()
+
+	// Call the handler
+	handler.getReleasesInDateRange(rw, req)
+
+	// Check the response
+	if rw.Code != http.StatusOK {
+		t.Errorf("Expected status code %d, got %d", http.StatusOK, rw.Code)
+	}
+
+	// Decode the response body
+	var releases []*releaseRepository.ServiceReleaseInfo
+	err = json.NewDecoder(rw.Body).Decode(&releases)
+	if err != nil {
+		t.Fatalf("Failed to decode response body: %v", err)
+	}
+
+	// Check that the correct number of releases was returned
+	if len(releases) != len(mockServiceInfo) {
+		t.Errorf("Expected %d releases, got %d", len(mockServiceInfo), len(releases))
+	}
+}
+
+func TestGetReleasesInDateRangeInvalidStartDate(t *testing.T) {
+	// Create a handler with mocked dependencies
+	handler := ServiceCallsHandler{
+		Repository: mockReleaseRepository{
+			Err: nil, // No error
+		},
+		PathValidator: func(name string, req *http.Request) (string, bool) {
+			return "", true // Not used in this test
+		},
+	}
+
+	// Create a request with invalid start date
+	req, err := http.NewRequest("GET", "/releases/invalid-date/2025-02-02", nil)
+	if err != nil {
+		t.Fatalf("Failed to create request: %v", err)
+	}
+
+	// Set path values for the request
+	req = req.WithContext(req.Context())
+	req.SetPathValue("start_date", "invalid-date")
+	req.SetPathValue("end_date", "2025-02-02")
+
+	// Create a response recorder
+	rw := httptest.NewRecorder()
+
+	// Call the handler
+	handler.getReleasesInDateRange(rw, req)
+
+	// Check the response
+	if rw.Code != http.StatusBadRequest {
+		t.Errorf("Expected status code %d, got %d", http.StatusBadRequest, rw.Code)
+	}
+}
+
+func TestGetReleasesInDateRangeInvalidEndDate(t *testing.T) {
+	// Create a handler with mocked dependencies
+	handler := ServiceCallsHandler{
+		Repository: mockReleaseRepository{
+			Err: nil, // No error
+		},
+		PathValidator: func(name string, req *http.Request) (string, bool) {
+			return "", true // Not used in this test
+		},
+	}
+
+	// Create a request with invalid end date
+	req, err := http.NewRequest("GET", "/releases/2025-01-01/invalid-date", nil)
+	if err != nil {
+		t.Fatalf("Failed to create request: %v", err)
+	}
+
+	// Set path values for the request
+	req = req.WithContext(req.Context())
+	req.SetPathValue("start_date", "2025-01-01")
+	req.SetPathValue("end_date", "invalid-date")
+
+	// Create a response recorder
+	rw := httptest.NewRecorder()
+
+	// Call the handler
+	handler.getReleasesInDateRange(rw, req)
+
+	// Check the response
+	if rw.Code != http.StatusBadRequest {
+		t.Errorf("Expected status code %d, got %d", http.StatusBadRequest, rw.Code)
+	}
+}
+
+func TestGetReleasesInDateRangeEndDateBeforeStartDate(t *testing.T) {
+	// Create a handler with mocked dependencies
+	handler := ServiceCallsHandler{
+		Repository: mockReleaseRepository{
+			Err: nil, // No error
+		},
+		PathValidator: func(name string, req *http.Request) (string, bool) {
+			return "", true // Not used in this test
+		},
+	}
+
+	// Create a request with end date before start date
+	req, err := http.NewRequest("GET", "/releases/2025-02-02/2025-01-01", nil)
+	if err != nil {
+		t.Fatalf("Failed to create request: %v", err)
+	}
+
+	// Set path values for the request
+	req = req.WithContext(req.Context())
+	req.SetPathValue("start_date", "2025-02-02")
+	req.SetPathValue("end_date", "2025-01-01")
+
+	// Create a response recorder
+	rw := httptest.NewRecorder()
+
+	// Call the handler
+	handler.getReleasesInDateRange(rw, req)
+
+	// Check the response
+	if rw.Code != http.StatusBadRequest {
+		t.Errorf("Expected status code %d, got %d", http.StatusBadRequest, rw.Code)
+	}
+}
