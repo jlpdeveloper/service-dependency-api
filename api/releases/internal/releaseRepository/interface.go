@@ -10,6 +10,7 @@ import (
 type ReleaseRepository interface {
 	CreateRelease(ctx context.Context, release Release) error
 	GetReleasesByServiceId(ctx context.Context, serviceId string, page, pageSize int) ([]*Release, error)
+	GetReleasesInDateRange(ctx context.Context, startDate, endDate time.Time, page, pageSize int) ([]*ServiceReleaseInfo, error)
 }
 
 type Release struct {
@@ -17,6 +18,12 @@ type Release struct {
 	ReleaseDate time.Time `json:"release_date"`
 	Url         string    `json:"url"`
 	Version     string    `json:"version"`
+}
+
+type ServiceReleaseInfo struct {
+	ServiceName string `json:"service_name"`
+	ServiceType string `json:"service_type"`
+	Release
 }
 
 func (r *Release) Validate() error {

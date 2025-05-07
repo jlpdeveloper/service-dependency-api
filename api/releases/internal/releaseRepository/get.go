@@ -72,19 +72,16 @@ func (r *Neo4jReleaseRepository) GetReleasesByServiceId(ctx context.Context, ser
 
 		for _, record := range records {
 			releaseDate, _ := record.Get("releaseDate")
-			url, _ := record.Get("url")
-			version, _ := record.Get("version")
-
 			release := &Release{
 				ServiceId:   serviceId,
 				ReleaseDate: releaseDate.(time.Time),
 			}
 
 			// Only set url and version if they exist
-			if url != nil {
+			if url, ok := record.Get("url"); ok {
 				release.Url = url.(string)
 			}
-			if version != nil {
+			if version, ok := record.Get("version"); ok {
 				release.Version = version.(string)
 			}
 
@@ -100,4 +97,67 @@ func (r *Neo4jReleaseRepository) GetReleasesByServiceId(ctx context.Context, ser
 	}
 
 	return result.([]*Release), nil
+}
+
+func (r *Neo4jReleaseRepository) GetReleasesInDateRange(ctx context.Context, startDate, endDate time.Time, page, pageSize int) ([]*ServiceReleaseInfo, error) {
+	session := r.driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeRead})
+	defer func() {
+		_ = session.Close(ctx)
+	}()
+	getReleasesInRangeTransaction := func(tx neo4j.ManagedTransaction) (any, error) {
+		query := `
+			MATCH (s:Service)-[rel:RELEASED]->(r:Release)
+			WHERE r.releaseDate >= datetime($startDate) AND r.releaseDate <= datetime($endDate)
+			RETURN r.releaseDate as releaseDate, r.url as url, r.version as version, s.id as serviceId, s.name as serviceName, s.type as serviceType
+			ORDER BY r.releaseDate DESC
+			SKIP $skip
+			LIMIT $limit
+		`
+
+		result, err := tx.Run(ctx, query, map[string]any{
+			"startDate": startDate.Format("2006-01-02"),
+			"endDate":   endDate.Format("2006-01-02"),
+			"skip":      (page - 1) * pageSize,
+			"limit":     pageSize,
+		})
+		if err != nil {
+			return nil, err
+		}
+		records, err := result.Collect(ctx)
+		if err != nil {
+			return nil, err
+		}
+
+		releases := []*ServiceReleaseInfo{}
+		for _, record := range records {
+			releaseDate, _ := record.Get("releaseDate")
+			serviceId, _ := record.Get("serviceId")
+			serviceName, _ := record.Get("serviceName")
+			serviceType, _ := record.Get("serviceType")
+			release := &ServiceReleaseInfo{
+				ServiceName: serviceName.(string),
+				ServiceType: serviceType.(string),
+				Release: Release{
+					ReleaseDate: releaseDate.(time.Time),
+					ServiceId:   serviceId.(string),
+				},
+			}
+			if url, ok := record.Get("url"); ok && url != nil {
+				release.Url = url.(string)
+			}
+			if version, ok := record.Get("version"); ok && version != nil {
+				release.Version = version.(string)
+			}
+
+			releases = append(releases, release)
+		}
+
+		return releases, nil
+
+	}
+	result, err := session.ExecuteRead(ctx, getReleasesInRangeTransaction)
+	if err != nil {
+		return nil, err
+	}
+	return result.([]*ServiceReleaseInfo), nil
 }
