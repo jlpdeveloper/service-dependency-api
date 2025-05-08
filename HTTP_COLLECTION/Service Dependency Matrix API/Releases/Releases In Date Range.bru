@@ -1,0 +1,70 @@
+meta {
+  name: Releases In Date Range
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/releases/:startDate/:endDate
+  body: none
+  auth: none
+}
+
+params:path {
+  startDate: 2025-05-04
+  endDate: 2025-05-06
+}
+
+docs {
+  # Get Releases in Date Range
+  
+  This call allows you to get all releases that occurred within a specified date range. The results are paginated.
+  
+  ## Parameters
+  
+  - **startDate**: Start date of the range, required.
+    - Example: 2025-01-01
+  - **endDate**: End date of the range, required.
+    - Example: 2025-12-31
+  - **page** (optional): Page number for pagination. Default is 1.
+    - Example: 2
+  - **pageSize** (optional): Number of items per page. Default is 25.
+    - Example: 50
+  
+  ## Sample Response
+  
+  ```json
+  {
+    "data": [
+      {
+        "releaseDate": "2024-12-25",
+        "url": "https://example.com/release1",
+        "version": "1.0.0",
+        "serviceId": "service1",
+        "serviceName": "Service One",
+        "serviceType": "Type A"
+      },
+      {
+        "releaseDate": "2024-12-31",
+        "url": "https://example.com/release2",
+        "version": "1.1.0",
+        "serviceId": "service2",
+        "serviceName": "Service Two",
+        "serviceType": "Type B"
+      }
+    ],
+    "pagination": {
+      "totalPages": 2,
+      "currentPage": 1,
+      "pageSize": 50
+    }
+  }
+  ```
+  
+  ## Response Codes
+  | Status Code | Description |
+  |-------------|-------------|
+  | 200         | Successful retrieval of releases in the specified date range. |
+  | 400         | Bad request - Invalid start or end date, or invalid page parameters. |
+  | 500         | Internal server error - An unexpected error occurred while retrieving releases. |
+}
