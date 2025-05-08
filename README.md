@@ -15,12 +15,30 @@ This API allows you to:
 
 - Create, read, update, and delete services
 - Map dependencies between services
-- Track service metadata including:
+- Track service metadata such as:
     - Name
     - Description
     - Database dependencies
     - GitHub repository
 - Associate releases with services
+
+## What is a "Service"
+A service is any object that you wish to track as part of your catalog of objects. This can be databases, apis, servers, or anything else.
+Service was chosen as the initial use case for this api was to catalog microservices and relations between them. Services can `depend_on` other services and have `releases` associated with them
+
+```mermaid
+flowchart LR
+    id1((Service A)) -- Depends On --> id2((Service B))
+    id1 -- Released --> r1((Release 1))
+
+```
+
+## Neo4j Data Structure
+Services are created under a `Service` object, while releases are created under a `Release` object.
+Services can have a `Depend_ON` relationship that may have a version as part of the relationship
+Services `Released` a `Release`
+
+Releases will always have a date; releases without a date are assigned `now()` as the date. Releases may have a url, a version or both, but require at least a url or a version to be present.
 
 ## Installation
 
@@ -61,4 +79,4 @@ The server listens on port 8080 by default.
 
 ## API Endpoints
 
-For more information on endpoints, see the [Bruno Collection](./HTTP_COLLECTION) or the [OAS file](./_http_docs/service-dependency.json)
+For more information on endpoints, see the [Bruno Collection](./HTTP_COLLECTION) or the [OAS file](./_http_docs/service-dependency.yaml)
