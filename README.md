@@ -61,16 +61,4 @@ The server listens on port 8080 by default.
 
 ## API Endpoints
 
-### System Endpoints
-
-- `GET /helloworld` - Simple health check endpoint
-- `GET /time` - Returns the current server time
-- `GET /database` - Returns the database address
-
-### Service Endpoints
-
-- `GET /services` - List all services
-- `GET /services/{id}` - Get a service by ID
-- `POST /services` - Create a new service
-- `PUT /services/{id}` - Update an existing service
-- `DELETE /services/{id}` - Delete a service
+For more information on endpoints, see the [Bruno Collection](./HTTP_COLLECTION) or the [OAS file](./_http_docs/service-dependency.json)
