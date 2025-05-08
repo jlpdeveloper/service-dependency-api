@@ -1,5 +1,5 @@
 meta {
-  name: Get dependents
+  name: Dependents on service
   type: http
   seq: 4
 }
@@ -45,4 +45,11 @@ docs {
     }
   ]
   ```
+  ## Response Codes
+   | Status Code | Description |
+    |-------------|-------------|
+    | 200 OK      | Dependencies retrieved successfully. |
+    | 400 Bad Request | Invalid id parameter.  |
+    | 404 Not Found | Service not found. |
+    | 500 Internal Server Error | Failed to retrieve dependencies due to an internal server error. |
 }

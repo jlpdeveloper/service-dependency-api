@@ -1,5 +1,5 @@
 meta {
-  name: Add a new release
+  name: Create Release
   type: http
   seq: 3
 }
@@ -24,11 +24,11 @@ body:json {
 
 docs {
   # Add Release
-
+  
   This endpoint allows adding a release record to a service. A release represents a specific version or deployment of a service.
-
+  
   ## Sample Body
-
+  
   ```json
   {
     "release_date": "2023-05-15T14:30:00Z",
@@ -36,31 +36,31 @@ docs {
     "version": "1.2.3"
   }
   ```
-
+  
   ## Required Fields
-
+  
   At least one of the following fields must be provided:
   - `url`: A string containing the URL to the release (e.g., GitHub release URL)
   - `version`: A string containing the version identifier
-
+  
   ## Optional Fields
-
+  
   - `release_date`: ISO 8601 formatted date-time string (defaults to current UTC time if not provided)
-
+  
   ## Responses
-
+  
   - `201 Created`: Release was successfully created
   - `400 Bad Request`: Invalid request body (missing required fields or invalid format)
   - `404 Not Found`: Service with the specified ID does not exist
-
+  
   ## Notes
-
+  
   - The service ID is taken from the URL path parameter
   - Either `url` or `version` must be provided, but both can be included if available
   - The `release_date` will default to the current UTC time if not specified
-
+  
   ## ChangeLog
-
+  
   - 2025-05-04 - JPotts: Initial Creation
   - 2025-05-05 - JPotts: Added comprehensive documentation
 }

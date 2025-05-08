@@ -1,0 +1,49 @@
+meta {
+  name: Get service by id
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/services/:id
+  body: none
+  auth: none
+}
+
+params:path {
+  id: 5931d4b0-dd0a-4654-85fe-78f42890da0d
+}
+
+docs {
+  # Get Service By Id
+  
+  This service allows you to get information by id about a service object.
+  
+  ## Parameters
+  | Parameter | Type | Description |
+  |-----------|------|-------------|
+  | id        | string | The unique identifier of the service. |
+  
+  ## Sample Request
+  ```
+  GET {{baseUrl}}/services/5931d4b0-dd0a-4654-85fe-78f42890da0d
+  ```
+  
+  ## Response Body
+  ```json
+  {
+    "id": "service_id",
+    "name": "Service Name",
+    "type": "service_type",
+    "description": "Description of the service",
+    "url": "http://service_url"
+  }
+  ```
+  
+  ## Status Codes
+  | Status Code | Description |
+  |-------------|-------------|
+  | 200 OK      | Service retrieved successfully. |
+  | 400 Bad Request | Invalid id parameter or service not found. |
+  | 500 Internal Server Error | Failed to retrieve service due to an internal server error. |
+}

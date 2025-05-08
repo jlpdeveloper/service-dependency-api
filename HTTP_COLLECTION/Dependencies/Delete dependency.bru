@@ -1,0 +1,41 @@
+meta {
+  name: Delete dependency
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{baseUrl}}/services/:id/dependency/:targetId
+  body: none
+  auth: none
+}
+
+params:path {
+  targetId: 05c980e5-cb47-4659-bd2b-2a72371c1b79
+  id: 5931d4b0-dd0a-4654-85fe-78f42890da0d
+}
+
+docs {
+  # Delete Service Dependency
+  
+  Allows you to remove a dependency from a service.
+  
+  ## Parameters
+  | Parameter | Type | Description |
+  |-----------|------|-------------|
+  | id        | string | The unique identifier of the service. |
+  | targetId  | string | The unique identifier of the dependent service to be removed. |
+  
+  ## Sample Request
+  ```
+  DELETE {{baseUrl}}/services/5931d4b0-dd0a-4654-85fe-78f42890da0d/dependency/05c980e5-cb47-4659-bd2b-2a72371c1b79
+  ```
+  
+  ## Response Codes
+  | Status Code | Description |
+  |-------------|-------------|
+  | 204 No Content | Dependency deleted successfully. |
+  | 400 Bad Request | Invalid id or targetId parameter. |
+  | 404 Not Found   | Dependency relationship not found between services. |
+  | 500 Internal Server Error | Failed to delete dependency due to an internal server error. |
+}

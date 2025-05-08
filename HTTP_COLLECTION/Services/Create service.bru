@@ -1,0 +1,43 @@
+meta {
+  name: Create service
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/services
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "{{$randomCity}}",
+    "type": "service",
+    "description": "this is a test form bruno",
+    "url": "{{$randomUrl}}"
+  }
+}
+
+docs {
+  # Create Service
+  
+  This call allows you to create a new service.
+  
+  ## Sample Body
+  ```json
+  {
+    "name": "NewService",
+    "type": "service",
+    "description": "Description of the new service",
+    "url": "http://new-service.com"
+  }
+  ```
+  
+  ## Status Codes
+  | Status Code | Description |
+  |-------------|-------------|
+  | 201 Created | Service created successfully. |
+  | 400 Bad Request | Invalid request body or validation error. |
+  | 500 Internal Server Error | Failed to create service due to an internal server error. |
+}

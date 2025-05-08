@@ -1,0 +1,47 @@
+meta {
+  name: Releases For Service
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/services/:id/releases
+  body: none
+  auth: none
+}
+
+params:path {
+  id: 5931d4b0-dd0a-4654-85fe-78f42890da0d
+}
+
+docs {
+  # Get All Releases for a Service
+  
+  This will return a list of releases associated with a service. The query dynamically includes properties based on their values, ensuring that empty string properties are not included in the Neo4j database.
+
+  ## Sample Response
+
+  ```json
+  [
+    {
+      "releaseDate": "2023-10-01T12:00:00Z",
+      "url": "http://example.com/v1.0"
+    },
+    {
+      "releaseDate": "2023-10-05T14:00:00Z",
+      "version": "v1.1"
+    }
+  ]
+  ```
+
+  ## Parameters
+  
+  - **id**: The ID of the service for which to retrieve releases.
+
+  ## Response Codes
+  | Status Code | Description |
+  |-------------|-------------|
+  | 200         | Successful response with a list of releases. |
+  | 404         | Service not found. |
+  | 400         | Invalid page or page_size parameter. |
+}
