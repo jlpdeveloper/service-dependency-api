@@ -4,11 +4,12 @@ import (
 	"encoding/json"
 	"net/http"
 	"service-dependency-api/api/dependencies/internal/dependencyRepository"
+	"service-dependency-api/internal"
 	"service-dependency-api/internal/customErrors"
 )
 
 func (s *ServiceCallsHandler) createDependency(rw http.ResponseWriter, req *http.Request) {
-	id, ok := s.PathValidator("id", req)
+	id, ok := internal.GetGuidFromRequestPath("id", req)
 	if !ok {
 		http.Error(rw, "path id not valid", http.StatusBadRequest)
 		return
