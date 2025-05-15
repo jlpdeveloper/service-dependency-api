@@ -1,7 +1,6 @@
 package services
 
 import (
-	"github.com/google/uuid"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 	"net/http"
 	"service-dependency-api/api/services/internal/serviceRepository"
@@ -22,12 +21,6 @@ func (u *ServiceCallsHandler) Register(mux *http.ServeMux) {
 	for path, f := range paths {
 		mux.HandleFunc(path, f)
 	}
-}
-
-func getGuidFromRequestPath(varName string, req *http.Request) (string, bool) {
-	guidVal := req.PathValue(varName)
-	err := uuid.Validate(guidVal)
-	return guidVal, err == nil
 }
 
 func Register(mux *http.ServeMux, driver *neo4j.DriverWithContext) {
