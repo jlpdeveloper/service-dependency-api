@@ -8,8 +8,7 @@ import (
 )
 
 type ServiceCallsHandler struct {
-	Repository  serviceRepository.ServiceRepository
-	IdValidator func(string, *http.Request) (string, bool)
+	Repository serviceRepository.ServiceRepository
 }
 
 func (u *ServiceCallsHandler) Register(mux *http.ServeMux) {
@@ -38,8 +37,7 @@ func Register(mux *http.ServeMux, driver *neo4j.DriverWithContext) {
 	}
 
 	callsHandler := ServiceCallsHandler{
-		Repository:  serviceRepo,
-		IdValidator: getGuidFromRequestPath,
+		Repository: serviceRepo,
 	}
 
 	callsHandler.Register(mux)

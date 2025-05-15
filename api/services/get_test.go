@@ -17,9 +17,6 @@ import (
 
 func TestGetAllSuccess(t *testing.T) {
 	handler := ServiceCallsHandler{
-		IdValidator: func(_ string, _ *http.Request) (string, bool) {
-			return "", false
-		},
 		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
@@ -64,9 +61,6 @@ func TestGetAllSuccess(t *testing.T) {
 
 func TestGetAllBadRequest(t *testing.T) {
 	handler := ServiceCallsHandler{
-		IdValidator: func(_ string, _ *http.Request) (string, bool) {
-			return "", false
-		},
 		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				return []map[string]any{}
@@ -91,9 +85,6 @@ func TestGetAllBadRequest(t *testing.T) {
 
 func TestGetAllInternalServerError(t *testing.T) {
 	handler := ServiceCallsHandler{
-		IdValidator: func(_ string, _ *http.Request) (string, bool) {
-			return "", false
-		},
 		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				return []map[string]any{}
@@ -117,9 +108,7 @@ func TestGetAllInternalServerError(t *testing.T) {
 
 func TestGetAllWithZeroPageSize(t *testing.T) {
 	handler := ServiceCallsHandler{
-		IdValidator: func(_ string, _ *http.Request) (string, bool) {
-			return "", false
-		},
+
 		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				return []map[string]any{}
@@ -144,9 +133,7 @@ func TestGetAllWithZeroPageSize(t *testing.T) {
 
 func TestGetAllWithLargePageSize(t *testing.T) {
 	handler := ServiceCallsHandler{
-		IdValidator: func(_ string, _ *http.Request) (string, bool) {
-			return "", false
-		},
+
 		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				return []map[string]any{}
@@ -171,9 +158,7 @@ func TestGetAllWithLargePageSize(t *testing.T) {
 
 func TestGetAllWithNegativePage(t *testing.T) {
 	handler := ServiceCallsHandler{
-		IdValidator: func(_ string, _ *http.Request) (string, bool) {
-			return "", false
-		},
+
 		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				return []map[string]any{}
@@ -198,9 +183,7 @@ func TestGetAllWithNegativePage(t *testing.T) {
 
 func TestGetAllWithNegativePageSize(t *testing.T) {
 	handler := ServiceCallsHandler{
-		IdValidator: func(_ string, _ *http.Request) (string, bool) {
-			return "", false
-		},
+
 		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				return []map[string]any{}
@@ -225,9 +208,7 @@ func TestGetAllWithNegativePageSize(t *testing.T) {
 
 func TestGetAllWithNonNumericValues(t *testing.T) {
 	handler := ServiceCallsHandler{
-		IdValidator: func(_ string, _ *http.Request) (string, bool) {
-			return "", false
-		},
+
 		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				return []map[string]any{}
@@ -266,9 +247,7 @@ func TestGetAllWithNonNumericValues(t *testing.T) {
 
 func TestGetAllWithEmptyResultSet(t *testing.T) {
 	handler := ServiceCallsHandler{
-		IdValidator: func(_ string, _ *http.Request) (string, bool) {
-			return "", false
-		},
+
 		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				return []map[string]any{} // Empty data set
@@ -306,9 +285,7 @@ func TestGetAllWithEmptyResultSet(t *testing.T) {
 
 func TestGetAllWithPageBeyondAvailableData(t *testing.T) {
 	handler := ServiceCallsHandler{
-		IdValidator: func(_ string, _ *http.Request) (string, bool) {
-			return "", false
-		},
+
 		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
@@ -354,9 +331,7 @@ func TestGetAllWithPageBeyondAvailableData(t *testing.T) {
 
 func TestGetAllWithDefaultPageSize(t *testing.T) {
 	handler := ServiceCallsHandler{
-		IdValidator: func(_ string, _ *http.Request) (string, bool) {
-			return "", false
-		},
+
 		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
@@ -422,16 +397,13 @@ func TestGetByIdSuccess(t *testing.T) {
 			},
 			Err: nil,
 		},
-		IdValidator: func(_ string, _ *http.Request) (string, bool) {
-			return id, true
-		},
 	}
 
 	req, err := http.NewRequest("GET", "/services/"+id, nil)
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
-
+	req.SetPathValue("id", id)
 	rw := httptest.NewRecorder()
 	handler.GetById(rw, req)
 
@@ -459,9 +431,6 @@ func TestGetByIdInvalidId(t *testing.T) {
 				return []map[string]any{}
 			},
 			Err: nil,
-		},
-		IdValidator: func(_ string, _ *http.Request) (string, bool) {
-			return "", false // Invalid ID
 		},
 	}
 
@@ -494,16 +463,13 @@ func TestGetByIdRepositoryError(t *testing.T) {
 			},
 			Err: errors.New(expectedError),
 		},
-		IdValidator: func(_ string, _ *http.Request) (string, bool) {
-			return id, true
-		},
 	}
 
 	req, err := http.NewRequest("GET", "/services/"+id, nil)
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
-
+	req.SetPathValue("id", id)
 	rw := httptest.NewRecorder()
 	handler.GetById(rw, req)
 
@@ -537,16 +503,13 @@ func TestGetByIdServiceNotFound(t *testing.T) {
 			},
 			Err: nil,
 		},
-		IdValidator: func(_ string, _ *http.Request) (string, bool) {
-			return nonExistentId, true // Valid but non-existent ID
-		},
 	}
 
 	req, err := http.NewRequest("GET", "/services/"+nonExistentId, nil)
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
-
+	req.SetPathValue("id", nonExistentId)
 	rw := httptest.NewRecorder()
 	handler.GetById(rw, req)
 

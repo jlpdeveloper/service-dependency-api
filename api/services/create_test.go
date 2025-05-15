@@ -15,9 +15,6 @@ import (
 func TestPOSTSuccess(t *testing.T) {
 
 	handler := ServiceCallsHandler{
-		IdValidator: func(_ string, _ *http.Request) (string, bool) {
-			return "", false
-		},
 		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
@@ -72,9 +69,6 @@ func TestPOSTSuccess(t *testing.T) {
 
 func TestPOSTError(t *testing.T) {
 	handler := ServiceCallsHandler{
-		IdValidator: func(_ string, _ *http.Request) (string, bool) {
-			return "", false
-		},
 		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
@@ -110,9 +104,6 @@ func TestPOSTError(t *testing.T) {
 
 func TestPOSTInvalidBody(t *testing.T) {
 	handler := ServiceCallsHandler{
-		IdValidator: func(_ string, _ *http.Request) (string, bool) {
-			return "", false
-		},
 		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any

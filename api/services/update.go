@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net/http"
 	"service-dependency-api/api/services/internal/serviceRepository"
+	"service-dependency-api/internal"
 	errors2 "service-dependency-api/internal/customErrors"
 )
 
@@ -15,7 +16,7 @@ func (u *ServiceCallsHandler) UpdateService(rw http.ResponseWriter, req *http.Re
 		http.Error(rw, err.Error(), http.StatusBadRequest)
 		return
 	}
-	if id, ok := u.IdValidator("id", req); !ok || updateServiceRequest.Id != id {
+	if id, ok := internal.GetGuidFromRequestPath("id", req); !ok || updateServiceRequest.Id != id {
 		http.Error(rw, "Service Id is not valid", http.StatusBadRequest)
 		return
 	}
