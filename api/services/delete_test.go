@@ -9,9 +9,6 @@ import (
 
 func TestDeleteServiceSuccess(t *testing.T) {
 	handler := ServiceCallsHandler{
-		IdValidator: func(_ string, _ *http.Request) (string, bool) {
-			return "1", true // Return valid ID
-		},
 		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
@@ -27,11 +24,11 @@ func TestDeleteServiceSuccess(t *testing.T) {
 		},
 	}
 
-	req, err := http.NewRequest("DELETE", "/services/1", nil)
+	req, err := http.NewRequest("DELETE", "/services/be00abbc-42c6-47aa-a45a-e4e02cb6363f", nil)
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
-
+	req.SetPathValue("id", "be00abbc-42c6-47aa-a45a-e4e02cb6363f")
 	rw := httptest.NewRecorder()
 	handler.DeleteServiceById(rw, req)
 
@@ -47,9 +44,6 @@ func TestDeleteServiceSuccess(t *testing.T) {
 
 func TestDeleteServiceInvalidId(t *testing.T) {
 	handler := ServiceCallsHandler{
-		IdValidator: func(_ string, _ *http.Request) (string, bool) {
-			return "", false // Return error for invalid ID
-		},
 		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
@@ -77,9 +71,6 @@ func TestDeleteServiceInvalidId(t *testing.T) {
 
 func TestDeleteServiceError(t *testing.T) {
 	handler := ServiceCallsHandler{
-		IdValidator: func(_ string, _ *http.Request) (string, bool) {
-			return "1", true
-		},
 		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
@@ -92,11 +83,11 @@ func TestDeleteServiceError(t *testing.T) {
 		},
 	}
 
-	req, err := http.NewRequest("DELETE", "/services/1", nil)
+	req, err := http.NewRequest("DELETE", "/services/be00abbc-42c6-47aa-a45a-e4e02cb6363f", nil)
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
-
+	req.SetPathValue("id", "be00abbc-42c6-47aa-a45a-e4e02cb6363f")
 	rw := httptest.NewRecorder()
 	handler.DeleteServiceById(rw, req)
 
@@ -107,9 +98,6 @@ func TestDeleteServiceError(t *testing.T) {
 
 func TestDeleteNonExistentService(t *testing.T) {
 	handler := ServiceCallsHandler{
-		IdValidator: func(_ string, _ *http.Request) (string, bool) {
-			return "999", true // Return valid but non-existent ID
-		},
 		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
@@ -122,11 +110,11 @@ func TestDeleteNonExistentService(t *testing.T) {
 		},
 	}
 
-	req, err := http.NewRequest("DELETE", "/services/999", nil)
+	req, err := http.NewRequest("DELETE", "/services/be00abbc-42c6-47aa-a45a-e4e02cb6363f", nil)
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
-
+	req.SetPathValue("id", "be00abbc-42c6-47aa-a45a-e4e02cb6363f")
 	rw := httptest.NewRecorder()
 	handler.DeleteServiceById(rw, req)
 

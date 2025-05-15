@@ -15,9 +15,6 @@ import (
 func TestCreateDependencySuccess(t *testing.T) {
 	// Create a handler with mocked dependencies
 	handler := ServiceCallsHandler{
-		PathValidator: func(_ string, _ *http.Request) (string, bool) {
-			return "service-id-123", true // Return a valid service ID
-		},
 		Repository: mockDependencyRepository{
 			Data: func() []map[string]any {
 				return []map[string]any{} // Empty data, not used in this test
@@ -37,12 +34,13 @@ func TestCreateDependencySuccess(t *testing.T) {
 	}
 
 	// Create a request
-	req, err := http.NewRequest("POST", "/services/service-id-123/dependency",
+	req, err := http.NewRequest("POST", "/services/be00abbc-42c6-47aa-a45a-e4e02cb6363f/dependency",
 		io.NopCloser(strings.NewReader(string(dependencyJSON))))
+
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
-
+	req.SetPathValue("id", "be00abbc-42c6-47aa-a45a-e4e02cb6363f")
 	// Create a response recorder
 	rw := httptest.NewRecorder()
 
@@ -58,9 +56,6 @@ func TestCreateDependencySuccess(t *testing.T) {
 func TestCreateDependencyInvalidPath(t *testing.T) {
 	// Create a handler with mocked dependencies
 	handler := ServiceCallsHandler{
-		PathValidator: func(_ string, _ *http.Request) (string, bool) {
-			return "", false // Return an invalid service ID
-		},
 		Repository: mockDependencyRepository{
 			Data: func() []map[string]any {
 				return []map[string]any{} // Empty data, not used in this test
@@ -85,7 +80,7 @@ func TestCreateDependencyInvalidPath(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
-
+	req.SetPathValue("id", "invalid-id")
 	// Create a response recorder
 	rw := httptest.NewRecorder()
 
@@ -101,9 +96,6 @@ func TestCreateDependencyInvalidPath(t *testing.T) {
 func TestCreateDependencyInvalidBody(t *testing.T) {
 	// Create a handler with mocked dependencies
 	handler := ServiceCallsHandler{
-		PathValidator: func(_ string, _ *http.Request) (string, bool) {
-			return "service-id-123", true // Return a valid service ID
-		},
 		Repository: mockDependencyRepository{
 			Data: func() []map[string]any {
 				return []map[string]any{} // Empty data, not used in this test
@@ -113,12 +105,12 @@ func TestCreateDependencyInvalidBody(t *testing.T) {
 	}
 
 	// Create a request with invalid JSON
-	req, err := http.NewRequest("POST", "/services/service-id-123/dependency",
+	req, err := http.NewRequest("POST", "/services/be00abbc-42c6-47aa-a45a-e4e02cb6363f/dependency",
 		io.NopCloser(strings.NewReader("invalid json")))
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
-
+	req.SetPathValue("id", "be00abbc-42c6-47aa-a45a-e4e02cb6363f")
 	// Create a response recorder
 	rw := httptest.NewRecorder()
 
@@ -134,9 +126,6 @@ func TestCreateDependencyInvalidBody(t *testing.T) {
 func TestCreateDependencyInvalidDependency(t *testing.T) {
 	// Create a handler with mocked dependencies
 	handler := ServiceCallsHandler{
-		PathValidator: func(_ string, _ *http.Request) (string, bool) {
-			return "service-id-123", true // Return a valid service ID
-		},
 		Repository: mockDependencyRepository{
 			Data: func() []map[string]any {
 				return []map[string]any{} // Empty data, not used in this test
@@ -155,12 +144,12 @@ func TestCreateDependencyInvalidDependency(t *testing.T) {
 	}
 
 	// Create a request
-	req, err := http.NewRequest("POST", "/services/service-id-123/dependency",
+	req, err := http.NewRequest("POST", "/services/be00abbc-42c6-47aa-a45a-e4e02cb6363f/dependency",
 		io.NopCloser(strings.NewReader(string(dependencyJSON))))
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
-
+	req.SetPathValue("id", "be00abbc-42c6-47aa-a45a-e4e02cb6363f")
 	// Create a response recorder
 	rw := httptest.NewRecorder()
 
@@ -176,9 +165,7 @@ func TestCreateDependencyInvalidDependency(t *testing.T) {
 func TestCreateDependencyRepositoryError(t *testing.T) {
 	// Create a handler with mocked dependencies
 	handler := ServiceCallsHandler{
-		PathValidator: func(_ string, _ *http.Request) (string, bool) {
-			return "service-id-123", true // Return a valid service ID
-		},
+
 		Repository: mockDependencyRepository{
 			Data: func() []map[string]any {
 				return []map[string]any{} // Empty data, not used in this test
@@ -198,12 +185,12 @@ func TestCreateDependencyRepositoryError(t *testing.T) {
 	}
 
 	// Create a request
-	req, err := http.NewRequest("POST", "/services/service-id-123/dependency",
+	req, err := http.NewRequest("POST", "/services/be00abbc-42c6-47aa-a45a-e4e02cb6363f/dependency",
 		io.NopCloser(strings.NewReader(string(dependencyJSON))))
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
-
+	req.SetPathValue("id", "be00abbc-42c6-47aa-a45a-e4e02cb6363f")
 	// Create a response recorder
 	rw := httptest.NewRecorder()
 
@@ -219,9 +206,6 @@ func TestCreateDependencyRepositoryError(t *testing.T) {
 func TestCreateDependencyHTTPError(t *testing.T) {
 	// Create a handler with mocked dependencies
 	handler := ServiceCallsHandler{
-		PathValidator: func(_ string, _ *http.Request) (string, bool) {
-			return "service-id-123", true // Return a valid service ID
-		},
 		Repository: mockDependencyRepository{
 			Data: func() []map[string]any {
 				return []map[string]any{} // Empty data, not used in this test
@@ -244,12 +228,12 @@ func TestCreateDependencyHTTPError(t *testing.T) {
 	}
 
 	// Create a request
-	req, err := http.NewRequest("POST", "/services/service-id-123/dependency",
+	req, err := http.NewRequest("POST", "/services/be00abbc-42c6-47aa-a45a-e4e02cb6363f/dependency",
 		io.NopCloser(strings.NewReader(string(dependencyJSON))))
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
-
+	req.SetPathValue("id", "be00abbc-42c6-47aa-a45a-e4e02cb6363f")
 	// Create a response recorder
 	rw := httptest.NewRecorder()
 

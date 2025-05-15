@@ -4,11 +4,12 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"service-dependency-api/internal"
 	errors2 "service-dependency-api/internal/customErrors"
 )
 
 func (u *ServiceCallsHandler) DeleteServiceById(rw http.ResponseWriter, req *http.Request) {
-	id, ok := u.IdValidator("id", req)
+	id, ok := internal.GetGuidFromRequestPath("id", req)
 	log.Println("Request received - DeleteServiceById - " + id)
 	if !ok {
 		http.Error(rw, "Invalid Request", http.StatusBadRequest)

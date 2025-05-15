@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"service-dependency-api/internal"
 	"strconv"
 )
 
@@ -42,7 +43,7 @@ func (u *ServiceCallsHandler) GetAllServices(rw http.ResponseWriter, req *http.R
 }
 
 func (u *ServiceCallsHandler) GetById(rw http.ResponseWriter, req *http.Request) {
-	id, ok := u.IdValidator("id", req)
+	id, ok := internal.GetGuidFromRequestPath("id", req)
 
 	if !ok {
 		http.Error(rw, "Service id is required", http.StatusBadRequest)

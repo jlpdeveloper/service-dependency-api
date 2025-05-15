@@ -13,14 +13,11 @@ import (
 
 func TestUpdateServiceSuccess(t *testing.T) {
 	handler := ServiceCallsHandler{
-		IdValidator: func(_ string, _ *http.Request) (string, bool) {
-			return "1", true // Return valid ID and false for no error
-		},
 		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
 				m = append(m, map[string]any{
-					"id":          "1",
+					"id":          "be00abbc-42c6-47aa-a45a-e4e02cb6363f",
 					"name":        "ExistingService",
 					"type":        "Internal",
 					"description": "Existing service description",
@@ -33,20 +30,21 @@ func TestUpdateServiceSuccess(t *testing.T) {
 
 	// Create a service update request
 	service := serviceRepository.Service{
-		Id:          "1", // Must match the ID in the mock data
+		Id:          "be00abbc-42c6-47aa-a45a-e4e02cb6363f", // Must match the ID in the mock data
 		Name:        "UpdatedService",
 		ServiceType: "External",
 		Description: "Updated service description",
 		Url:         "http://test.com",
 	}
 	serviceJson, err := json.Marshal(&service)
-	req, err := http.NewRequest("PUT", "/services/1", io.NopCloser(strings.NewReader(string(serviceJson))))
-
+	req, err := http.NewRequest("PUT", "/services/be00abbc-42c6-47aa-a45a-e4e02cb6363f", io.NopCloser(strings.NewReader(string(serviceJson))))
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.SetPathValue("id", "be00abbc-42c6-47aa-a45a-e4e02cb6363f")
 	rw := httptest.NewRecorder()
 	handler.UpdateService(rw, req)
-	if err != nil {
-		t.Errorf("Service UPDATE errored with %s", err.Error())
-	}
+
 	if rw.Code != http.StatusNoContent {
 		t.Errorf("Service UPDATE returned wrong status code: got %v want %v", rw.Code, http.StatusNoContent)
 	}
@@ -54,14 +52,11 @@ func TestUpdateServiceSuccess(t *testing.T) {
 
 func TestUpdateServiceNotFound(t *testing.T) {
 	handler := ServiceCallsHandler{
-		IdValidator: func(_ string, _ *http.Request) (string, bool) {
-			return "999", true // Return non-existent ID
-		},
 		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
 				m = append(m, map[string]any{
-					"id":          "1",
+					"id":          "be00abbc-42c6-47aa-a45a-e4e02cb6364f",
 					"name":        "ExistingService",
 					"type":        "Internal",
 					"description": "Existing service description",
@@ -74,20 +69,20 @@ func TestUpdateServiceNotFound(t *testing.T) {
 
 	// Create a service update request with non-existent ID
 	service := serviceRepository.Service{
-		Id:          "999",
+		Id:          "be00abbc-42c6-47aa-a45a-e4e02cb6363f",
 		Name:        "UpdatedService",
 		ServiceType: "External",
 		Description: "Updated service description",
 		Url:         "http://test.com",
 	}
 	serviceJson, err := json.Marshal(&service)
-	req, err := http.NewRequest("PUT", "/services/999", io.NopCloser(strings.NewReader(string(serviceJson))))
-
+	req, err := http.NewRequest("PUT", "/services/be00abbc-42c6-47aa-a45a-e4e02cb6363f", io.NopCloser(strings.NewReader(string(serviceJson))))
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.SetPathValue("id", "be00abbc-42c6-47aa-a45a-e4e02cb6363f")
 	rw := httptest.NewRecorder()
 	handler.UpdateService(rw, req)
-	if err != nil {
-		t.Errorf("Service UPDATE errored with %s", err.Error())
-	}
 	if rw.Code != http.StatusNotFound {
 		t.Errorf("Service UPDATE returned wrong status code: got %v want %v", rw.Code, http.StatusNotFound)
 	}
@@ -95,14 +90,11 @@ func TestUpdateServiceNotFound(t *testing.T) {
 
 func TestUpdateServiceError(t *testing.T) {
 	handler := ServiceCallsHandler{
-		IdValidator: func(_ string, _ *http.Request) (string, bool) {
-			return "1", true
-		},
 		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
 				m = append(m, map[string]any{
-					"id": "1",
+					"id": "be00abbc-42c6-47aa-a45a-e4e02cb6363f",
 				})
 				return m
 			},
@@ -111,7 +103,7 @@ func TestUpdateServiceError(t *testing.T) {
 	}
 
 	service := serviceRepository.Service{
-		Id:          "1",
+		Id:          "be00abbc-42c6-47aa-a45a-e4e02cb6363f",
 		Name:        "UpdatedService",
 		ServiceType: "External",
 		Description: "Updated service description",
@@ -122,6 +114,7 @@ func TestUpdateServiceError(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
+	req.SetPathValue("id", "be00abbc-42c6-47aa-a45a-e4e02cb6363f")
 	rw := httptest.NewRecorder()
 	handler.UpdateService(rw, req)
 	if rw.Code != http.StatusInternalServerError {
@@ -131,9 +124,6 @@ func TestUpdateServiceError(t *testing.T) {
 
 func TestUpdateServiceInvalidBody(t *testing.T) {
 	handler := ServiceCallsHandler{
-		IdValidator: func(_ string, _ *http.Request) (string, bool) {
-			return "1", false
-		},
 		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
@@ -160,9 +150,6 @@ func TestUpdateServiceInvalidBody(t *testing.T) {
 
 func TestUpdateServiceInvalidId(t *testing.T) {
 	handler := ServiceCallsHandler{
-		IdValidator: func(_ string, _ *http.Request) (string, bool) {
-			return "", false // Return error for invalid ID
-		},
 		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
@@ -198,9 +185,6 @@ func TestUpdateServiceInvalidId(t *testing.T) {
 
 func TestUpdateServiceIdMismatch(t *testing.T) {
 	handler := ServiceCallsHandler{
-		IdValidator: func(_ string, _ *http.Request) (string, bool) {
-			return "1", true // Return valid ID from path
-		},
 		Repository: mockServiceRepository{
 			Data: func() []map[string]any {
 				var m []map[string]any
@@ -226,12 +210,12 @@ func TestUpdateServiceIdMismatch(t *testing.T) {
 	}
 	serviceJson, err := json.Marshal(&service)
 	req, err := http.NewRequest("PUT", "/services/1", io.NopCloser(strings.NewReader(string(serviceJson))))
-
+	if err != nil {
+		panic(err)
+	}
+	req.SetPathValue("id", "be00abbc-42c6-47aa-a45a-e4e02cb6363f")
 	rw := httptest.NewRecorder()
 	handler.UpdateService(rw, req)
-	if err != nil {
-		t.Errorf("Service UPDATE errored with %s", err.Error())
-	}
 
 	if rw.Code != http.StatusBadRequest {
 		t.Errorf("Service UPDATE returned wrong status code: got %v want %v", rw.Code, http.StatusBadRequest)

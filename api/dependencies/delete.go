@@ -2,16 +2,17 @@ package dependencies
 
 import (
 	"net/http"
+	"service-dependency-api/internal"
 	"service-dependency-api/internal/customErrors"
 )
 
 func (s *ServiceCallsHandler) deleteDependency(rw http.ResponseWriter, req *http.Request) {
-	id, ok := s.PathValidator("id", req)
+	id, ok := internal.GetGuidFromRequestPath("id", req)
 	if !ok {
 		http.Error(rw, "path id not valid", http.StatusBadRequest)
 		return
 	}
-	dependsOnID, ok := s.PathValidator("id2", req)
+	dependsOnID, ok := internal.GetGuidFromRequestPath("id2", req)
 	if !ok {
 		http.Error(rw, "path id2 not valid", http.StatusBadRequest)
 		return

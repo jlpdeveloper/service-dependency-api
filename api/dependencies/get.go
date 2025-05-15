@@ -5,11 +5,12 @@ import (
 	"log"
 	"net/http"
 	"service-dependency-api/api/dependencies/internal/dependencyRepository"
+	"service-dependency-api/internal"
 	"service-dependency-api/internal/customErrors"
 )
 
 func (s *ServiceCallsHandler) getDependencies(rw http.ResponseWriter, req *http.Request) {
-	id, ok := s.PathValidator("id", req)
+	id, ok := internal.GetGuidFromRequestPath("id", req)
 	if !ok {
 		http.Error(rw, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
@@ -27,7 +28,7 @@ func (s *ServiceCallsHandler) getDependencies(rw http.ResponseWriter, req *http.
 }
 
 func (s *ServiceCallsHandler) getDependents(rw http.ResponseWriter, req *http.Request) {
-	id, ok := s.PathValidator("id", req)
+	id, ok := internal.GetGuidFromRequestPath("id", req)
 	if !ok {
 		http.Error(rw, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
