@@ -9,7 +9,7 @@ import (
 )
 
 func (s *ServiceCallsHandler) getReleasesByServiceId(rw http.ResponseWriter, req *http.Request) {
-	serviceId, ok := s.PathValidator("id", req)
+	serviceId, ok := internal.GetGuidFromRequestPath("id", req)
 	if !ok {
 		http.Error(rw, "Invalid service ID", http.StatusBadRequest)
 		return

@@ -19,9 +19,6 @@ func TestCreateReleaseSuccess(t *testing.T) {
 		Repository: mockReleaseRepository{
 			Err: nil, // No error
 		},
-		PathValidator: func(name string, req *http.Request) (string, bool) {
-			return validServiceId, true // Mock successful path validation
-		},
 	}
 
 	// Create a release request (without ServiceId as it comes from the path)
@@ -39,7 +36,7 @@ func TestCreateReleaseSuccess(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
-
+	req.SetPathValue("id", validServiceId)
 	// Create a response recorder
 	rw := httptest.NewRecorder()
 
@@ -59,9 +56,6 @@ func TestCreateReleaseInvalidBody(t *testing.T) {
 		Repository: mockReleaseRepository{
 			Err: nil, // No error
 		},
-		PathValidator: func(name string, req *http.Request) (string, bool) {
-			return validServiceId, true // Mock successful path validation
-		},
 	}
 
 	// Create a request with invalid JSON
@@ -70,7 +64,7 @@ func TestCreateReleaseInvalidBody(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
-
+	req.SetPathValue("id", validServiceId)
 	// Create a response recorder
 	rw := httptest.NewRecorder()
 
@@ -88,9 +82,6 @@ func TestCreateReleaseInvalidPathParameter(t *testing.T) {
 	handler := ServiceCallsHandler{
 		Repository: mockReleaseRepository{
 			Err: nil, // No error
-		},
-		PathValidator: func(name string, req *http.Request) (string, bool) {
-			return "invalid-id", false // Mock failed path validation
 		},
 	}
 
@@ -129,9 +120,6 @@ func TestCreateReleaseRepositoryError(t *testing.T) {
 		Repository: mockReleaseRepository{
 			Err: errors.New("repository error"), // Simulate a repository error
 		},
-		PathValidator: func(name string, req *http.Request) (string, bool) {
-			return validServiceId, true // Mock successful path validation
-		},
 	}
 
 	// Create a release request (without ServiceId as it comes from the path)
@@ -149,7 +137,7 @@ func TestCreateReleaseRepositoryError(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
-
+	req.SetPathValue("id", validServiceId)
 	// Create a response recorder
 	rw := httptest.NewRecorder()
 
@@ -172,9 +160,6 @@ func TestCreateReleaseHTTPError(t *testing.T) {
 				Msg:    "Service not found",
 			}, // Simulate an HTTP error
 		},
-		PathValidator: func(name string, req *http.Request) (string, bool) {
-			return validServiceId, true // Mock successful path validation
-		},
 	}
 
 	// Create a release request (without ServiceId as it comes from the path)
@@ -192,7 +177,7 @@ func TestCreateReleaseHTTPError(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
-
+	req.SetPathValue("id", validServiceId)
 	// Create a response recorder
 	rw := httptest.NewRecorder()
 

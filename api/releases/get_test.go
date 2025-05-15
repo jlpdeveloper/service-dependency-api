@@ -35,9 +35,6 @@ func TestGetReleasesByServiceIdSuccess(t *testing.T) {
 			Err:      nil, // No error
 			Releases: mockReleases,
 		},
-		PathValidator: func(name string, req *http.Request) (string, bool) {
-			return validServiceId, true // Mock successful path validation
-		},
 	}
 
 	// Create a request with no pagination parameters (should use defaults)
@@ -46,6 +43,7 @@ func TestGetReleasesByServiceIdSuccess(t *testing.T) {
 		t.Fatalf("Failed to create request: %v", err)
 	}
 
+	req.SetPathValue("id", validServiceId)
 	// Create a response recorder
 	rw := httptest.NewRecorder()
 
@@ -76,9 +74,6 @@ func TestGetReleasesByServiceIdInvalidPathParameter(t *testing.T) {
 		Repository: mockReleaseRepository{
 			Err: nil, // No error
 		},
-		PathValidator: func(name string, req *http.Request) (string, bool) {
-			return "invalid-id", false // Mock failed path validation
-		},
 	}
 
 	// Create a request
@@ -106,9 +101,6 @@ func TestGetReleasesByServiceIdRepositoryError(t *testing.T) {
 		Repository: mockReleaseRepository{
 			Err: errors.New("repository error"), // Simulate a repository error
 		},
-		PathValidator: func(name string, req *http.Request) (string, bool) {
-			return validServiceId, true // Mock successful path validation
-		},
 	}
 
 	// Create a request
@@ -116,7 +108,7 @@ func TestGetReleasesByServiceIdRepositoryError(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
-
+	req.SetPathValue("id", validServiceId)
 	// Create a response recorder
 	rw := httptest.NewRecorder()
 
@@ -139,9 +131,6 @@ func TestGetReleasesByServiceIdHTTPError(t *testing.T) {
 				Msg:    "Service not found",
 			}, // Simulate an HTTP error
 		},
-		PathValidator: func(name string, req *http.Request) (string, bool) {
-			return validServiceId, true // Mock successful path validation
-		},
 	}
 
 	// Create a request
@@ -149,7 +138,7 @@ func TestGetReleasesByServiceIdHTTPError(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
-
+	req.SetPathValue("id", validServiceId)
 	// Create a response recorder
 	rw := httptest.NewRecorder()
 
@@ -182,9 +171,6 @@ func TestGetReleasesByServiceIdWithPagination(t *testing.T) {
 			Err:      nil, // No error
 			Releases: mockReleases,
 		},
-		PathValidator: func(name string, req *http.Request) (string, bool) {
-			return validServiceId, true // Mock successful path validation
-		},
 	}
 
 	// Create a request with pagination parameters (page=1, page_size=10)
@@ -192,7 +178,7 @@ func TestGetReleasesByServiceIdWithPagination(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
-
+	req.SetPathValue("id", validServiceId)
 	// Create a response recorder
 	rw := httptest.NewRecorder()
 
@@ -232,9 +218,6 @@ func TestGetReleasesByServiceIdInvalidPageParameter(t *testing.T) {
 		Repository: mockReleaseRepository{
 			Err: nil, // No error
 		},
-		PathValidator: func(name string, req *http.Request) (string, bool) {
-			return validServiceId, true // Mock successful path validation
-		},
 	}
 
 	// Create a request with invalid page parameter
@@ -242,7 +225,7 @@ func TestGetReleasesByServiceIdInvalidPageParameter(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
-
+	req.SetPathValue("id", validServiceId)
 	// Create a response recorder
 	rw := httptest.NewRecorder()
 
@@ -262,9 +245,6 @@ func TestGetReleasesByServiceIdInvalidPageSizeParameter(t *testing.T) {
 		Repository: mockReleaseRepository{
 			Err: nil, // No error
 		},
-		PathValidator: func(name string, req *http.Request) (string, bool) {
-			return validServiceId, true // Mock successful path validation
-		},
 	}
 
 	// Create a request with invalid page_size parameter
@@ -272,7 +252,7 @@ func TestGetReleasesByServiceIdInvalidPageSizeParameter(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
-
+	req.SetPathValue("id", validServiceId)
 	// Create a response recorder
 	rw := httptest.NewRecorder()
 
@@ -292,9 +272,6 @@ func TestGetReleasesByServiceIdNegativePageParameter(t *testing.T) {
 		Repository: mockReleaseRepository{
 			Err: nil, // No error
 		},
-		PathValidator: func(name string, req *http.Request) (string, bool) {
-			return validServiceId, true // Mock successful path validation
-		},
 	}
 
 	// Create a request with negative page parameter
@@ -302,7 +279,7 @@ func TestGetReleasesByServiceIdNegativePageParameter(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
-
+	req.SetPathValue("id", validServiceId)
 	// Create a response recorder
 	rw := httptest.NewRecorder()
 
@@ -322,9 +299,6 @@ func TestGetReleasesByServiceIdZeroPageSizeParameter(t *testing.T) {
 		Repository: mockReleaseRepository{
 			Err: nil, // No error
 		},
-		PathValidator: func(name string, req *http.Request) (string, bool) {
-			return validServiceId, true // Mock successful path validation
-		},
 	}
 
 	// Create a request with zero page_size parameter
@@ -332,7 +306,7 @@ func TestGetReleasesByServiceIdZeroPageSizeParameter(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
-
+	req.SetPathValue("id", validServiceId)
 	// Create a response recorder
 	rw := httptest.NewRecorder()
 
@@ -376,9 +350,6 @@ func TestGetReleasesInDateRangeSuccess(t *testing.T) {
 			Err:         nil, // No error
 			ServiceInfo: mockServiceInfo,
 		},
-		PathValidator: func(name string, req *http.Request) (string, bool) {
-			return validServiceId, true // Mock successful path validation
-		},
 	}
 	// Create a request with no pagination parameters (should use defaults)
 	req, err := http.NewRequest("GET", "/releases/2025-01-01/2025-02-02", nil)
@@ -390,7 +361,7 @@ func TestGetReleasesInDateRangeSuccess(t *testing.T) {
 	req = req.WithContext(req.Context())
 	req.SetPathValue("startDate", "2025-01-01")
 	req.SetPathValue("endDate", "2025-02-02")
-
+	req.SetPathValue("id", validServiceId)
 	// Create a response recorder
 	rw := httptest.NewRecorder()
 
@@ -420,9 +391,6 @@ func TestGetReleasesInDateRangeInvalidStartDate(t *testing.T) {
 	handler := ServiceCallsHandler{
 		Repository: mockReleaseRepository{
 			Err: nil, // No error
-		},
-		PathValidator: func(name string, req *http.Request) (string, bool) {
-			return "", true // Not used in this test
 		},
 	}
 
@@ -455,9 +423,6 @@ func TestGetReleasesInDateRangeInvalidEndDate(t *testing.T) {
 		Repository: mockReleaseRepository{
 			Err: nil, // No error
 		},
-		PathValidator: func(name string, req *http.Request) (string, bool) {
-			return "", true // Not used in this test
-		},
 	}
 
 	// Create a request with invalid end date
@@ -488,9 +453,6 @@ func TestGetReleasesInDateRangeEndDateBeforeStartDate(t *testing.T) {
 	handler := ServiceCallsHandler{
 		Repository: mockReleaseRepository{
 			Err: nil, // No error
-		},
-		PathValidator: func(name string, req *http.Request) (string, bool) {
-			return "", true // Not used in this test
 		},
 	}
 
