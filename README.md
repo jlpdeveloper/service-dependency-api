@@ -1,5 +1,7 @@
 # Service Dependency API
 
+![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/jlpdeveloper/service-dependency-api?utm_source=oss&utm_medium=github&utm_campaign=jlpdeveloper%2Fservice-dependency-api&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
+
 A RESTful API service designed to map dependencies between services and provide basic information about services in your ecosystem.
 
 _Note_ This API was designed as a project to learn Go. If you wish to use it you can, but you should put it behind an API gateway or something to make it secure. 
