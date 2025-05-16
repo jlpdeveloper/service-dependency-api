@@ -5,45 +5,45 @@ import (
 	"testing"
 )
 
-func TestDebtTypeGetsMember(t *testing.T) {
-	isMember := DebtTypes.IsMember("code")
-	if !isMember {
-		t.Error("DebtType.IsMember failed")
+func TestEnumMembership(t *testing.T) {
+	tests := []struct {
+		name     string
+		enum     StringEnum
+		value    string
+		expected bool
+	}{
+		{"ValidDebtType", DebtTypes, "code", true},
+		{"InvalidDebtType", DebtTypes, "duck", false},
+		{"ValidDebtStatus", DebtStatus, "pending", true},
+		{"InvalidDebtStatus", DebtStatus, "duck", false},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			result := tc.enum.IsMember(tc.value)
+			if result != tc.expected {
+				t.Errorf("%s: IsMember(%q) = %v, want %v", tc.name, tc.value, result, tc.expected)
+			}
+		})
 	}
 }
 
-func TestDebtTypeInvalidMember(t *testing.T) {
-	isMember := DebtTypes.IsMember("duck")
-	if isMember {
-		t.Error("DebtType.IsMember failed")
+func TestEnumMembers(t *testing.T) {
+	tests := []struct {
+		name     string
+		enum     StringEnum
+		expected []string
+	}{
+		{"DebtTypes", DebtTypes, []string{"code", "documentation", "testing", "architecture", "infrastructure", "security"}},
+		{"DebtStatus", DebtStatus, []string{"pending", "remediated", "in_progress"}},
 	}
-}
 
-func TestDebtTypeMembers(t *testing.T) {
-	members := DebtTypes.Members()
-	expectedMembers := []string{"code", "documentation", "testing", "architecture", "infrastructure", "security"}
-	if !slices.Equal(expectedMembers, members) {
-		t.Error("DebtTypes.Members failed")
-	}
-}
-
-func TestStatusGetsMember(t *testing.T) {
-	isMember := DebtStatus.IsMember("pending")
-	if !isMember {
-		t.Error("DebtStatus.IsMember failed")
-	}
-}
-func TestStatusInvalidMember(t *testing.T) {
-	isMember := DebtStatus.IsMember("duck")
-	if isMember {
-		t.Error("DebtStatus.IsMember failed")
-	}
-}
-
-func TestStatusMembers(t *testing.T) {
-	members := DebtStatus.Members()
-	expectedMembers := []string{"pending", "remediated", "in_progress"}
-	if !slices.Equal(expectedMembers, members) {
-		t.Error("DebtStatus.Members failed")
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			members := tc.enum.Members()
+			if !slices.Equal(members, tc.expected) {
+				t.Errorf("%s: Members() = %v, want %v", tc.name, members, tc.expected)
+			}
+		})
 	}
 }
