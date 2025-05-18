@@ -1,0 +1,27 @@
+meta {
+  name: Create Debt
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/services/:id/debt
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: 5931d4b0-dd0a-4654-85fe-78f42890da0d
+}
+
+body:json {
+  {
+    "title": "{{$randomCity}}",
+    "description": "{{$randomBs}}",
+    "type": "code"
+  }
+}
+
+assert {
+  res.status: eq 201
+}
