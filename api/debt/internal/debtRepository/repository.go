@@ -9,3 +9,7 @@ type Neo4jDebtRepository struct {
 func New(driver neo4j.DriverWithContext) *Neo4jDebtRepository {
 	return &Neo4jDebtRepository{driver: driver}
 }
+
+const (
+	DefaultStatus = "pending"
+)

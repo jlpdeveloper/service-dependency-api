@@ -45,7 +45,7 @@ func (n Neo4jDebtRepository) CreateDebtItem(ctx context.Context, debt Debt) erro
 			"title":       debt.Title,
 			"type":        debt.Type,
 			"description": debt.Description,
-			"status":      "pending",
+			"status":      DefaultStatus,
 			"serviceId":   debt.ServiceId,
 		})
 		return nil, err
