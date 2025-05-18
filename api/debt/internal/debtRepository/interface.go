@@ -19,12 +19,18 @@ type Debt struct {
 	Status      string `json:"status"`
 }
 
-func (d Debt) Validate() error {
+func (d *Debt) Validate() error {
 	if d.Status == "" {
 		d.Status = "pending"
 	}
-	if !internal.DebtTypes.IsMember(d.Type) || !internal.DebtStatus.IsMember(d.Status) {
-		return errors.New("invalid debt")
+	if !internal.DebtTypes.IsMember(d.Type) {
+		return errors.New("invalid debt type")
+	}
+	if !internal.DebtStatus.IsMember(d.Status) {
+		return errors.New("invalid debt status")
+	}
+	if d.Title == "" {
+		return errors.New("title is required")
 	}
 	return nil
 }
