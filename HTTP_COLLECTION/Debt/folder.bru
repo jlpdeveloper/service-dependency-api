@@ -1,0 +1,28 @@
+meta {
+  name: Debt
+}
+
+docs {
+  ## Overview
+  The requests in this folder will allow you to add, update, or get reports on tech debt associated with a service
+  
+  ## Enumerations
+  Debt items using the following enumerations for storing data in the database
+  
+  ### Debt Types
+  | Type           | Notes                                                         |
+  |----------------|---------------------------------------------------------------|
+  | code           | code smells or localized poor code quality                    |
+  | documentation  | lack of documentation about app purpose, how tos, etc         |
+  | testing        | lack of types of testing                                      |
+  | architecture   | issues with design choices that affect the entire application |
+  | infrastructure | issues with the infrastructure stack the app runs on          |
+  | security       | security issues, such as using packages past EOL              |
+  
+  ### Debt Statuses
+  | Status      | Notes                                  |
+  |-------------|----------------------------------------|
+  | pending     | a new debt item                        |
+  | in_progress | actively being worked on               |
+  | remediated  | a debt item that is no longer an issue |
+}
