@@ -17,6 +17,8 @@ func (c CallsHandler) createDebt(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 	debt := &debtRepository.Debt{}
+	const maxBodySize = 1 << 20 // 1 MB
+	r.Body = http.MaxBytesReader(rw, r.Body, maxBodySize)
 	err := json.NewDecoder(r.Body).Decode(debt)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusBadRequest)
