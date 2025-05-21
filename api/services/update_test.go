@@ -6,7 +6,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
-	"service-dependency-api/api/services/internal/serviceRepository"
+	"service-dependency-api/repositories"
 	"strings"
 	"testing"
 )
@@ -29,7 +29,7 @@ func TestUpdateServiceSuccess(t *testing.T) {
 	}
 
 	// Create a service update request
-	service := serviceRepository.Service{
+	service := repositories.Service{
 		Id:          "be00abbc-42c6-47aa-a45a-e4e02cb6363f", // Must match the ID in the mock data
 		Name:        "UpdatedService",
 		ServiceType: "External",
@@ -43,7 +43,7 @@ func TestUpdateServiceSuccess(t *testing.T) {
 	}
 	req.SetPathValue("id", "be00abbc-42c6-47aa-a45a-e4e02cb6363f")
 	rw := httptest.NewRecorder()
-	handler.UpdateService(rw, req)
+	handler.updateService(rw, req)
 
 	if rw.Code != http.StatusNoContent {
 		t.Errorf("Service UPDATE returned wrong status code: got %v want %v", rw.Code, http.StatusNoContent)
@@ -68,7 +68,7 @@ func TestUpdateServiceNotFound(t *testing.T) {
 	}
 
 	// Create a service update request with non-existent ID
-	service := serviceRepository.Service{
+	service := repositories.Service{
 		Id:          "be00abbc-42c6-47aa-a45a-e4e02cb6363f",
 		Name:        "UpdatedService",
 		ServiceType: "External",
@@ -82,7 +82,7 @@ func TestUpdateServiceNotFound(t *testing.T) {
 	}
 	req.SetPathValue("id", "be00abbc-42c6-47aa-a45a-e4e02cb6363f")
 	rw := httptest.NewRecorder()
-	handler.UpdateService(rw, req)
+	handler.updateService(rw, req)
 	if rw.Code != http.StatusNotFound {
 		t.Errorf("Service UPDATE returned wrong status code: got %v want %v", rw.Code, http.StatusNotFound)
 	}
@@ -102,7 +102,7 @@ func TestUpdateServiceError(t *testing.T) {
 		},
 	}
 
-	service := serviceRepository.Service{
+	service := repositories.Service{
 		Id:          "be00abbc-42c6-47aa-a45a-e4e02cb6363f",
 		Name:        "UpdatedService",
 		ServiceType: "External",
@@ -116,7 +116,7 @@ func TestUpdateServiceError(t *testing.T) {
 	}
 	req.SetPathValue("id", "be00abbc-42c6-47aa-a45a-e4e02cb6363f")
 	rw := httptest.NewRecorder()
-	handler.UpdateService(rw, req)
+	handler.updateService(rw, req)
 	if rw.Code != http.StatusInternalServerError {
 		t.Errorf("Service UPDATE returned wrong status code: got %v want %v", rw.Code, http.StatusInternalServerError)
 	}
@@ -138,7 +138,7 @@ func TestUpdateServiceInvalidBody(t *testing.T) {
 	req, err := http.NewRequest("PUT", "/services/1", io.NopCloser(strings.NewReader("some invalid json")))
 
 	rw := httptest.NewRecorder()
-	handler.UpdateService(rw, req)
+	handler.updateService(rw, req)
 	if err != nil {
 		t.Errorf("Service UPDATE errored with %s", err.Error())
 	}
@@ -162,7 +162,7 @@ func TestUpdateServiceInvalidId(t *testing.T) {
 		},
 	}
 
-	service := serviceRepository.Service{
+	service := repositories.Service{
 		Id:          "invalid",
 		Name:        "UpdatedService",
 		ServiceType: "External",
@@ -173,7 +173,7 @@ func TestUpdateServiceInvalidId(t *testing.T) {
 	req, err := http.NewRequest("PUT", "/services/invalid", io.NopCloser(strings.NewReader(string(serviceJson))))
 
 	rw := httptest.NewRecorder()
-	handler.UpdateService(rw, req)
+	handler.updateService(rw, req)
 	if err != nil {
 		t.Errorf("Service UPDATE errored with %s", err.Error())
 	}
@@ -201,7 +201,7 @@ func TestUpdateServiceIdMismatch(t *testing.T) {
 	}
 
 	// Create a service update request with ID that doesn't match the path ID
-	service := serviceRepository.Service{
+	service := repositories.Service{
 		Id:          "2", // Different from the ID in the path (1)
 		Name:        "UpdatedService",
 		ServiceType: "External",
@@ -215,7 +215,7 @@ func TestUpdateServiceIdMismatch(t *testing.T) {
 	}
 	req.SetPathValue("id", "be00abbc-42c6-47aa-a45a-e4e02cb6363f")
 	rw := httptest.NewRecorder()
-	handler.UpdateService(rw, req)
+	handler.updateService(rw, req)
 
 	if rw.Code != http.StatusBadRequest {
 		t.Errorf("Service UPDATE returned wrong status code: got %v want %v", rw.Code, http.StatusBadRequest)

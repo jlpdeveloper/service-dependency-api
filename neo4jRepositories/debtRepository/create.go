@@ -28,11 +28,11 @@ func (n Neo4jDebtRepository) CreateDebtItem(ctx context.Context, debt repositori
 		}
 
 		// If no records are returned, the service doesn't exist
-		records, err := result.Collect(ctx)
+		hasRecords, err := result.HasRecords(ctx)
 		if err != nil {
 			return nil, err
 		}
-		if len(records) == 0 {
+		if !hasRecords {
 			return nil, &customErrors.HTTPError{
 				Status: 404,
 				Msg:    fmt.Sprintf("Service not found: %s", debt.ServiceId),

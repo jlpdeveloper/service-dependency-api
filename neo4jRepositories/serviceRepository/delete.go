@@ -7,7 +7,7 @@ import (
 	"service-dependency-api/internal/customErrors"
 )
 
-func (d *ServiceNeo4jRepository) DeleteService(ctx context.Context, id string) (err error) {
+func (d *Neo4jServiceRepository) DeleteService(ctx context.Context, id string) (err error) {
 	session := d.Driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
 	defer func() {
 		closeErr := session.Close(ctx)

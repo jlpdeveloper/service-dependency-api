@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-func (u *ServiceCallsHandler) GetAllServices(rw http.ResponseWriter, req *http.Request) {
+func (u *ServiceCallsHandler) getAllServices(rw http.ResponseWriter, req *http.Request) {
 	page, err := strconv.Atoi(req.URL.Query().Get("page"))
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusBadRequest)
@@ -42,7 +42,7 @@ func (u *ServiceCallsHandler) GetAllServices(rw http.ResponseWriter, req *http.R
 	}
 }
 
-func (u *ServiceCallsHandler) GetById(rw http.ResponseWriter, req *http.Request) {
+func (u *ServiceCallsHandler) getById(rw http.ResponseWriter, req *http.Request) {
 	id, ok := internal.GetGuidFromRequestPath("id", req)
 
 	if !ok {

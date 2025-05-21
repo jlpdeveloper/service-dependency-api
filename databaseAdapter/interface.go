@@ -16,11 +16,16 @@ type SessionManager interface {
 // TransactionManager interface abstracts Neo4j transaction operations
 type TransactionManager interface {
 	Run(ctx context.Context, query string, params map[string]any) (ResultManager, error)
+	ReturnBase() any
 }
 
 // ResultManager interface abstracts Neo4j result operations
 type ResultManager interface {
-	Collect(ctx context.Context) ([]Record, error)
+	Collect(ctx context.Context) (any, error)
+	Single(ctx context.Context) (any, error)
+	HasRecords(ctx context.Context) (bool, error)
+	Next(ctx context.Context) bool
+	GetProperty(ctx context.Context, key string) (any, error)
 }
 
 // Record interface abstracts Neo4j record operations

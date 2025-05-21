@@ -6,7 +6,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
-	"service-dependency-api/api/services/internal/serviceRepository"
+	"service-dependency-api/repositories"
 	"strconv"
 	"strings"
 	"testing"
@@ -30,7 +30,7 @@ func TestPOSTSuccess(t *testing.T) {
 		},
 	}
 
-	service := serviceRepository.Service{
+	service := repositories.Service{
 		Name:        "MockService",
 		ServiceType: "Internal",
 		Description: "Unit test service",
@@ -40,14 +40,14 @@ func TestPOSTSuccess(t *testing.T) {
 	req, err := http.NewRequest("POST", "/hello/world?name=test", io.NopCloser(strings.NewReader(string(serviceJson))))
 
 	rw := httptest.NewRecorder()
-	handler.CreateService(rw, req)
+	handler.createService(rw, req)
 	if err != nil {
 		t.Errorf("Service POST errored with %s", err.Error())
 	}
 	if rw.Code != http.StatusCreated {
 		t.Errorf("Service POST errored with %s", strconv.Itoa(rw.Code))
 	}
-	returnedService := &serviceRepository.Service{}
+	returnedService := &repositories.Service{}
 	err = json.Unmarshal(rw.Body.Bytes(), &returnedService)
 	switch {
 	case err != nil:
@@ -84,7 +84,7 @@ func TestPOSTError(t *testing.T) {
 		},
 	}
 
-	service := serviceRepository.Service{
+	service := repositories.Service{
 		Name:        "MockService",
 		ServiceType: "Internal",
 		Description: "Unit test service",
@@ -96,7 +96,7 @@ func TestPOSTError(t *testing.T) {
 		panic(err)
 	}
 	rw := httptest.NewRecorder()
-	handler.CreateService(rw, req)
+	handler.createService(rw, req)
 	if rw.Code != http.StatusInternalServerError {
 		t.Errorf("Service POST errored with %s", strconv.Itoa(rw.Code))
 	}
@@ -118,7 +118,7 @@ func TestPOSTInvalidBody(t *testing.T) {
 	req, err := http.NewRequest("POST", "/hello/world?name=test", io.NopCloser(strings.NewReader("some text")))
 
 	rw := httptest.NewRecorder()
-	handler.CreateService(rw, req)
+	handler.createService(rw, req)
 	if err != nil {
 		t.Errorf("Service POST errored with %s", err.Error())
 	}

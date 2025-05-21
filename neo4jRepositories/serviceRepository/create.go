@@ -2,11 +2,12 @@ package serviceRepository
 
 import (
 	"context"
-	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
+	"service-dependency-api/databaseAdapter"
+	"service-dependency-api/repositories"
 )
 
-func (d *ServiceNeo4jRepository) CreateService(ctx context.Context, service Service) (id string, err error) {
-	session := d.Driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
+func (d *Neo4jServiceRepository) CreateService(ctx context.Context, service repositories.Service) (id string, err error) {
+	session := d.manager.NewSession(ctx, databaseAdapter.SessionConfig{AccessMode: "write"})
 	defer func() {
 		closeErr := session.Close(ctx)
 		if err == nil {
@@ -14,7 +15,7 @@ func (d *ServiceNeo4jRepository) CreateService(ctx context.Context, service Serv
 		}
 	}()
 
-	createServiceTransaction := func(tx neo4j.ManagedTransaction) (any, error) {
+	createServiceTransaction := func(tx databaseAdapter.TransactionManager) (any, error) {
 		result, err := tx.Run(
 			ctx, `
         CREATE (n: Service {id: randomuuid(), created: datetime(), name: $name, type: $type, description: $description, url: $url})
@@ -28,12 +29,8 @@ func (d *ServiceNeo4jRepository) CreateService(ctx context.Context, service Serv
 		if err != nil {
 			return "", err
 		}
-		svc, err := result.Single(ctx)
-		if err != nil {
-			return "", err
-		}
-		svcMap := svc.AsMap()
-		if svcId, ok := svcMap["id"]; ok {
+		svcId, err := result.GetProperty(ctx, "id")
+		if svcId != nil {
 			if idStr, ok := svcId.(string); ok {
 				return idStr, err
 			}

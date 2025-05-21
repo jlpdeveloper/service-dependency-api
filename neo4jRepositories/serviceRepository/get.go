@@ -3,10 +3,11 @@ package serviceRepository
 import (
 	"context"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
+	"service-dependency-api/repositories"
 	"sync"
 )
 
-func (d *ServiceNeo4jRepository) GetAllServices(ctx context.Context, page int, pageSize int) (services []Service, err error) {
+func (d *Neo4jServiceRepository) GetAllServices(ctx context.Context, page int, pageSize int) (services []repositories.Service, err error) {
 	session := d.Driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeRead})
 	defer func() {
 		closeErr := session.Close(ctx)
@@ -14,7 +15,7 @@ func (d *ServiceNeo4jRepository) GetAllServices(ctx context.Context, page int, p
 			err = closeErr
 		}
 	}()
-	services = []Service{}
+	services = []repositories.Service{}
 	wg := sync.WaitGroup{}
 	wg.Add(1)
 	getPagedData := func(tx neo4j.ManagedTransaction) (any, error) {
@@ -61,7 +62,7 @@ func (d *ServiceNeo4jRepository) GetAllServices(ctx context.Context, page int, p
 	return services, nil
 }
 
-func (d *ServiceNeo4jRepository) GetServiceById(ctx context.Context, id string) (svc Service, err error) {
+func (d *Neo4jServiceRepository) GetServiceById(ctx context.Context, id string) (svc repositories.Service, err error) {
 	session := d.Driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeRead})
 	defer func() {
 		closeErr := session.Close(ctx)
@@ -80,22 +81,22 @@ func (d *ServiceNeo4jRepository) GetServiceById(ctx context.Context, id string) 
 		})
 
 		if err != nil {
-			return Service{}, err
+			return repositories.Service{}, err
 		}
 
 		if !result.Next(ctx) {
-			return Service{}, nil // No service found with this ID
+			return repositories.Service{}, nil // No service found with this ID
 		}
 
 		record := result.Record()
 		node, ok := record.Get("s")
 		if !ok {
-			return Service{}, nil
+			return repositories.Service{}, nil
 		}
 
 		n, ok := node.(neo4j.Node)
 		if !ok {
-			return Service{}, nil
+			return repositories.Service{}, nil
 		}
 
 		return d.mapNodeToService(n), nil
@@ -103,12 +104,12 @@ func (d *ServiceNeo4jRepository) GetServiceById(ctx context.Context, id string) 
 
 	service, readErr := session.ExecuteRead(ctx, getServiceById)
 	if readErr != nil {
-		return Service{}, readErr
+		return repositories.Service{}, readErr
 	}
 
 	if service == nil {
-		return Service{}, nil
+		return repositories.Service{}, nil
 	}
 
-	return service.(Service), nil
+	return service.(repositories.Service), nil
 }

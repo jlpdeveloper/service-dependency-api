@@ -1,8 +1,6 @@
-package serviceRepository
+package repositories
 
-import (
-	"testing"
-)
+import "testing"
 
 func TestValidate(t *testing.T) {
 	tests := []struct {

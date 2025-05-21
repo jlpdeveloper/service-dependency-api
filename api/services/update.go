@@ -4,13 +4,13 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
-	"service-dependency-api/api/services/internal/serviceRepository"
 	"service-dependency-api/internal"
-	errors2 "service-dependency-api/internal/customErrors"
+	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/repositories"
 )
 
-func (u *ServiceCallsHandler) UpdateService(rw http.ResponseWriter, req *http.Request) {
-	updateServiceRequest := &serviceRepository.Service{}
+func (u *ServiceCallsHandler) updateService(rw http.ResponseWriter, req *http.Request) {
+	updateServiceRequest := &repositories.Service{}
 	err := json.NewDecoder(req.Body).Decode(updateServiceRequest)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusBadRequest)
@@ -28,7 +28,7 @@ func (u *ServiceCallsHandler) UpdateService(rw http.ResponseWriter, req *http.Re
 
 	err = u.Repository.UpdateService(req.Context(), *updateServiceRequest)
 
-	var httpErr *errors2.HTTPError
+	var httpErr *customErrors.HTTPError
 	if err != nil {
 		if errors.As(err, &httpErr) {
 			http.Error(rw, httpErr.Error(), httpErr.Status)

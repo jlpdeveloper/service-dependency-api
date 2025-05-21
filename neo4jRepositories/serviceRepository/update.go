@@ -5,9 +5,10 @@ import (
 	"errors"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/repositories"
 )
 
-func (d *ServiceNeo4jRepository) UpdateService(ctx context.Context, service Service) (err error) {
+func (d *Neo4jServiceRepository) UpdateService(ctx context.Context, service repositories.Service) (err error) {
 	session := d.Driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
 	defer func() {
 		closeErr := session.Close(ctx)
