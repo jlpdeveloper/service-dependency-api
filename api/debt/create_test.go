@@ -6,8 +6,8 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
-	"service-dependency-api/api/debt/internal/debtRepository"
 	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/repositories"
 	"strings"
 	"testing"
 )
@@ -22,7 +22,7 @@ func TestCreateDebtSuccess(t *testing.T) {
 	}
 
 	// Create a debt request (without ServiceId as it comes from the path)
-	debt := &debtRepository.Debt{
+	debt := &repositories.Debt{
 		Type:        "code",
 		Title:       "Test Debt",
 		Description: "This is a test debt",
@@ -91,7 +91,7 @@ func TestCreateDebtInvalidPathParameter(t *testing.T) {
 	}
 
 	// Create a debt request
-	debt := &debtRepository.Debt{
+	debt := &repositories.Debt{
 		Type:        "code",
 		Title:       "Test Debt",
 		Description: "This is a test debt",
@@ -131,7 +131,7 @@ func TestCreateDebtRepositoryError(t *testing.T) {
 	}
 
 	// Create a debt request (without ServiceId as it comes from the path)
-	debt := &debtRepository.Debt{
+	debt := &repositories.Debt{
 		Type:        "code",
 		Title:       "Test Debt",
 		Description: "This is a test debt",
@@ -175,7 +175,7 @@ func TestCreateDebtHTTPError(t *testing.T) {
 	}
 
 	// Create a debt request (without ServiceId as it comes from the path)
-	debt := &debtRepository.Debt{
+	debt := &repositories.Debt{
 		Type:        "code",
 		Title:       "Test Debt",
 		Description: "This is a test debt",

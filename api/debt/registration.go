@@ -3,11 +3,12 @@ package debt
 import (
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 	"net/http"
-	"service-dependency-api/api/debt/internal/debtRepository"
+	"service-dependency-api/neo4jRepositories/debtRepository"
+	"service-dependency-api/repositories"
 )
 
 type CallsHandler struct {
-	Repository debtRepository.Repository
+	Repository repositories.DebtRepository
 }
 
 func (c CallsHandler) Register(mux *http.ServeMux) {

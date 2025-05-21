@@ -2,15 +2,15 @@ package debt
 
 import (
 	"context"
-	"service-dependency-api/api/debt/internal/debtRepository"
+	"service-dependency-api/repositories"
 )
 
 type mockDebtRepository struct {
 	Err   error
-	Debts []*debtRepository.Debt
+	Debts []*repositories.Debt
 }
 
-func (repo mockDebtRepository) CreateDebtItem(_ context.Context, _ debtRepository.Debt) error {
+func (repo mockDebtRepository) CreateDebtItem(_ context.Context, _ repositories.Debt) error {
 	if repo.Err != nil {
 		return repo.Err
 	}

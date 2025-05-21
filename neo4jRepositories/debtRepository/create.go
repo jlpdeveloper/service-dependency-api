@@ -3,17 +3,18 @@ package debtRepository
 import (
 	"context"
 	"fmt"
-	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
+	"service-dependency-api/databaseAdapter"
 	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/repositories"
 )
 
-func (n Neo4jDebtRepository) CreateDebtItem(ctx context.Context, debt Debt) error {
-	session := n.driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
+func (n Neo4jDebtRepository) CreateDebtItem(ctx context.Context, debt repositories.Debt) error {
+	session := n.manager.NewSession(ctx, databaseAdapter.SessionConfig{AccessMode: "write"})
 	defer func() {
 		_ = session.Close(ctx)
 	}()
 
-	createDebtTransaction := func(tx neo4j.ManagedTransaction) (any, error) {
+	createDebtTransaction := func(tx databaseAdapter.TransactionManager) (any, error) {
 		// Check if the service exists
 		checkQuery := `
 			MATCH (s:Service {id: $serviceId})
