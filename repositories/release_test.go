@@ -1,4 +1,4 @@
-package releaseRepository
+package repositories
 
 import (
 	"encoding/json"

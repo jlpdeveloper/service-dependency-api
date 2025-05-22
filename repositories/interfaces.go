@@ -1,6 +1,9 @@
 package repositories
 
-import "context"
+import (
+	"context"
+	"time"
+)
 
 type DebtRepository interface {
 	CreateDebtItem(ctx context.Context, debt Debt) error
@@ -20,4 +23,10 @@ type DependencyRepository interface {
 	GetDependencies(ctx context.Context, id string) ([]*Dependency, error)
 	GetDependents(ctx context.Context, id string) ([]*Dependency, error)
 	DeleteDependency(ctx context.Context, id string, dependsOnID string) error
+}
+
+type ReleaseRepository interface {
+	CreateRelease(ctx context.Context, release Release) error
+	GetReleasesByServiceId(ctx context.Context, serviceId string, page, pageSize int) ([]*Release, error)
+	GetReleasesInDateRange(ctx context.Context, startDate, endDate time.Time, page, pageSize int) ([]*ServiceReleaseInfo, error)
 }

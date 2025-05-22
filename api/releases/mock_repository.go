@@ -2,17 +2,17 @@ package releases
 
 import (
 	"context"
-	"service-dependency-api/api/releases/internal/releaseRepository"
+	"service-dependency-api/repositories"
 	"time"
 )
 
 type mockReleaseRepository struct {
 	Err         error
-	Releases    []*releaseRepository.Release
-	ServiceInfo []*releaseRepository.ServiceReleaseInfo
+	Releases    []*repositories.Release
+	ServiceInfo []*repositories.ServiceReleaseInfo
 }
 
-func (repo mockReleaseRepository) CreateRelease(_ context.Context, _ releaseRepository.Release) error {
+func (repo mockReleaseRepository) CreateRelease(_ context.Context, _ repositories.Release) error {
 	if repo.Err != nil {
 		return repo.Err
 	}
@@ -21,7 +21,7 @@ func (repo mockReleaseRepository) CreateRelease(_ context.Context, _ releaseRepo
 	return nil
 }
 
-func (repo mockReleaseRepository) GetReleasesByServiceId(_ context.Context, _ string, page, pageSize int) ([]*releaseRepository.Release, error) {
+func (repo mockReleaseRepository) GetReleasesByServiceId(_ context.Context, _ string, page, pageSize int) ([]*repositories.Release, error) {
 	if repo.Err != nil {
 		return nil, repo.Err
 	}
@@ -32,7 +32,7 @@ func (repo mockReleaseRepository) GetReleasesByServiceId(_ context.Context, _ st
 
 	// Check if start is beyond the array length
 	if start >= len(repo.Releases) {
-		return []*releaseRepository.Release{}, nil
+		return []*repositories.Release{}, nil
 	}
 
 	// Ensure end doesn't exceed array length
@@ -44,7 +44,7 @@ func (repo mockReleaseRepository) GetReleasesByServiceId(_ context.Context, _ st
 	return repo.Releases[start:end], nil
 }
 
-func (repo mockReleaseRepository) GetReleasesInDateRange(_ context.Context, _ time.Time, _ time.Time, page, pageSize int) ([]*releaseRepository.ServiceReleaseInfo, error) {
+func (repo mockReleaseRepository) GetReleasesInDateRange(_ context.Context, _ time.Time, _ time.Time, page, pageSize int) ([]*repositories.ServiceReleaseInfo, error) {
 	if repo.Err != nil {
 		return nil, repo.Err
 	}
@@ -54,7 +54,7 @@ func (repo mockReleaseRepository) GetReleasesInDateRange(_ context.Context, _ ti
 
 	// Check if start is beyond the array length
 	if start >= len(repo.ServiceInfo) {
-		return []*releaseRepository.ServiceReleaseInfo{}, nil
+		return []*repositories.ServiceReleaseInfo{}, nil
 	}
 
 	// Ensure end doesn't exceed array length

@@ -6,8 +6,8 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
-	"service-dependency-api/api/releases/internal/releaseRepository"
 	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/repositories"
 	"strings"
 	"testing"
 )
@@ -22,7 +22,7 @@ func TestCreateReleaseSuccess(t *testing.T) {
 	}
 
 	// Create a release request (without ServiceId as it comes from the path)
-	release := &releaseRepository.Release{
+	release := &repositories.Release{
 		Url: "https://example.com/release",
 	}
 	releaseJSON, err := json.Marshal(release)
@@ -86,7 +86,7 @@ func TestCreateReleaseInvalidPathParameter(t *testing.T) {
 	}
 
 	// Create a release request
-	release := &releaseRepository.Release{
+	release := &repositories.Release{
 		Url: "https://example.com/release",
 	}
 	releaseJSON, err := json.Marshal(release)
@@ -123,7 +123,7 @@ func TestCreateReleaseRepositoryError(t *testing.T) {
 	}
 
 	// Create a release request (without ServiceId as it comes from the path)
-	release := &releaseRepository.Release{
+	release := &repositories.Release{
 		Url: "https://example.com/release",
 	}
 	releaseJSON, err := json.Marshal(release)
@@ -163,7 +163,7 @@ func TestCreateReleaseHTTPError(t *testing.T) {
 	}
 
 	// Create a release request (without ServiceId as it comes from the path)
-	release := &releaseRepository.Release{
+	release := &repositories.Release{
 		Url: "https://example.com/release",
 	}
 	releaseJSON, err := json.Marshal(release)

@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
-	"service-dependency-api/api/releases/internal/releaseRepository"
 	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/repositories"
 	"testing"
 	"time"
 )
@@ -15,7 +15,7 @@ import (
 func TestGetReleasesByServiceIdSuccess(t *testing.T) {
 	// Create a handler with mocked dependencies
 	validServiceId := "123e4567-e89b-12d3-a456-426614174000" // Valid GUID
-	mockReleases := []*releaseRepository.Release{
+	mockReleases := []*repositories.Release{
 		{
 			ServiceId:   validServiceId,
 			ReleaseDate: time.Now().UTC(),
@@ -56,7 +56,7 @@ func TestGetReleasesByServiceIdSuccess(t *testing.T) {
 	}
 
 	// Decode the response body
-	var releases []*releaseRepository.Release
+	var releases []*repositories.Release
 	err = json.NewDecoder(rw.Body).Decode(&releases)
 	if err != nil {
 		t.Fatalf("Failed to decode response body: %v", err)
@@ -156,9 +156,9 @@ func TestGetReleasesByServiceIdWithPagination(t *testing.T) {
 	validServiceId := "123e4567-e89b-12d3-a456-426614174000" // Valid GUID
 
 	// Create 30 mock releases
-	mockReleases := make([]*releaseRepository.Release, 30)
+	mockReleases := make([]*repositories.Release, 30)
 	for i := 0; i < 30; i++ {
-		mockReleases[i] = &releaseRepository.Release{
+		mockReleases[i] = &repositories.Release{
 			ServiceId:   validServiceId,
 			ReleaseDate: time.Now().UTC(),
 			Url:         fmt.Sprintf("https://example.com/release%d", i+1),
@@ -191,7 +191,7 @@ func TestGetReleasesByServiceIdWithPagination(t *testing.T) {
 	}
 
 	// Decode the response body
-	var releases []*releaseRepository.Release
+	var releases []*repositories.Release
 	err = json.NewDecoder(rw.Body).Decode(&releases)
 	if err != nil {
 		t.Fatalf("Failed to decode response body: %v", err)
@@ -322,11 +322,11 @@ func TestGetReleasesByServiceIdZeroPageSizeParameter(t *testing.T) {
 func TestGetReleasesInDateRangeSuccess(t *testing.T) {
 	// Create a handler with mocked dependencies
 	validServiceId := "123e4567-e89b-12d3-a456-426614174000" // Valid GUID
-	mockServiceInfo := []*releaseRepository.ServiceReleaseInfo{
+	mockServiceInfo := []*repositories.ServiceReleaseInfo{
 		{
 			ServiceType: "service-type-1",
 			ServiceName: "service-name-1",
-			Release: releaseRepository.Release{
+			Release: repositories.Release{
 				ServiceId:   validServiceId,
 				ReleaseDate: time.Now().UTC(),
 				Url:         "https://example.com/release1",
@@ -336,7 +336,7 @@ func TestGetReleasesInDateRangeSuccess(t *testing.T) {
 		{
 			ServiceType: "service-type-2",
 			ServiceName: "service-name-2",
-			Release: releaseRepository.Release{
+			Release: repositories.Release{
 				ServiceId:   validServiceId,
 				ReleaseDate: time.Now().UTC(),
 				Url:         "https://example.com/release2",
@@ -374,7 +374,7 @@ func TestGetReleasesInDateRangeSuccess(t *testing.T) {
 	}
 
 	// Decode the response body
-	var releases []*releaseRepository.ServiceReleaseInfo
+	var releases []*repositories.ServiceReleaseInfo
 	err = json.NewDecoder(rw.Body).Decode(&releases)
 	if err != nil {
 		t.Fatalf("Failed to decode response body: %v", err)

@@ -5,14 +5,10 @@ import (
 	"fmt"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/repositories"
 )
 
-func (r *Neo4jReleaseRepository) CreateRelease(ctx context.Context, release Release) error {
-	session := r.driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
-	defer func() {
-		_ = session.Close(ctx)
-	}()
-
+func (r *Neo4jReleaseRepository) CreateRelease(ctx context.Context, release repositories.Release) error {
 	createReleaseTransaction := func(tx neo4j.ManagedTransaction) (any, error) {
 		// Check if the service exists
 		checkQuery := `
@@ -68,6 +64,6 @@ func (r *Neo4jReleaseRepository) CreateRelease(ctx context.Context, release Rele
 		return nil, nil
 	}
 
-	_, err := session.ExecuteWrite(ctx, createReleaseTransaction)
+	_, err := r.manager.ExecuteWrite(ctx, createReleaseTransaction)
 	return err
 }
