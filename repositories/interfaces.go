@@ -14,3 +14,10 @@ type ServiceRepository interface {
 	DeleteService(ctx context.Context, id string) error
 	GetServiceById(ctx context.Context, id string) (Service, error)
 }
+
+type DependencyRepository interface {
+	AddDependency(ctx context.Context, id string, dependency *Dependency) error
+	GetDependencies(ctx context.Context, id string) ([]*Dependency, error)
+	GetDependents(ctx context.Context, id string) ([]*Dependency, error)
+	DeleteDependency(ctx context.Context, id string, dependsOnID string) error
+}

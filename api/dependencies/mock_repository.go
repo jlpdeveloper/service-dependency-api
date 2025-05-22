@@ -3,8 +3,8 @@ package dependencies
 import (
 	"context"
 	"fmt"
-	"service-dependency-api/api/dependencies/internal/dependencyRepository"
 	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/repositories"
 )
 
 type mockDependencyRepository struct {
@@ -14,7 +14,7 @@ type mockDependencyRepository struct {
 	DependencyExists bool
 }
 
-func (repo mockDependencyRepository) AddDependency(_ context.Context, _ string, _ *dependencyRepository.Dependency) error {
+func (repo mockDependencyRepository) AddDependency(_ context.Context, _ string, _ *repositories.Dependency) error {
 	if repo.Err != nil {
 		return repo.Err
 	}
@@ -24,17 +24,17 @@ func (repo mockDependencyRepository) AddDependency(_ context.Context, _ string, 
 	return nil
 }
 
-func (repo mockDependencyRepository) GetDependencies(_ context.Context, _ string) ([]*dependencyRepository.Dependency, error) {
+func (repo mockDependencyRepository) GetDependencies(_ context.Context, _ string) ([]*repositories.Dependency, error) {
 	if repo.Err != nil {
 		return nil, repo.Err
 	}
 
 	// Convert the mock data to the expected return type
 	data := repo.Data()
-	dependencies := make([]*dependencyRepository.Dependency, 0, len(data))
+	dependencies := make([]*repositories.Dependency, 0, len(data))
 
 	for _, item := range data {
-		dep := &dependencyRepository.Dependency{}
+		dep := &repositories.Dependency{}
 
 		if id, ok := item["id"].(string); ok {
 			dep.Id = id
@@ -52,17 +52,17 @@ func (repo mockDependencyRepository) GetDependencies(_ context.Context, _ string
 	return dependencies, nil
 }
 
-func (repo mockDependencyRepository) GetDependents(_ context.Context, _ string) ([]*dependencyRepository.Dependency, error) {
+func (repo mockDependencyRepository) GetDependents(_ context.Context, _ string) ([]*repositories.Dependency, error) {
 	if repo.Err != nil {
 		return nil, repo.Err
 	}
 
 	// Convert the mock data to the expected return type
 	data := repo.Data()
-	dependencies := make([]*dependencyRepository.Dependency, 0, len(data))
+	dependencies := make([]*repositories.Dependency, 0, len(data))
 
 	for _, item := range data {
-		dep := &dependencyRepository.Dependency{}
+		dep := &repositories.Dependency{}
 
 		if id, ok := item["id"].(string); ok {
 			dep.Id = id
