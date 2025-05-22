@@ -5,16 +5,10 @@ import (
 	"errors"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/repositories"
 )
 
-func (d *ServiceNeo4jRepository) UpdateService(ctx context.Context, service Service) (err error) {
-	session := d.Driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
-	defer func() {
-		closeErr := session.Close(ctx)
-		if err == nil {
-			err = closeErr
-		}
-	}()
+func (d *Neo4jServiceRepository) UpdateService(ctx context.Context, service repositories.Service) (err error) {
 	updateServiceTransaction := func(tx neo4j.ManagedTransaction) (any, error) {
 		// First check if the service exists
 		result, err := tx.Run(ctx, `
@@ -66,7 +60,7 @@ func (d *ServiceNeo4jRepository) UpdateService(ctx context.Context, service Serv
 		return nil, err
 	}
 
-	_, execErr := session.ExecuteWrite(ctx, updateServiceTransaction)
+	_, execErr := d.manager.ExecuteWrite(ctx, updateServiceTransaction)
 	if execErr != nil {
 		return execErr
 	}

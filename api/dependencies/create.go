@@ -3,9 +3,9 @@ package dependencies
 import (
 	"encoding/json"
 	"net/http"
-	"service-dependency-api/api/dependencies/internal/dependencyRepository"
 	"service-dependency-api/internal"
 	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/repositories"
 )
 
 func (s *ServiceCallsHandler) createDependency(rw http.ResponseWriter, req *http.Request) {
@@ -14,7 +14,7 @@ func (s *ServiceCallsHandler) createDependency(rw http.ResponseWriter, req *http
 		http.Error(rw, "path id not valid", http.StatusBadRequest)
 		return
 	}
-	dep := &dependencyRepository.Dependency{}
+	dep := &repositories.Dependency{}
 	err := json.NewDecoder(req.Body).Decode(dep)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusBadRequest)

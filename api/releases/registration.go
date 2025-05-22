@@ -3,11 +3,12 @@ package releases
 import (
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 	"net/http"
-	"service-dependency-api/api/releases/internal/releaseRepository"
+	"service-dependency-api/neo4jRepositories/releaseRepository"
+	"service-dependency-api/repositories"
 )
 
 type ServiceCallsHandler struct {
-	Repository releaseRepository.ReleaseRepository
+	Repository repositories.ReleaseRepository
 }
 
 func (s *ServiceCallsHandler) Register(mux *http.ServeMux) {
@@ -22,10 +23,8 @@ func (s *ServiceCallsHandler) Register(mux *http.ServeMux) {
 }
 
 func Register(mux *http.ServeMux, driver *neo4j.DriverWithContext) {
-	repo := releaseRepository.New(*driver)
-
 	handler := ServiceCallsHandler{
-		Repository: repo,
+		Repository: releaseRepository.New(*driver),
 	}
 	handler.Register(mux)
 

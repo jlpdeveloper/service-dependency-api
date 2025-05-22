@@ -5,41 +5,33 @@ import (
 	"fmt"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/repositories"
 )
 
-func (d *Neo4jDependencyRepository) GetDependencies(ctx context.Context, id string) ([]*Dependency, error) {
-	session := d.driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeRead})
-	defer func() {
-		_ = session.Close(ctx)
-	}()
+func (d *Neo4jDependencyRepository) GetDependencies(ctx context.Context, id string) ([]*repositories.Dependency, error) {
 
 	query := `
 			MATCH (s1:Service {id: $serviceId})-[r:DEPENDS_ON]->(s2:Service)
 			RETURN s2.id as id, s2.name as name, r.version as version, s2.type as type
 		`
-	result, err := session.ExecuteRead(ctx, makeGetTransaction(ctx, id, query))
+	result, err := d.manager.ExecuteRead(ctx, makeGetTransaction(ctx, id, query))
 	if err != nil {
 		return nil, err
 	}
 
-	return result.([]*Dependency), nil
+	return result.([]*repositories.Dependency), nil
 }
 
-func (d *Neo4jDependencyRepository) GetDependents(ctx context.Context, id string) ([]*Dependency, error) {
-	session := d.driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeRead})
-	defer func() {
-		_ = session.Close(ctx)
-	}()
-
+func (d *Neo4jDependencyRepository) GetDependents(ctx context.Context, id string) ([]*repositories.Dependency, error) {
 	query := `
 			MATCH (s1:Service)-[r:DEPENDS_ON]->(s2:Service {id: $serviceId})
 			RETURN s1.id as id, s1.name as name, s1.type as type, r.version as version
 		`
-	result, err := session.ExecuteRead(ctx, makeGetTransaction(ctx, id, query))
+	result, err := d.manager.ExecuteRead(ctx, makeGetTransaction(ctx, id, query))
 	if err != nil {
 		return nil, err
 	}
-	return result.([]*Dependency), nil
+	return result.([]*repositories.Dependency), nil
 }
 
 func makeGetTransaction(ctx context.Context, id string, query string) func(tx neo4j.ManagedTransaction) (any, error) {
@@ -77,7 +69,7 @@ func makeGetTransaction(ctx context.Context, id string, query string) func(tx ne
 			return nil, err
 		}
 
-		dependencies := []*Dependency{}
+		var dependencies []*repositories.Dependency
 		records, err = result.Collect(ctx)
 		if err != nil {
 			return nil, err
@@ -88,7 +80,7 @@ func makeGetTransaction(ctx context.Context, id string, query string) func(tx ne
 			name, _ := record.Get("name")
 			version, _ := record.Get("version")
 			serviceType, _ := record.Get("type")
-			dependency := &Dependency{
+			dependency := &repositories.Dependency{
 				Id: id.(string),
 			}
 

@@ -8,11 +8,6 @@ import (
 )
 
 func (d *Neo4jDependencyRepository) DeleteDependency(ctx context.Context, id string, dependsOnID string) error {
-	session := d.driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
-	defer func() {
-		_ = session.Close(ctx)
-	}()
-
 	deleteDependencyTransaction := func(tx neo4j.ManagedTransaction) (any, error) {
 		// Check if both services exist and the dependency relationship exists
 		checkQuery := `
@@ -55,6 +50,6 @@ func (d *Neo4jDependencyRepository) DeleteDependency(ctx context.Context, id str
 		return nil, nil
 	}
 
-	_, err := session.ExecuteWrite(ctx, deleteDependencyTransaction)
+	_, err := d.manager.ExecuteWrite(ctx, deleteDependencyTransaction)
 	return err
 }

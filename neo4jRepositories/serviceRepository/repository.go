@@ -2,17 +2,23 @@ package serviceRepository
 
 import (
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
+	"service-dependency-api/databaseAdapter"
+	"service-dependency-api/repositories"
 	"time"
 )
 
-// ServiceNeo4jRepository type implements the interface for service repository above
-type ServiceNeo4jRepository struct {
-	Driver neo4j.DriverWithContext
+// Neo4jServiceRepository type implements the interface for service repository above
+type Neo4jServiceRepository struct {
+	manager databaseAdapter.DriverManager
+}
+
+func New(driver neo4j.DriverWithContext) *Neo4jServiceRepository {
+	return &Neo4jServiceRepository{manager: databaseAdapter.NewDriverManager(driver)}
 }
 
 // mapNodeToService converts a Neo4j node to a Service object
-func (d *ServiceNeo4jRepository) mapNodeToService(n neo4j.Node) Service {
-	svc := Service{}
+func (d *Neo4jServiceRepository) mapNodeToService(n neo4j.Node) repositories.Service {
+	svc := repositories.Service{}
 
 	// Safely extract name with validation
 	if name, ok := n.Props["name"]; ok {

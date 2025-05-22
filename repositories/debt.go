@@ -1,15 +1,9 @@
-package debtRepository
+package repositories
 
 import (
-	"context"
 	"errors"
 	"service-dependency-api/internal"
 )
-
-type Repository interface {
-	CreateDebtItem(ctx context.Context, debt Debt) error
-	UpdateStatus(ctx context.Context, id, status string) error
-}
 
 type Debt struct {
 	ServiceId   string `json:"serviceId"`

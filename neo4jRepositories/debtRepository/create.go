@@ -5,14 +5,10 @@ import (
 	"fmt"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/repositories"
 )
 
-func (n Neo4jDebtRepository) CreateDebtItem(ctx context.Context, debt Debt) error {
-	session := n.driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
-	defer func() {
-		_ = session.Close(ctx)
-	}()
-
+func (n Neo4jDebtRepository) CreateDebtItem(ctx context.Context, debt repositories.Debt) error {
 	createDebtTransaction := func(tx neo4j.ManagedTransaction) (any, error) {
 		// Check if the service exists
 		checkQuery := `
@@ -50,6 +46,6 @@ func (n Neo4jDebtRepository) CreateDebtItem(ctx context.Context, debt Debt) erro
 		})
 		return nil, err
 	}
-	_, err := session.ExecuteWrite(ctx, createDebtTransaction)
+	_, err := n.manager.ExecuteWrite(ctx, createDebtTransaction)
 	return err
 }

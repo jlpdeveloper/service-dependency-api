@@ -5,8 +5,8 @@ import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
-	"service-dependency-api/api/dependencies/internal/dependencyRepository"
 	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/repositories"
 	"testing"
 )
 
@@ -59,7 +59,7 @@ func TestGetByIdSuccess(t *testing.T) {
 	}
 
 	// Decode the response
-	var dependencies []*dependencyRepository.Dependency
+	var dependencies []*repositories.Dependency
 	err = json.NewDecoder(rw.Body).Decode(&dependencies)
 	if err != nil {
 		t.Fatalf("Failed to decode response: %v", err)
@@ -224,7 +224,7 @@ func TestGetDependentsByIdSuccess(t *testing.T) {
 	}
 
 	// Decode the response
-	var dependents []*dependencyRepository.Dependency
+	var dependents []*repositories.Dependency
 	err = json.NewDecoder(rw.Body).Decode(&dependents)
 	if err != nil {
 		t.Fatalf("Failed to decode response: %v", err)
@@ -395,7 +395,7 @@ func TestGetDependentsByIdWithVersionFilter(t *testing.T) {
 	}
 
 	// Decode the response
-	var dependents []*dependencyRepository.Dependency
+	var dependents []*repositories.Dependency
 	err = json.NewDecoder(rw.Body).Decode(&dependents)
 	if err != nil {
 		t.Fatalf("Failed to decode response: %v", err)
@@ -464,7 +464,7 @@ func TestGetDependentsByIdWithNonMatchingVersionFilter(t *testing.T) {
 	}
 
 	// Decode the response
-	var dependents []*dependencyRepository.Dependency
+	var dependents []*repositories.Dependency
 	err = json.NewDecoder(rw.Body).Decode(&dependents)
 	if err != nil {
 		t.Fatalf("Failed to decode response: %v", err)
@@ -525,7 +525,7 @@ func TestGetDependentsByIdWithNoVersionFilter(t *testing.T) {
 	}
 
 	// Decode the response
-	var dependents []*dependencyRepository.Dependency
+	var dependents []*repositories.Dependency
 	err = json.NewDecoder(rw.Body).Decode(&dependents)
 	if err != nil {
 		t.Fatalf("Failed to decode response: %v", err)

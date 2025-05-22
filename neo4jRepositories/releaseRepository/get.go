@@ -6,15 +6,11 @@ import (
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 	"net/http"
 	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/repositories"
 	"time"
 )
 
-func (r *Neo4jReleaseRepository) GetReleasesByServiceId(ctx context.Context, serviceId string, page, pageSize int) ([]*Release, error) {
-	session := r.driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeRead})
-	defer func() {
-		_ = session.Close(ctx)
-	}()
-
+func (r *Neo4jReleaseRepository) GetReleasesByServiceId(ctx context.Context, serviceId string, page, pageSize int) ([]*repositories.Release, error) {
 	if page <= 0 || pageSize <= 0 {
 		return nil, &customErrors.HTTPError{
 			Status: http.StatusBadRequest,
@@ -64,7 +60,7 @@ func (r *Neo4jReleaseRepository) GetReleasesByServiceId(ctx context.Context, ser
 			return nil, err
 		}
 
-		releases := []*Release{}
+		releases := []*repositories.Release{}
 		records, err = result.Collect(ctx)
 		if err != nil {
 			return nil, err
@@ -72,7 +68,7 @@ func (r *Neo4jReleaseRepository) GetReleasesByServiceId(ctx context.Context, ser
 
 		for _, record := range records {
 			releaseDate, _ := record.Get("releaseDate")
-			release := &Release{
+			release := &repositories.Release{
 				ServiceId:   serviceId,
 				ReleaseDate: releaseDate.(time.Time),
 			}
@@ -91,19 +87,15 @@ func (r *Neo4jReleaseRepository) GetReleasesByServiceId(ctx context.Context, ser
 		return releases, nil
 	}
 
-	result, err := session.ExecuteRead(ctx, getReleasesByServiceIdTransaction)
+	result, err := r.manager.ExecuteRead(ctx, getReleasesByServiceIdTransaction)
 	if err != nil {
 		return nil, err
 	}
 
-	return result.([]*Release), nil
+	return result.([]*repositories.Release), nil
 }
 
-func (r *Neo4jReleaseRepository) GetReleasesInDateRange(ctx context.Context, startDate, endDate time.Time, page, pageSize int) ([]*ServiceReleaseInfo, error) {
-	session := r.driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeRead})
-	defer func() {
-		_ = session.Close(ctx)
-	}()
+func (r *Neo4jReleaseRepository) GetReleasesInDateRange(ctx context.Context, startDate, endDate time.Time, page, pageSize int) ([]*repositories.ServiceReleaseInfo, error) {
 	getReleasesInRangeTransaction := func(tx neo4j.ManagedTransaction) (any, error) {
 		query := `
 			MATCH (s:Service)-[rel:RELEASED]->(r:Release)
@@ -128,16 +120,16 @@ func (r *Neo4jReleaseRepository) GetReleasesInDateRange(ctx context.Context, sta
 			return nil, err
 		}
 
-		releases := []*ServiceReleaseInfo{}
+		releases := []*repositories.ServiceReleaseInfo{}
 		for _, record := range records {
 			releaseDate, _ := record.Get("releaseDate")
 			serviceId, _ := record.Get("serviceId")
 			serviceName, _ := record.Get("serviceName")
 			serviceType, _ := record.Get("serviceType")
-			release := &ServiceReleaseInfo{
+			release := &repositories.ServiceReleaseInfo{
 				ServiceName: serviceName.(string),
 				ServiceType: serviceType.(string),
-				Release: Release{
+				Release: repositories.Release{
 					ReleaseDate: releaseDate.(time.Time),
 					ServiceId:   serviceId.(string),
 				},
@@ -155,9 +147,9 @@ func (r *Neo4jReleaseRepository) GetReleasesInDateRange(ctx context.Context, sta
 		return releases, nil
 
 	}
-	result, err := session.ExecuteRead(ctx, getReleasesInRangeTransaction)
+	result, err := r.manager.ExecuteRead(ctx, getReleasesInRangeTransaction)
 	if err != nil {
 		return nil, err
 	}
-	return result.([]*ServiceReleaseInfo), nil
+	return result.([]*repositories.ServiceReleaseInfo), nil
 }

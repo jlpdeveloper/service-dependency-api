@@ -1,4 +1,4 @@
-package debtRepository
+package repositories
 
 import "testing"
 

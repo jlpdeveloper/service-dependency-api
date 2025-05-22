@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"service-dependency-api/api/dependencies/internal/dependencyRepository"
 	"service-dependency-api/internal"
 	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/repositories"
 )
 
 func (s *ServiceCallsHandler) getDependencies(rw http.ResponseWriter, req *http.Request) {
@@ -40,7 +40,7 @@ func (s *ServiceCallsHandler) getDependents(rw http.ResponseWriter, req *http.Re
 	}
 	rw.Header().Set("Content-Type", "application/json")
 	ver := req.URL.Query().Get("version")
-	returnObj := make([]*dependencyRepository.Dependency, 0)
+	returnObj := make([]*repositories.Dependency, 0)
 	if ver != "" {
 		for _, dep := range deps {
 			if ver == dep.Version {

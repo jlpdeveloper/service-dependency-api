@@ -6,8 +6,8 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
-	"service-dependency-api/api/dependencies/internal/dependencyRepository"
 	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/repositories"
 	"strings"
 	"testing"
 )
@@ -24,7 +24,7 @@ func TestCreateDependencySuccess(t *testing.T) {
 	}
 
 	// Create a dependency request
-	dependency := &dependencyRepository.Dependency{
+	dependency := &repositories.Dependency{
 		Id:      "dependency-id-456",
 		Version: "1.0.0",
 	}
@@ -65,7 +65,7 @@ func TestCreateDependencyInvalidPath(t *testing.T) {
 	}
 
 	// Create a dependency request
-	dependency := &dependencyRepository.Dependency{
+	dependency := &repositories.Dependency{
 		Id:      "dependency-id-456",
 		Version: "1.0.0",
 	}
@@ -135,7 +135,7 @@ func TestCreateDependencyInvalidDependency(t *testing.T) {
 	}
 
 	// Create an invalid dependency (missing ID)
-	dependency := &dependencyRepository.Dependency{
+	dependency := &repositories.Dependency{
 		Version: "1.0.0",
 	}
 	dependencyJSON, err := json.Marshal(dependency)
@@ -175,7 +175,7 @@ func TestCreateDependencyRepositoryError(t *testing.T) {
 	}
 
 	// Create a dependency request
-	dependency := &dependencyRepository.Dependency{
+	dependency := &repositories.Dependency{
 		Id:      "dependency-id-456",
 		Version: "1.0.0",
 	}
@@ -218,7 +218,7 @@ func TestCreateDependencyHTTPError(t *testing.T) {
 	}
 
 	// Create a dependency request
-	dependency := &dependencyRepository.Dependency{
+	dependency := &repositories.Dependency{
 		Id:      "dependency-id-456",
 		Version: "1.0.0",
 	}

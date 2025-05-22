@@ -3,9 +3,9 @@ package releases
 import (
 	"encoding/json"
 	"net/http"
-	"service-dependency-api/api/releases/internal/releaseRepository"
 	"service-dependency-api/internal"
 	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/repositories"
 )
 
 func (s *ServiceCallsHandler) createRelease(rw http.ResponseWriter, req *http.Request) {
@@ -15,7 +15,7 @@ func (s *ServiceCallsHandler) createRelease(rw http.ResponseWriter, req *http.Re
 		return
 	}
 
-	r := &releaseRepository.Release{}
+	r := &repositories.Release{}
 	err := json.NewDecoder(req.Body).Decode(r)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusBadRequest)

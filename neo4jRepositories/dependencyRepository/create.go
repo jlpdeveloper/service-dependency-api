@@ -5,14 +5,10 @@ import (
 	"fmt"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/repositories"
 )
 
-func (d *Neo4jDependencyRepository) AddDependency(ctx context.Context, id string, dependency *Dependency) error {
-	session := d.driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
-	defer func() {
-		_ = session.Close(ctx)
-	}()
-
+func (d *Neo4jDependencyRepository) AddDependency(ctx context.Context, id string, dependency *repositories.Dependency) error {
 	createDependencyTransaction := func(tx neo4j.ManagedTransaction) (any, error) {
 		// Check if both services exist
 		checkQuery := `
@@ -77,6 +73,6 @@ func (d *Neo4jDependencyRepository) AddDependency(ctx context.Context, id string
 		return nil, nil
 	}
 
-	_, err := session.ExecuteWrite(ctx, createDependencyTransaction)
+	_, err := d.manager.ExecuteWrite(ctx, createDependencyTransaction)
 	return err
 }

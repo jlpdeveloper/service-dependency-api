@@ -4,9 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
-	"service-dependency-api/api/debt/internal/debtRepository"
 	"service-dependency-api/internal"
 	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/repositories"
 	"time"
 )
 
@@ -16,7 +16,7 @@ func (c CallsHandler) createDebt(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, "service id not valid", http.StatusBadRequest)
 		return
 	}
-	debt := &debtRepository.Debt{}
+	debt := &repositories.Debt{}
 	const maxBodySize = 1 << 20 // 1 MB
 	r.Body = http.MaxBytesReader(rw, r.Body, maxBodySize)
 	err := json.NewDecoder(r.Body).Decode(debt)
