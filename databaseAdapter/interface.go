@@ -25,9 +25,11 @@ func (n Neo4jDriverAdapter) executeInSession(ctx context.Context, work func(tx n
 	defer func() {
 		_ = session.Close(ctx)
 	}()
-	result, err := session.ExecuteWrite(ctx, work)
 
-	return result, err
+	if mode == neo4j.AccessModeWrite {
+		return session.ExecuteWrite(ctx, work)
+	}
+	return session.ExecuteRead(ctx, work)
 }
 
 func (n Neo4jDriverAdapter) ExecuteWrite(ctx context.Context, work func(tx neo4j.ManagedTransaction) (any, error)) (any, error) {
