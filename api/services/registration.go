@@ -25,14 +25,8 @@ func (u *ServiceCallsHandler) Register(mux *http.ServeMux) {
 }
 
 func Register(mux *http.ServeMux, driver *neo4j.DriverWithContext) {
-
-	serviceRepo := &serviceRepository.Neo4jServiceRepository{
-		Driver: *driver,
-	}
-
 	callsHandler := ServiceCallsHandler{
-		Repository: serviceRepo,
+		Repository: serviceRepository.New(*driver),
 	}
-
 	callsHandler.Register(mux)
 }

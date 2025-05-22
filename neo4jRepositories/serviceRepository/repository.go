@@ -12,6 +12,10 @@ type Neo4jServiceRepository struct {
 	manager databaseAdapter.DriverManager
 }
 
+func New(driver neo4j.DriverWithContext) *Neo4jServiceRepository {
+	return &Neo4jServiceRepository{manager: databaseAdapter.NewDriverManager(driver)}
+}
+
 // mapNodeToService converts a Neo4j node to a Service object
 func (d *Neo4jServiceRepository) mapNodeToService(n neo4j.Node) repositories.Service {
 	svc := repositories.Service{}
