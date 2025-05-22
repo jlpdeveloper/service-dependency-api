@@ -1,39 +1,39 @@
 package databaseAdapter
 
-import "context"
+import (
+	"context"
+	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
+)
 
 // DriverManager interface abstracts Neo4j driver operations
 type DriverManager interface {
-	NewSession(ctx context.Context, config SessionConfig) SessionManager
+	ExecuteWrite(ctx context.Context, work func(tx neo4j.ManagedTransaction) (any, error)) (any, error)
+	ExecuteRead(ctx context.Context, work func(tx neo4j.ManagedTransaction) (any, error)) (any, error)
 }
 
-// SessionManager interface abstracts Neo4j session operations
-type SessionManager interface {
-	ExecuteWrite(ctx context.Context, work func(tx TransactionManager) (any, error)) (any, error)
-	Close(ctx context.Context) error
+func NewDriverManager(driver neo4j.DriverWithContext) DriverManager {
+	return &Neo4jDriverAdapter{driver}
 }
 
-// TransactionManager interface abstracts Neo4j transaction operations
-type TransactionManager interface {
-	Run(ctx context.Context, query string, params map[string]any) (ResultManager, error)
-	ReturnBase() any
+// Neo4jDriverAdapter adapts Neo4j driver to DriverManager
+type Neo4jDriverAdapter struct {
+	driver neo4j.DriverWithContext
 }
 
-// ResultManager interface abstracts Neo4j result operations
-type ResultManager interface {
-	Collect(ctx context.Context) (any, error)
-	Single(ctx context.Context) (any, error)
-	HasRecords(ctx context.Context) (bool, error)
-	Next(ctx context.Context) bool
-	GetProperty(ctx context.Context, key string) (any, error)
+func (n Neo4jDriverAdapter) executeInSession(ctx context.Context, work func(tx neo4j.ManagedTransaction) (any, error), mode neo4j.AccessMode) (any, error) {
+	session := n.driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: mode})
+	defer func() {
+		_ = session.Close(ctx)
+	}()
+	result, err := session.ExecuteWrite(ctx, work)
+
+	return result, err
 }
 
-// Record interface abstracts Neo4j record operations
-type Record interface {
-	// Add methods as needed
+func (n Neo4jDriverAdapter) ExecuteWrite(ctx context.Context, work func(tx neo4j.ManagedTransaction) (any, error)) (any, error) {
+	return n.executeInSession(ctx, work, neo4j.AccessModeWrite)
 }
 
-// SessionConfig struct to hold session configuration
-type SessionConfig struct {
-	AccessMode string
+func (n Neo4jDriverAdapter) ExecuteRead(ctx context.Context, work func(tx neo4j.ManagedTransaction) (any, error)) (any, error) {
+	return n.executeInSession(ctx, work, neo4j.AccessModeRead)
 }

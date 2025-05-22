@@ -8,13 +8,6 @@ import (
 )
 
 func (d *Neo4jServiceRepository) DeleteService(ctx context.Context, id string) (err error) {
-	session := d.Driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
-	defer func() {
-		closeErr := session.Close(ctx)
-		if err == nil {
-			err = closeErr
-		}
-	}()
 	deleteServiceTransaction := func(tx neo4j.ManagedTransaction) (any, error) {
 
 		result, err := tx.Run(ctx, `
@@ -55,6 +48,6 @@ func (d *Neo4jServiceRepository) DeleteService(ctx context.Context, id string) (
 		return nil, nil
 	}
 
-	_, err = session.ExecuteWrite(ctx, deleteServiceTransaction)
+	_, err = d.manager.ExecuteWrite(ctx, deleteServiceTransaction)
 	return err
 }

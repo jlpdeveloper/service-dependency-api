@@ -9,13 +9,6 @@ import (
 )
 
 func (d *Neo4jServiceRepository) UpdateService(ctx context.Context, service repositories.Service) (err error) {
-	session := d.Driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
-	defer func() {
-		closeErr := session.Close(ctx)
-		if err == nil {
-			err = closeErr
-		}
-	}()
 	updateServiceTransaction := func(tx neo4j.ManagedTransaction) (any, error) {
 		// First check if the service exists
 		result, err := tx.Run(ctx, `
@@ -67,7 +60,7 @@ func (d *Neo4jServiceRepository) UpdateService(ctx context.Context, service repo
 		return nil, err
 	}
 
-	_, execErr := session.ExecuteWrite(ctx, updateServiceTransaction)
+	_, execErr := d.manager.ExecuteWrite(ctx, updateServiceTransaction)
 	if execErr != nil {
 		return execErr
 	}

@@ -9,7 +9,6 @@ import (
 
 // Neo4jServiceRepository type implements the interface for service repository above
 type Neo4jServiceRepository struct {
-	Driver  neo4j.DriverWithContext
 	manager databaseAdapter.DriverManager
 }
 

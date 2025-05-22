@@ -3,18 +3,13 @@ package debtRepository
 import (
 	"context"
 	"fmt"
-	"service-dependency-api/databaseAdapter"
+	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 	"service-dependency-api/internal/customErrors"
 	"service-dependency-api/repositories"
 )
 
 func (n Neo4jDebtRepository) CreateDebtItem(ctx context.Context, debt repositories.Debt) error {
-	session := n.manager.NewSession(ctx, databaseAdapter.SessionConfig{AccessMode: "write"})
-	defer func() {
-		_ = session.Close(ctx)
-	}()
-
-	createDebtTransaction := func(tx databaseAdapter.TransactionManager) (any, error) {
+	createDebtTransaction := func(tx neo4j.ManagedTransaction) (any, error) {
 		// Check if the service exists
 		checkQuery := `
 			MATCH (s:Service {id: $serviceId})
@@ -28,11 +23,11 @@ func (n Neo4jDebtRepository) CreateDebtItem(ctx context.Context, debt repositori
 		}
 
 		// If no records are returned, the service doesn't exist
-		hasRecords, err := result.HasRecords(ctx)
+		records, err := result.Collect(ctx)
 		if err != nil {
 			return nil, err
 		}
-		if !hasRecords {
+		if len(records) == 0 {
 			return nil, &customErrors.HTTPError{
 				Status: 404,
 				Msg:    fmt.Sprintf("Service not found: %s", debt.ServiceId),
@@ -51,6 +46,6 @@ func (n Neo4jDebtRepository) CreateDebtItem(ctx context.Context, debt repositori
 		})
 		return nil, err
 	}
-	_, err := session.ExecuteWrite(ctx, createDebtTransaction)
+	_, err := n.manager.ExecuteWrite(ctx, createDebtTransaction)
 	return err
 }

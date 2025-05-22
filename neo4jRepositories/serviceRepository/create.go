@@ -2,20 +2,12 @@ package serviceRepository
 
 import (
 	"context"
-	"service-dependency-api/databaseAdapter"
+	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 	"service-dependency-api/repositories"
 )
 
 func (d *Neo4jServiceRepository) CreateService(ctx context.Context, service repositories.Service) (id string, err error) {
-	session := d.manager.NewSession(ctx, databaseAdapter.SessionConfig{AccessMode: "write"})
-	defer func() {
-		closeErr := session.Close(ctx)
-		if err == nil {
-			err = closeErr
-		}
-	}()
-
-	createServiceTransaction := func(tx databaseAdapter.TransactionManager) (any, error) {
+	createServiceTransaction := func(tx neo4j.ManagedTransaction) (any, error) {
 		result, err := tx.Run(
 			ctx, `
         CREATE (n: Service {id: randomuuid(), created: datetime(), name: $name, type: $type, description: $description, url: $url})
@@ -29,8 +21,12 @@ func (d *Neo4jServiceRepository) CreateService(ctx context.Context, service repo
 		if err != nil {
 			return "", err
 		}
-		svcId, err := result.GetProperty(ctx, "id")
-		if svcId != nil {
+		svc, err := result.Single(ctx)
+		if err != nil {
+			return "", err
+		}
+		svcMap := svc.AsMap()
+		if svcId, ok := svcMap["id"]; ok {
 			if idStr, ok := svcId.(string); ok {
 				return idStr, err
 			}
@@ -38,7 +34,7 @@ func (d *Neo4jServiceRepository) CreateService(ctx context.Context, service repo
 		return "", err
 
 	}
-	newId, insertErr := session.ExecuteWrite(ctx, createServiceTransaction)
+	newId, insertErr := d.manager.ExecuteWrite(ctx, createServiceTransaction)
 	if insertErr != nil {
 		return "", insertErr
 	}
