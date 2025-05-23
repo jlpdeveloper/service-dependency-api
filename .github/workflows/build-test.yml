@@ -7,7 +7,8 @@ on:
       - synchronize
       - ready_for_review
       - reopened
-
+env:
+  HEAD_REF: ${{ github.head_ref }}
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -57,12 +58,9 @@ jobs:
 
       - name: Commit changes
         if: steps.verify-changed-files.outputs.files_changed == 'true'
-        env:
-          HEAD_REF: ${{ github.head_ref }}
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git pull origin ${{ env.HEAD_REF }} --rebase
           git add README.md
           git commit -m "chore: Updated coverage badge." || echo "No changes to commit"
           git push origin ${{ env.HEAD_REF }}
