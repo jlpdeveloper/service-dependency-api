@@ -28,6 +28,8 @@ jobs:
           go build -o service-dependency-api cmd/service-dependency-api/main.go
   test:
     needs: [build]
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
