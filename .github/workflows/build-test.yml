@@ -9,6 +9,7 @@ on:
       - reopened
 env:
   HEAD_REF: ${{ github.head_ref }}
+  GO_VERSION: 1.24.2
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -20,9 +21,14 @@ jobs:
             ~/.cache/go-build
             ~/go/pkg/mod
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+
       - uses: actions/checkout@v4
         name: Checkout
+
       - uses: actions/setup-go@v5.5.0
+        with:
+          go-version: ${{ GO_VERSION }}
+
       - name: build
         shell: bash
         run: |
@@ -39,6 +45,9 @@ jobs:
           ref: ${{ github.head_ref }}
 
       - uses: actions/setup-go@v5.5.0
+        with:
+          go-version: ${{ GO_VERSION }}
+
       - name: run tests
         shell: bash
         run: |
