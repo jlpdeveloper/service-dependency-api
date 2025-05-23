@@ -74,10 +74,10 @@ func (r *Neo4jReleaseRepository) GetReleasesByServiceId(ctx context.Context, ser
 			}
 
 			// Only set url and version if they exist
-			if url, ok := record.Get("url"); ok {
+			if url, ok := record.Get("url"); ok && url != nil {
 				release.Url = url.(string)
 			}
-			if version, ok := record.Get("version"); ok {
+			if version, ok := record.Get("version"); ok && version != nil {
 				release.Version = version.(string)
 			}
 
