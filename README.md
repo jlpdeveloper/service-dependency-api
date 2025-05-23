@@ -1,4 +1,5 @@
 # Service Dependency API
+![Coverage](https://img.shields.io/badge/Coverage-81.7%25-brightgreen)
 
 ![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/jlpdeveloper/service-dependency-api?utm_source=oss&utm_medium=github&utm_campaign=jlpdeveloper%2Fservice-dependency-api&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
 
