@@ -1,0 +1,15 @@
+meta {
+  name: Get Debt By Service
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/services/:id/debt
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: 5931d4b0-dd0a-4654-85fe-78f42890da0d
+}
