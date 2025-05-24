@@ -19,7 +19,9 @@ func (c CallsHandler) getDebtByServiceId(rw http.ResponseWriter, r *http.Request
 		customErrors.HandleError(rw, err)
 		return
 	}
-	debt, err := c.Repository.GetDebtByServiceId(r.Context(), id, page, pageSize)
+	onlyResolved := r.URL.Query().Get("onlyResolved")
+
+	debt, err := c.Repository.GetDebtByServiceId(r.Context(), id, page, pageSize, onlyResolved == "true")
 	if err != nil {
 		customErrors.HandleError(rw, err)
 		return

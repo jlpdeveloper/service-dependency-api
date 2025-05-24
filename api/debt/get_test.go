@@ -1,6 +1,7 @@
 package debt
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"net/http"
@@ -211,5 +212,45 @@ func TestGetDebtByServiceIdHTTPError(t *testing.T) {
 	// Check the response
 	if rw.Code != http.StatusNotFound {
 		t.Errorf("Expected status code %d, got %d", http.StatusNotFound, rw.Code)
+	}
+}
+
+func TestGetDebtByServiceId_OnlyResolved(t *testing.T) {
+	ctx := context.Background()
+	mock := &mockDebtRepository{
+		Debts: []repositories.Debt{
+			{ServiceId: "svc1", Title: "A", Status: "remediated"},
+			{ServiceId: "svc1", Title: "B", Status: "pending"},
+			{ServiceId: "svc1", Title: "C", Status: "remediated"},
+			{ServiceId: "svc2", Title: "D", Status: "in_progress"},
+		},
+	}
+
+	type args struct {
+		serviceId    string
+		onlyResolved bool
+		wantCount    int
+		wantTitles   []string
+	}
+	tests := []args{
+		{serviceId: "svc1", onlyResolved: false, wantCount: 3, wantTitles: []string{"A", "B", "C"}},
+		{serviceId: "svc1", onlyResolved: true, wantCount: 2, wantTitles: []string{"A", "C"}},
+		{serviceId: "svc2", onlyResolved: true, wantCount: 0, wantTitles: nil},
+	}
+
+	for _, tt := range tests {
+		got, err := mock.GetDebtByServiceId(ctx, tt.serviceId, 0, 10, tt.onlyResolved)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		if len(got) != tt.wantCount {
+			t.Errorf("GetDebtByServiceId(%q, onlyResolved=%v) got %d debts, want %d",
+				tt.serviceId, tt.onlyResolved, len(got), tt.wantCount)
+		}
+		for i, d := range got {
+			if i < len(tt.wantTitles) && d.Title != tt.wantTitles[i] {
+				t.Errorf("debt[%d].Title = %q, want %q", i, d.Title, tt.wantTitles[i])
+			}
+		}
 	}
 }

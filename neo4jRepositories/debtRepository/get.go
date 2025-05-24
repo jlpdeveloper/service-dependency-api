@@ -8,7 +8,7 @@ import (
 	"service-dependency-api/repositories"
 )
 
-func (n Neo4jDebtRepository) GetDebtByServiceId(ctx context.Context, id string, page, pageSize int) ([]repositories.Debt, error) {
+func (n Neo4jDebtRepository) GetDebtByServiceId(ctx context.Context, id string, page, pageSize int, onlyResolved bool) ([]repositories.Debt, error) {
 	if page <= 0 || pageSize <= 0 {
 		return nil, &customErrors.HTTPError{
 			Status: http.StatusBadRequest,
@@ -16,17 +16,30 @@ func (n Neo4jDebtRepository) GetDebtByServiceId(ctx context.Context, id string, 
 		}
 	}
 	getByServiceIdTransaction := func(tx neo4j.ManagedTransaction) (any, error) {
-		result, err := tx.Run(ctx, `
+		cypher := `
 			MATCH (s:Service {id: $serviceId})-[:OWNS]->(d:Debt)
 			RETURN d.title as title, d.description as description, d.type as type, d.status as status
 			ORDER BY d.created DESC
 			SKIP $skip
 			LIMIT $limit
-		`, map[string]any{
+		`
+		params := map[string]any{
 			"serviceId": id,
 			"skip":      (page - 1) * pageSize,
 			"limit":     pageSize,
-		})
+		}
+		if onlyResolved {
+			cypher = `
+				MATCH (s:Service {id: $serviceId})-[:OWNS]->(d:Debt)
+				WHERE d.status = $status
+				RETURN d.title as title, d.description as description, d.type as type, d.status as status
+				ORDER BY d.created DESC
+				SKIP $skip
+				LIMIT $limit
+			`
+			params["status"] = "remediated"
+		}
+		result, err := tx.Run(ctx, cypher, params)
 		if err != nil {
 			return nil, err
 		}

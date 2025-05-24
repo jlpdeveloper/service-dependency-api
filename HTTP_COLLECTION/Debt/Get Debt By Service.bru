@@ -10,6 +10,12 @@ get {
   auth: inherit
 }
 
+params:query {
+  ~onlyResolved: true
+  ~page: 1
+  ~pageSize: 10
+}
+
 params:path {
   id: 5931d4b0-dd0a-4654-85fe-78f42890da0d
 }
@@ -25,6 +31,7 @@ docs {
   |-----------|------|-------------|
   | page      | int  | The page number. Must be positive. (default: 1) |
   | pageSize  | int  | The number of items per page. Must be between 1 and 100. (default: 10) |
+  | onlyResolved | bool | Used to filter out only resolved issues |
   
   ## Path Parameters
   | Parameter | Type | Description |

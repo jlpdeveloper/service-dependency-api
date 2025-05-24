@@ -28,9 +28,22 @@ func (repo mockDebtRepository) UpdateStatus(_ context.Context, _, _ string) erro
 	return nil
 }
 
-func (repo mockDebtRepository) GetDebtByServiceId(_ context.Context, _ string, _, _ int) ([]repositories.Debt, error) {
+func (repo mockDebtRepository) GetDebtByServiceId(_ context.Context, id string, _, _ int, onlyResolved bool) ([]repositories.Debt, error) {
 	if repo.Err != nil {
 		return nil, repo.Err
 	}
-	return repo.Debts, nil
+	var debts []repositories.Debt
+	for _, d := range repo.Debts {
+		if d.ServiceId == id {
+			if onlyResolved {
+				if d.Status == "remediated" {
+					debts = append(debts, d)
+				}
+			} else {
+				debts = append(debts, d)
+			}
+		}
+	}
+	return debts, nil
+
 }
