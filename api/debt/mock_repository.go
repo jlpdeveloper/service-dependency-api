@@ -7,7 +7,7 @@ import (
 
 type mockDebtRepository struct {
 	Err   error
-	Debts []*repositories.Debt
+	Debts []repositories.Debt
 }
 
 func (repo mockDebtRepository) CreateDebtItem(_ context.Context, _ repositories.Debt) error {
@@ -26,4 +26,11 @@ func (repo mockDebtRepository) UpdateStatus(_ context.Context, _, _ string) erro
 
 	// If no error, we consider the operation successful
 	return nil
+}
+
+func (repo mockDebtRepository) GetDebtByServiceId(ctx context.Context, id string) ([]repositories.Debt, error) {
+	if repo.Err != nil {
+		return nil, repo.Err
+	}
+	return repo.Debts, nil
 }
