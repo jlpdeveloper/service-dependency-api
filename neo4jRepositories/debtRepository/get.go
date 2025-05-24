@@ -18,10 +18,6 @@ func (n Neo4jDebtRepository) GetDebtByServiceId(ctx context.Context, id string, 
 	getByServiceIdTransaction := func(tx neo4j.ManagedTransaction) (any, error) {
 		cypher := `
 			MATCH (s:Service {id: $serviceId})-[:OWNS]->(d:Debt)
-			RETURN d.title as title, d.description as description, d.type as type, d.status as status
-			ORDER BY d.created DESC
-			SKIP $skip
-			LIMIT $limit
 		`
 		params := map[string]any{
 			"serviceId": id,
@@ -29,16 +25,16 @@ func (n Neo4jDebtRepository) GetDebtByServiceId(ctx context.Context, id string, 
 			"limit":     pageSize,
 		}
 		if onlyResolved {
-			cypher = `
-				MATCH (s:Service {id: $serviceId})-[:OWNS]->(d:Debt)
+			cypher += `
 				WHERE d.status = $status
-				RETURN d.title as title, d.description as description, d.type as type, d.status as status
-				ORDER BY d.created DESC
-				SKIP $skip
-				LIMIT $limit
 			`
 			params["status"] = "remediated"
 		}
+		cypher += `
+			RETURN d.title as title, d.description as description, d.type as type, d.status as status
+			ORDER BY d.created DESC
+			SKIP $skip
+			LIMIT $limit`
 		result, err := tx.Run(ctx, cypher, params)
 		if err != nil {
 			return nil, err
@@ -65,8 +61,22 @@ func (n Neo4jDebtRepository) GetDebtByServiceId(ctx context.Context, id string, 
 			debtList = append(debtList, debt)
 
 		}
+
+		if err := result.Err(); err != nil {
+			return nil, err
+		}
 		return debtList, nil
 	}
+
 	debtList, err := n.manager.ExecuteRead(ctx, getByServiceIdTransaction)
-	return debtList.([]repositories.Debt), err
+	if err != nil {
+		return nil, err
+	}
+	if typedDebtList, ok := debtList.([]repositories.Debt); ok {
+		return typedDebtList, nil
+	}
+	return nil, &customErrors.HTTPError{
+		Status: http.StatusInternalServerError,
+		Msg:    "unexpected return type from transaction",
+	}
 }

@@ -62,7 +62,7 @@ func validatePageParams(req *http.Request) (int, int, error) {
 		if err != nil || parsedPageSize <= 0 {
 			return 0, 0, &customErrors.HTTPError{
 				Status: http.StatusBadRequest,
-				Msg:    "Invalid page_size parameter",
+				Msg:    "Invalid pageSize parameter",
 			}
 		}
 		pageSize = parsedPageSize
