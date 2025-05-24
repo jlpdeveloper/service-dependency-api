@@ -28,7 +28,7 @@ func (repo mockDebtRepository) UpdateStatus(_ context.Context, _, _ string) erro
 	return nil
 }
 
-func (repo mockDebtRepository) GetDebtByServiceId(ctx context.Context, id string) ([]repositories.Debt, error) {
+func (repo mockDebtRepository) GetDebtByServiceId(_ context.Context, _ string, _, _ int) ([]repositories.Debt, error) {
 	if repo.Err != nil {
 		return nil, repo.Err
 	}

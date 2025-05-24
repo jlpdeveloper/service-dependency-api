@@ -8,7 +8,7 @@ import (
 type DebtRepository interface {
 	CreateDebtItem(ctx context.Context, debt Debt) error
 	UpdateStatus(ctx context.Context, id, status string) error
-	GetDebtByServiceId(ctx context.Context, id string) ([]Debt, error)
+	GetDebtByServiceId(ctx context.Context, id string, page, pageSize int) ([]Debt, error)
 }
 
 type ServiceRepository interface {

@@ -13,3 +13,46 @@ get {
 params:path {
   id: 5931d4b0-dd0a-4654-85fe-78f42890da0d
 }
+
+docs {
+  # Get Debt for Service
+  
+  Get a paginated list of all debt items associated with a service
+  
+  
+  ## Query Parameters
+  | Parameter | Type | Description |
+  |-----------|------|-------------|
+  | page      | int  | The page number. Must be positive. (default: 1) |
+  | pageSize  | int  | The number of items per page. Must be between 1 and 100. (default: 10) |
+  
+  ## Path Parameters
+  | Parameter | Type | Description |
+  |-----------|------|-------------|
+  | id        | guid | The id for the service | 
+  
+  ## Sample Request
+  ```
+  GET {{baseUrl}}/services/:id/debt?page=1&pageSize=10
+  ```
+  
+  ## Response Body
+  ```json
+  [
+    {
+      "serviceId": "5931d4b0-dd0a-4654-85fe-78f42890da0d",
+      "type": "code",
+      "title": "Minaland",
+      "description": "revolutionize B2B supply-chains",
+      "status": "pending"
+    }
+  ]
+  ```
+  
+  ## Status Codes
+  | Status Code | Description |
+  |-------------|-------------|
+  | 200 OK      | Service debt retrieved successfully. |
+  | 400 Bad Request | Invalid page or pageSize parameter. |
+  | 500 Internal Server Error | Failed to retrieve debt due to an internal server error. |
+}

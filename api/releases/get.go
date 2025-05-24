@@ -76,7 +76,7 @@ func validatePageParams(req *http.Request) (int, int, error) {
 
 	// Parse page and page size from query parameters
 	pageStr := req.URL.Query().Get("page")
-	pageSizeStr := req.URL.Query().Get("page_size")
+	pageSizeStr := req.URL.Query().Get("pageSize")
 
 	// Default values
 	page := 1
