@@ -76,7 +76,7 @@ func validatePageParams(req *http.Request) (int, int, error) {
 
 	// Parse page and page size from query parameters
 	pageStr := req.URL.Query().Get("page")
-	pageSizeStr := req.URL.Query().Get("page_size")
+	pageSizeStr := req.URL.Query().Get("pageSize")
 
 	// Default values
 	page := 1
@@ -100,7 +100,7 @@ func validatePageParams(req *http.Request) (int, int, error) {
 		if err != nil || parsedPageSize <= 0 {
 			return 0, 0, &customErrors.HTTPError{
 				Status: http.StatusBadRequest,
-				Msg:    "Invalid page_size parameter",
+				Msg:    "Invalid pageSize parameter",
 			}
 		}
 		pageSize = parsedPageSize

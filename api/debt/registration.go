@@ -14,6 +14,7 @@ type CallsHandler struct {
 func (c CallsHandler) Register(mux *http.ServeMux) {
 	calls := map[string]func(http.ResponseWriter, *http.Request){
 		"POST /services/{id}/debt": c.createDebt,
+		"GET /services/{id}/debt":  c.getDebtByServiceId,
 	}
 	for path, f := range calls {
 		mux.HandleFunc(path, f)
