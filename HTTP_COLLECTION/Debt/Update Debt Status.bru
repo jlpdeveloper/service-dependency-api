@@ -32,7 +32,7 @@ docs {
   
   ## Sample Request
   ```
-  GET {{baseUrl}}/debt/:id
+  PATCH {{baseUrl}}/debt/:id
   ```
   
   ## Request Body
@@ -45,8 +45,8 @@ docs {
   ## Status Codes
   | Status Code | Description |
   |-------------|-------------|
-  | 204 OK      | Service debt retrieved successfully. |
+  | 204 No Content  | Service debt retrieved successfully. |
   | 400 Bad Request | Invalid debt id or invalid status |
-  | 404 Not Found | The debt item was not in the database | 
+  | 404 Not Found   | The debt item was not in the database | 
   | 500 Internal Server Error | Failed to retrieve debt due to an internal server error. |
 }
