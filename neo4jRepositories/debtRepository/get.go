@@ -31,7 +31,7 @@ func (n Neo4jDebtRepository) GetDebtByServiceId(ctx context.Context, id string, 
 			params["status"] = "remediated"
 		}
 		cypher += `
-			RETURN d.title as title, d.description as description, d.type as type, d.status as status
+			RETURN d.title as title, d.description as description, d.type as type, d.status as status, d.id as id
 			ORDER BY d.created DESC
 			SKIP $skip
 			LIMIT $limit`
@@ -56,6 +56,15 @@ func (n Neo4jDebtRepository) GetDebtByServiceId(ctx context.Context, id string, 
 			}
 			if status, ok := record.Get("status"); ok && status != nil {
 				debt.Status = status.(string)
+			}
+
+			if id, ok := record.Get("id"); ok && id != nil {
+				debt.Id = id.(string)
+			} else {
+				return nil, &customErrors.HTTPError{
+					Status: 500,
+					Msg:    "debt id is nil",
+				}
 			}
 
 			debtList = append(debtList, debt)

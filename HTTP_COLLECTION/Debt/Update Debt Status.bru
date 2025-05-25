@@ -1,0 +1,52 @@
+meta {
+  name: Update Debt Status
+  type: http
+  seq: 3
+}
+
+patch {
+  url: {{baseUrl}}/debt/:id
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: 8a576da2-4eeb-4024-999e-519e055f0e82
+}
+
+body:json {
+  {
+    "status": "pending"
+  }
+}
+
+docs {
+  # Update Debt Status
+  
+  Update the status of a debt id
+  
+  ## Path Parameters
+  | Parameter | Type | Description |
+  |-----------|------|-------------|
+  | id        | guid | The id for the debt | 
+  
+  ## Sample Request
+  ```
+  PATCH {{baseUrl}}/debt/:id
+  ```
+  
+  ## Request Body
+  ```json
+  {
+    "status": "in_progress"
+  }
+  ```
+  
+  ## Status Codes
+  | Status Code | Description |
+  |-------------|-------------|
+  | 204 No Content  | Service debt retrieved successfully. |
+  | 400 Bad Request | Invalid debt id or invalid status |
+  | 404 Not Found   | The debt item was not in the database | 
+  | 500 Internal Server Error | Failed to retrieve debt due to an internal server error. |
+}
