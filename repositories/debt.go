@@ -11,6 +11,7 @@ type Debt struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
 	Status      string `json:"status"`
+	Id          string `json:"id"`
 }
 
 func (d *Debt) Validate() error {
