@@ -8,6 +8,7 @@ import (
 	"service-dependency-api/api/dependencies"
 	"service-dependency-api/api/hello_world"
 	"service-dependency-api/api/releases"
+	"service-dependency-api/api/reports"
 	"service-dependency-api/api/services"
 	"service-dependency-api/api/system"
 )
@@ -22,4 +23,5 @@ func SetupRoutes(mux *http.ServeMux, driver *neo4j.DriverWithContext) {
 	dependencies.Register(mux, driver)
 	releases.Register(mux, driver)
 	debt.Register(mux, driver)
+	reports.Register(mux, driver)
 }
