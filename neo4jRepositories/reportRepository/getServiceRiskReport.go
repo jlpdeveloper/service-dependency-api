@@ -43,9 +43,9 @@ func (n Neo4jReportRepository) GetServiceRiskReport(ctx context.Context, service
 
 	var wg sync.WaitGroup
 	errCh := make(chan error, 2)
-	report := repositories.ServiceRiskReport{
-		DebtCount: make(map[string]int64),
-	}
+	var dependentCount int64
+	var debtCount map[string]int64
+
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
@@ -64,7 +64,9 @@ func (n Neo4jReportRepository) GetServiceRiskReport(ctx context.Context, service
 			if result.Next(ctx) {
 				ctr, _ := result.Record().Get("count")
 				if ct, ok := ctr.(int64); ok {
-					report.DependentCount = ct
+					dependentCount = ct
+				} else {
+					return nil, fmt.Errorf("could not convert count to int64")
 				}
 			}
 			if result.Err() != nil {
@@ -97,7 +99,17 @@ func (n Neo4jReportRepository) GetServiceRiskReport(ctx context.Context, service
 			}
 			for result.Next(ctx) {
 				record := result.Record().AsMap()
-				report.DebtCount[record["type"].(string)] = record["count"].(int64)
+				var debtType string
+				var count int64
+				debtType, ok := record["type"].(string)
+				if !ok {
+					return nil, fmt.Errorf("could not convert count to int64")
+				}
+				count, ok = record["count"].(int64)
+				if !ok {
+					return nil, fmt.Errorf("could not convert count to int64")
+				}
+				debtCount[debtType] = count
 			}
 			if result.Err() != nil {
 				return nil, result.Err()
@@ -115,6 +127,10 @@ func (n Neo4jReportRepository) GetServiceRiskReport(ctx context.Context, service
 		if err != nil {
 			return nil, err
 		}
+	}
+	report := repositories.ServiceRiskReport{
+		DebtCount:      debtCount,
+		DependentCount: dependentCount,
 	}
 	return &report, nil
 }

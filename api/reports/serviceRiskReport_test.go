@@ -94,7 +94,7 @@ func TestGetServiceRiskReportInvalidPathParameter(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
-
+	req.SetPathValue("id", "invalid-id")
 	// Create a response recorder
 	rw := httptest.NewRecorder()
 
