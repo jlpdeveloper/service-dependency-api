@@ -1,0 +1,48 @@
+meta {
+  name: Service Risk Report
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/reports/services/:id/risk
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: 5931d4b0-dd0a-4654-85fe-78f42890da0d
+}
+
+docs {
+  # Service Risk Report
+  
+  Creates a json object that quantifies service risk based on amount of technical debt and number of dependent services.
+  
+  
+  ## Query Parameters
+  | Parameter | Type | Description |
+  |-----------|------|-------------|
+  | id      | guid  | service id |
+  
+  ## Sample Response
+  ```json
+  {
+    "DebtCount": {
+      "code": 2,
+      "documentation": 1,
+      "testing": 1
+    },
+    "DependentCount": 1
+  }
+  ```
+  
+  
+  ## Status Codes
+  | Status Code | Description |
+  |-------------|-------------|
+  | 200 OK      | Success. |
+  | 400 Bad Request | Invalid id. |
+  | 404 Not Found | The service was not found. | 
+  | 500 Internal Server Error | Failed to create debt due to an internal server error. |
+}

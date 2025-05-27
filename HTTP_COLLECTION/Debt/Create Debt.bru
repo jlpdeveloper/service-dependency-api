@@ -25,3 +25,32 @@ body:json {
 assert {
   res.status: eq 201
 }
+
+docs {
+  # Create Debt for Service
+  This call creates a new debt item for a service.
+  
+  ## Query Parameters
+  
+  | Parameter | Type | Description |
+  |-----------|------|-------------|
+  | id      | guid  | first service id |
+  
+  ## Sample Body
+  ```json
+  {
+    "title": "Debt1",
+    "description": "a description",
+    "type": "code"
+  }
+  
+  ```
+  
+  ## Status Codes
+  | Status Code | Description |
+  |-------------|-------------|
+  | 201 OK      | Service debt created. |
+  | 400 Bad Request | Invalid body |
+  | 404 Not Found | The service was not found. | 
+  | 500 Internal Server Error | Failed to create debt due to an internal server error. |
+}
