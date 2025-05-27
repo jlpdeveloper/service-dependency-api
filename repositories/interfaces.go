@@ -31,3 +31,7 @@ type ReleaseRepository interface {
 	GetReleasesByServiceId(ctx context.Context, serviceId string, page, pageSize int) ([]*Release, error)
 	GetReleasesInDateRange(ctx context.Context, startDate, endDate time.Time, page, pageSize int) ([]*ServiceReleaseInfo, error)
 }
+
+type ReportRepository interface {
+	GetServiceRiskReport(ctx context.Context, serviceId string) (*ServiceRiskReport, error)
+}

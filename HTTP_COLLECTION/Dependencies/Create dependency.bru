@@ -25,6 +25,28 @@ docs {
   # Create Dependency
   This endpoint will create a dependency connection between two entities (service, database, etc.)
   
-  ## Return Data
-  This will return a `201 CREATED` status code
+  The service id from the query will depend on the the service from the body
+  
+  ## Query Parameters
+  
+  | Parameter | Type | Description |
+  |-----------|------|-------------|
+  | id      | guid  | service id |
+  
+  ## Sample Body
+  ```json
+  {
+    "id": "12973952-0165-400b-9178-a0fdbd90f967",
+    "version": "1.5.0"
+  }
+  
+  ```
+  
+  ## Status Codes
+  | Status Code | Description |
+  |-------------|-------------|
+  | 201 OK      | Dependency created successfully. |
+  | 400 Bad Request | Invalid page or pageSize parameter. |
+  | 404 Not Found | One of the services was not found. | 
+  | 500 Internal Server Error | Failed to retrieve debt due to an internal server error. |
 }
