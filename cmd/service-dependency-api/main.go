@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"service-dependency-api/api/routes"
 	"service-dependency-api/internal/config"
+	"service-dependency-api/middleware"
 )
 
 func main() {
@@ -32,6 +33,15 @@ func main() {
 	mux := http.NewServeMux()
 	routes.SetupRoutes(mux, &driver)
 
+	middlewareHandler := middleware.CreateStack(
+		middleware.Logging,
+	)
+
+	server := &http.Server{
+		Handler: middlewareHandler(mux),
+		Addr:    config.GetConfigValue("address"),
+	}
+
 	log.Println("Starting Web Server")
-	log.Fatal(http.ListenAndServe(config.GetConfigValue("address"), mux))
+	log.Fatal(server.ListenAndServe())
 }
