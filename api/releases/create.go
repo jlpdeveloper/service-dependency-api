@@ -16,6 +16,8 @@ func (s *ServiceCallsHandler) createRelease(rw http.ResponseWriter, req *http.Re
 	}
 
 	r := &repositories.Release{}
+	const maxBodySize = 1 << 20 // 1 MB
+	req.Body = http.MaxBytesReader(rw, req.Body, maxBodySize)
 	err := json.NewDecoder(req.Body).Decode(r)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusBadRequest)
