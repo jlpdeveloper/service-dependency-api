@@ -3,7 +3,6 @@ package serviceRepository
 import (
 	"context"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
-	"log"
 	"service-dependency-api/internal/customErrors"
 )
 
@@ -32,7 +31,6 @@ func (d *Neo4jServiceRepository) DeleteService(ctx context.Context, id string) (
 		MATCH(s:Service { id: $id})
 		DETACH DELETE s;`, map[string]interface{}{"id": id})
 		if err != nil {
-			log.Println("Error deleting service: " + id)
 			return nil, err
 		}
 
@@ -42,7 +40,6 @@ func (d *Neo4jServiceRepository) DeleteService(ctx context.Context, id string) (
 		}
 
 		if summary.Counters().NodesDeleted() == 0 {
-			log.Println("Error deleting service: " + id + ". Database transaction not successful")
 			return nil, &customErrors.HTTPError{Status: 500, Msg: "Error deleting service: " + id}
 		}
 		return nil, nil
