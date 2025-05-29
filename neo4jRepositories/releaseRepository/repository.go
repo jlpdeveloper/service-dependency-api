@@ -14,3 +14,6 @@ func New(driver neo4j.DriverWithContext) *Neo4jReleaseRepository {
 		manager: databaseAdapter.NewDriverManager(driver),
 	}
 }
+
+// releaseTimeFormat the default time format for formatting the release date
+const releaseTimeFormat = "2006-01-02T15:04:05Z"

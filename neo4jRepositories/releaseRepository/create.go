@@ -36,7 +36,7 @@ func (r *Neo4jReleaseRepository) CreateRelease(ctx context.Context, release repo
 
 		params := map[string]any{
 			"serviceId":   release.ServiceId,
-			"releaseDate": release.ReleaseDate.Format("2006-01-02T15:04:05Z"),
+			"releaseDate": release.ReleaseDate.Format(releaseTimeFormat),
 		}
 		// Build the Cypher query dynamically
 		propertiesString := "releaseDate: datetime($releaseDate)"
