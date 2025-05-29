@@ -14,7 +14,7 @@ type mockDependencyRepository struct {
 	DependencyExists bool
 }
 
-func (repo mockDependencyRepository) AddDependency(_ context.Context, _ string, _ *repositories.Dependency) error {
+func (repo mockDependencyRepository) AddDependency(_ context.Context, _ string, _ repositories.Dependency) error {
 	if repo.Err != nil {
 		return repo.Err
 	}

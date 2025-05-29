@@ -25,7 +25,7 @@ func (s *ServiceCallsHandler) createDependency(rw http.ResponseWriter, req *http
 		return
 	}
 
-	err = s.Repository.AddDependency(req.Context(), id, dep)
+	err = s.Repository.AddDependency(req.Context(), id, *dep)
 
 	if err != nil {
 		customErrors.HandleError(rw, err)
