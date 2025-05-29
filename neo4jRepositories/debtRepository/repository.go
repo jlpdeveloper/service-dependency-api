@@ -14,5 +14,6 @@ func New(driver neo4j.DriverWithContext) *Neo4jDebtRepository {
 }
 
 const (
+	// DefaultStatus The default status for any newly created debt items
 	DefaultStatus = "pending"
 )
