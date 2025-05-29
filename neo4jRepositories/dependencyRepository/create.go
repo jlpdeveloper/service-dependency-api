@@ -8,7 +8,7 @@ import (
 	"service-dependency-api/repositories"
 )
 
-func (d *Neo4jDependencyRepository) AddDependency(ctx context.Context, id string, dependency *repositories.Dependency) error {
+func (d *Neo4jDependencyRepository) AddDependency(ctx context.Context, id string, dependency repositories.Dependency) error {
 	createDependencyTransaction := func(tx neo4j.ManagedTransaction) (any, error) {
 		// Check if both services exist
 		checkQuery := `

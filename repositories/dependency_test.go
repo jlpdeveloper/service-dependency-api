@@ -17,5 +17,11 @@ func TestDependency_ValidateFailNoId(t *testing.T) {
 	err := dep.Validate()
 	if err == nil {
 		t.Error("Expected error")
+	} else {
+		expectedMsg := "dependency id is required" // Adjust to match the actual expected message
+		if err.Error() != expectedMsg {
+			t.Errorf("Expected error message '%s', got '%s'", expectedMsg, err.Error())
+		}
 	}
+
 }
