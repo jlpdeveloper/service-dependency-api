@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-func (c CallsHandler) getDebtByServiceId(rw http.ResponseWriter, r *http.Request) {
+func (c CallsHandler) GetDebtByServiceId(rw http.ResponseWriter, r *http.Request) {
 	id, ok := internal.GetGuidFromRequestPath("id", r)
 	if !ok {
 		http.Error(rw, "service id not valid", http.StatusBadRequest)

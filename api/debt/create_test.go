@@ -45,7 +45,7 @@ func TestCreateDebtSuccess(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.createDebt(rw, req)
+	handler.CreateDebt(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusCreated {
@@ -74,7 +74,7 @@ func TestCreateDebtInvalidBody(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.createDebt(rw, req)
+	handler.CreateDebt(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusBadRequest {
@@ -113,7 +113,7 @@ func TestCreateDebtInvalidPathParameter(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.createDebt(rw, req)
+	handler.CreateDebt(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusBadRequest {
@@ -154,7 +154,7 @@ func TestCreateDebtRepositoryError(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.createDebt(rw, req)
+	handler.CreateDebt(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusInternalServerError {
@@ -198,7 +198,7 @@ func TestCreateDebtHTTPError(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.createDebt(rw, req)
+	handler.CreateDebt(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusNotFound {

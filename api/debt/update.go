@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func (c CallsHandler) updateDebtStatus(rw http.ResponseWriter, r *http.Request) {
+func (c CallsHandler) UpdateDebtStatus(rw http.ResponseWriter, r *http.Request) {
 	id, ok := internal.GetGuidFromRequestPath("id", r)
 	if !ok {
 		http.Error(rw, "debt id not valid", http.StatusBadRequest)

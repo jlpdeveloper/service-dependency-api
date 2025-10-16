@@ -34,7 +34,7 @@ func TestUpdateDebtStatusSuccess(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.updateDebtStatus(rw, req)
+	handler.UpdateDebtStatus(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusNoContent {
@@ -65,7 +65,7 @@ func TestUpdateDebtStatusInvalidId(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.updateDebtStatus(rw, req)
+	handler.UpdateDebtStatus(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusBadRequest {
@@ -97,7 +97,7 @@ func TestUpdateDebtStatusInvalidStatus(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.updateDebtStatus(rw, req)
+	handler.UpdateDebtStatus(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusBadRequest {
@@ -127,7 +127,7 @@ func TestUpdateDebtStatusMissingStatus(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.updateDebtStatus(rw, req)
+	handler.UpdateDebtStatus(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusBadRequest {
@@ -155,7 +155,7 @@ func TestUpdateDebtStatusInvalidBody(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.updateDebtStatus(rw, req)
+	handler.UpdateDebtStatus(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusInternalServerError {
@@ -187,7 +187,7 @@ func TestUpdateDebtStatusRepositoryError(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.updateDebtStatus(rw, req)
+	handler.UpdateDebtStatus(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusInternalServerError {
@@ -222,7 +222,7 @@ func TestUpdateDebtStatusHTTPError(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.updateDebtStatus(rw, req)
+	handler.UpdateDebtStatus(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusNotFound {
