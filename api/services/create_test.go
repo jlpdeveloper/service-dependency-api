@@ -40,7 +40,7 @@ func TestPOSTSuccess(t *testing.T) {
 	req, err := http.NewRequest("POST", "/hello/world?name=test", io.NopCloser(strings.NewReader(string(serviceJson))))
 
 	rw := httptest.NewRecorder()
-	handler.createService(rw, req)
+	handler.CreateService(rw, req)
 	if err != nil {
 		t.Errorf("Service POST errored with %s", err.Error())
 	}
@@ -96,7 +96,7 @@ func TestPOSTError(t *testing.T) {
 		panic(err)
 	}
 	rw := httptest.NewRecorder()
-	handler.createService(rw, req)
+	handler.CreateService(rw, req)
 	if rw.Code != http.StatusInternalServerError {
 		t.Errorf("Service POST errored with %s", strconv.Itoa(rw.Code))
 	}
@@ -118,7 +118,7 @@ func TestPOSTInvalidBody(t *testing.T) {
 	req, err := http.NewRequest("POST", "/hello/world?name=test", io.NopCloser(strings.NewReader("some text")))
 
 	rw := httptest.NewRecorder()
-	handler.createService(rw, req)
+	handler.CreateService(rw, req)
 	if err != nil {
 		t.Errorf("Service POST errored with %s", err.Error())
 	}

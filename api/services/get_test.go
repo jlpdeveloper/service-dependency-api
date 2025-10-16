@@ -13,7 +13,7 @@ import (
 	"time"
 )
 
-// Tests for getAllServices
+// Tests for GetAllServices
 
 func TestGetAllSuccess(t *testing.T) {
 	handler := ServiceCallsHandler{
@@ -40,7 +40,7 @@ func TestGetAllSuccess(t *testing.T) {
 	}
 
 	rw := httptest.NewRecorder()
-	handler.getAllServices(rw, req)
+	handler.GetAllServices(rw, req)
 
 	if rw.Code != http.StatusOK {
 		t.Errorf("Expected status code %d, got %d", http.StatusOK, rw.Code)
@@ -76,7 +76,7 @@ func TestGetAllBadRequest(t *testing.T) {
 	}
 
 	rw := httptest.NewRecorder()
-	handler.getAllServices(rw, req)
+	handler.GetAllServices(rw, req)
 
 	if rw.Code != http.StatusBadRequest {
 		t.Errorf("Expected status code %d, got %d", http.StatusBadRequest, rw.Code)
@@ -99,7 +99,7 @@ func TestGetAllInternalServerError(t *testing.T) {
 	}
 
 	rw := httptest.NewRecorder()
-	handler.getAllServices(rw, req)
+	handler.GetAllServices(rw, req)
 
 	if rw.Code != http.StatusInternalServerError {
 		t.Errorf("Expected status code %d, got %d", http.StatusInternalServerError, rw.Code)
@@ -124,7 +124,7 @@ func TestGetAllWithZeroPageSize(t *testing.T) {
 	}
 
 	rw := httptest.NewRecorder()
-	handler.getAllServices(rw, req)
+	handler.GetAllServices(rw, req)
 
 	if rw.Code != http.StatusBadRequest {
 		t.Errorf("Expected status code %d, got %d", http.StatusBadRequest, rw.Code)
@@ -149,7 +149,7 @@ func TestGetAllWithLargePageSize(t *testing.T) {
 	}
 
 	rw := httptest.NewRecorder()
-	handler.getAllServices(rw, req)
+	handler.GetAllServices(rw, req)
 
 	if rw.Code != http.StatusBadRequest {
 		t.Errorf("Expected status code %d, got %d", http.StatusBadRequest, rw.Code)
@@ -174,7 +174,7 @@ func TestGetAllWithNegativePage(t *testing.T) {
 	}
 
 	rw := httptest.NewRecorder()
-	handler.getAllServices(rw, req)
+	handler.GetAllServices(rw, req)
 
 	if rw.Code != http.StatusBadRequest {
 		t.Errorf("Expected status code %d, got %d", http.StatusBadRequest, rw.Code)
@@ -199,7 +199,7 @@ func TestGetAllWithNegativePageSize(t *testing.T) {
 	}
 
 	rw := httptest.NewRecorder()
-	handler.getAllServices(rw, req)
+	handler.GetAllServices(rw, req)
 
 	if rw.Code != http.StatusBadRequest {
 		t.Errorf("Expected status code %d, got %d", http.StatusBadRequest, rw.Code)
@@ -224,7 +224,7 @@ func TestGetAllWithNonNumericValues(t *testing.T) {
 	}
 
 	rw := httptest.NewRecorder()
-	handler.getAllServices(rw, req)
+	handler.GetAllServices(rw, req)
 
 	if rw.Code != http.StatusBadRequest {
 		t.Errorf("Expected status code %d, got %d", http.StatusBadRequest, rw.Code)
@@ -237,7 +237,7 @@ func TestGetAllWithNonNumericValues(t *testing.T) {
 	}
 
 	rw = httptest.NewRecorder()
-	handler.getAllServices(rw, req)
+	handler.GetAllServices(rw, req)
 
 	// This should succeed with default pageSize
 	if rw.Code != http.StatusOK {
@@ -262,7 +262,7 @@ func TestGetAllWithEmptyResultSet(t *testing.T) {
 	}
 
 	rw := httptest.NewRecorder()
-	handler.getAllServices(rw, req)
+	handler.GetAllServices(rw, req)
 
 	if rw.Code != http.StatusOK {
 		t.Errorf("Expected status code %d, got %d", http.StatusOK, rw.Code)
@@ -311,7 +311,7 @@ func TestGetAllWithPageBeyondAvailableData(t *testing.T) {
 	}
 
 	rw := httptest.NewRecorder()
-	handler.getAllServices(rw, req)
+	handler.GetAllServices(rw, req)
 
 	if rw.Code != http.StatusOK {
 		t.Errorf("Expected status code %d, got %d", http.StatusOK, rw.Code)
@@ -357,7 +357,7 @@ func TestGetAllWithDefaultPageSize(t *testing.T) {
 	}
 
 	rw := httptest.NewRecorder()
-	handler.getAllServices(rw, req)
+	handler.GetAllServices(rw, req)
 
 	if rw.Code != http.StatusOK {
 		t.Errorf("Expected status code %d, got %d", http.StatusOK, rw.Code)
@@ -376,7 +376,7 @@ func TestGetAllWithDefaultPageSize(t *testing.T) {
 	}
 }
 
-// Tests for getById
+// Tests for GetById
 
 func TestGetByIdSuccess(t *testing.T) {
 	id := uuid.New().String()
@@ -405,7 +405,7 @@ func TestGetByIdSuccess(t *testing.T) {
 	}
 	req.SetPathValue("id", id)
 	rw := httptest.NewRecorder()
-	handler.getById(rw, req)
+	handler.GetById(rw, req)
 
 	if rw.Code != http.StatusOK {
 		t.Errorf("Expected status code %d, got %d", http.StatusOK, rw.Code)
@@ -440,7 +440,7 @@ func TestGetByIdInvalidId(t *testing.T) {
 	}
 
 	rw := httptest.NewRecorder()
-	handler.getById(rw, req)
+	handler.GetById(rw, req)
 
 	if rw.Code != http.StatusBadRequest {
 		t.Errorf("Expected status code %d, got %d", http.StatusBadRequest, rw.Code)
@@ -471,7 +471,7 @@ func TestGetByIdRepositoryError(t *testing.T) {
 	}
 	req.SetPathValue("id", id)
 	rw := httptest.NewRecorder()
-	handler.getById(rw, req)
+	handler.GetById(rw, req)
 
 	if rw.Code != http.StatusInternalServerError {
 		t.Errorf("Expected status code %d, got %d", http.StatusInternalServerError, rw.Code)
@@ -511,7 +511,7 @@ func TestGetByIdServiceNotFound(t *testing.T) {
 	}
 	req.SetPathValue("id", nonExistentId)
 	rw := httptest.NewRecorder()
-	handler.getById(rw, req)
+	handler.GetById(rw, req)
 
 	if rw.Code != http.StatusNotFound {
 		t.Errorf("Expected status code %d, got %d", http.StatusNotFound, rw.Code)

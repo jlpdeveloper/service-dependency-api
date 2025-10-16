@@ -9,7 +9,7 @@ import (
 	"service-dependency-api/repositories"
 )
 
-func (u *ServiceCallsHandler) updateService(rw http.ResponseWriter, req *http.Request) {
+func (u *ServiceCallsHandler) UpdateService(rw http.ResponseWriter, req *http.Request) {
 	updateServiceRequest := &repositories.Service{}
 	err := json.NewDecoder(req.Body).Decode(updateServiceRequest)
 	if err != nil {
