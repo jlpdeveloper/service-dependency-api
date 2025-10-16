@@ -72,7 +72,7 @@ func TestStructuredLogger(t *testing.T) {
 		t.Errorf("Expected user_agent 'test-agent', got %v", userAgent)
 	}
 
-	if _, ok := logEntry["duration"]; !ok {
+	if _, ok := logEntry["duration_ms"]; !ok {
 		t.Error("Expected duration field in log output")
 	}
 }
