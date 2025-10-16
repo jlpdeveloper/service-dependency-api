@@ -34,11 +34,12 @@ func SetupRouter(driver *neo4j.DriverWithContext) http.Handler {
 
 	router.Get("/releases/{startDate}/{endDate}", releaseHandler.GetReleasesInDateRange)
 	router.Get("/reports/services/{id}/risk", reportHandler.GetServiceRiskReport)
+	router.Patch("/debt/{id}", debtHandler.UpdateDebtStatus)
 
 	router.Route("/services", func(r chi.Router) {
 		r.Get("/", serviceHandler.GetAllServices)
 		r.Post("/", serviceHandler.CreateService)
-		r.Patch("/debt/{id}", debtHandler.UpdateDebtStatus)
+
 		r.Route("/{id}", func(r chi.Router) {
 			r.Get("/", serviceHandler.GetById)
 			r.Put("/", serviceHandler.UpdateService)
