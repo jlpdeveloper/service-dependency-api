@@ -31,7 +31,7 @@ func TestDeleteDependencySuccess(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.deleteDependency(rw, req)
+	handler.DeleteDependency(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusNoContent {
@@ -62,7 +62,7 @@ func TestDeleteDependencyInvalidServiceId(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.deleteDependency(rw, req)
+	handler.DeleteDependency(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusBadRequest {
@@ -93,7 +93,7 @@ func TestDeleteDependencyInvalidDependencyId(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.deleteDependency(rw, req)
+	handler.DeleteDependency(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusBadRequest {
@@ -124,7 +124,7 @@ func TestDeleteDependencyRepositoryError(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.deleteDependency(rw, req)
+	handler.DeleteDependency(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusInternalServerError {
@@ -158,7 +158,7 @@ func TestDeleteDependencyNotFound(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.deleteDependency(rw, req)
+	handler.DeleteDependency(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusNotFound {

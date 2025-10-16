@@ -45,7 +45,7 @@ func TestCreateDependencySuccess(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.createDependency(rw, req)
+	handler.CreateDependency(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusCreated {
@@ -85,7 +85,7 @@ func TestCreateDependencyInvalidPath(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.createDependency(rw, req)
+	handler.CreateDependency(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusBadRequest {
@@ -115,7 +115,7 @@ func TestCreateDependencyInvalidBody(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.createDependency(rw, req)
+	handler.CreateDependency(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusBadRequest {
@@ -154,7 +154,7 @@ func TestCreateDependencyInvalidDependency(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.createDependency(rw, req)
+	handler.CreateDependency(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusBadRequest {
@@ -195,7 +195,7 @@ func TestCreateDependencyRepositoryError(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.createDependency(rw, req)
+	handler.CreateDependency(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusInternalServerError {
@@ -238,7 +238,7 @@ func TestCreateDependencyHTTPError(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.createDependency(rw, req)
+	handler.CreateDependency(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusNotFound {

@@ -45,7 +45,7 @@ func TestGetByIdSuccess(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.getDependencies(rw, req)
+	handler.GetDependencies(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusOK {
@@ -105,7 +105,7 @@ func TestGetByIdInvalidPath(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.getDependencies(rw, req)
+	handler.GetDependencies(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusBadRequest {
@@ -134,7 +134,7 @@ func TestGetByIdRepositoryError(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.getDependencies(rw, req)
+	handler.GetDependencies(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusInternalServerError {
@@ -166,7 +166,7 @@ func TestGetByIdHTTPError(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.getDependencies(rw, req)
+	handler.GetDependencies(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusNotFound {
@@ -210,7 +210,7 @@ func TestGetDependentsByIdSuccess(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.getDependents(rw, req)
+	handler.GetDependents(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusOK {
@@ -271,7 +271,7 @@ func TestGetDependentsByIdInvalidPath(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.getDependents(rw, req)
+	handler.GetDependents(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusBadRequest {
@@ -301,7 +301,7 @@ func TestGetDependentsByIdRepositoryError(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.getDependents(rw, req)
+	handler.GetDependents(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusInternalServerError {
@@ -333,7 +333,7 @@ func TestGetDependentsByIdHTTPError(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.getDependents(rw, req)
+	handler.GetDependents(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusNotFound {
@@ -381,7 +381,7 @@ func TestGetDependentsByIdWithVersionFilter(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.getDependents(rw, req)
+	handler.GetDependents(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusOK {
@@ -450,7 +450,7 @@ func TestGetDependentsByIdWithNonMatchingVersionFilter(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.getDependents(rw, req)
+	handler.GetDependents(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusOK {
@@ -511,7 +511,7 @@ func TestGetDependentsByIdWithNoVersionFilter(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.getDependents(rw, req)
+	handler.GetDependents(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusOK {

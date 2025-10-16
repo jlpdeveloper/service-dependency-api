@@ -6,7 +6,7 @@ import (
 	"service-dependency-api/internal/customErrors"
 )
 
-func (s *ServiceCallsHandler) deleteDependency(rw http.ResponseWriter, req *http.Request) {
+func (s *ServiceCallsHandler) DeleteDependency(rw http.ResponseWriter, req *http.Request) {
 	id, ok := internal.GetGuidFromRequestPath("id", req)
 	if !ok {
 		http.Error(rw, "path id not valid", http.StatusBadRequest)
