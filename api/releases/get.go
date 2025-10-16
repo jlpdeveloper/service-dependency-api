@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-func (s *ServiceCallsHandler) getReleasesByServiceId(rw http.ResponseWriter, req *http.Request) {
+func (s *ServiceCallsHandler) GetReleasesByServiceId(rw http.ResponseWriter, req *http.Request) {
 	serviceId, ok := internal.GetGuidFromRequestPath("id", req)
 	if !ok {
 		http.Error(rw, "Invalid service ID", http.StatusBadRequest)
@@ -38,7 +38,7 @@ func (s *ServiceCallsHandler) getReleasesByServiceId(rw http.ResponseWriter, req
 	}
 }
 
-func (s *ServiceCallsHandler) getReleasesInDateRange(rw http.ResponseWriter, req *http.Request) {
+func (s *ServiceCallsHandler) GetReleasesInDateRange(rw http.ResponseWriter, req *http.Request) {
 	startDate, ok := internal.GetDateFromRequestPath("startDate", req)
 	if !ok {
 		http.Error(rw, "Invalid start date", http.StatusBadRequest)

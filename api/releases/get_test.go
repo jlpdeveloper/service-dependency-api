@@ -48,7 +48,7 @@ func TestGetReleasesByServiceIdSuccess(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.getReleasesByServiceId(rw, req)
+	handler.GetReleasesByServiceId(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusOK {
@@ -86,7 +86,7 @@ func TestGetReleasesByServiceIdInvalidPathParameter(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.getReleasesByServiceId(rw, req)
+	handler.GetReleasesByServiceId(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusBadRequest {
@@ -113,7 +113,7 @@ func TestGetReleasesByServiceIdRepositoryError(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.getReleasesByServiceId(rw, req)
+	handler.GetReleasesByServiceId(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusInternalServerError {
@@ -143,7 +143,7 @@ func TestGetReleasesByServiceIdHTTPError(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.getReleasesByServiceId(rw, req)
+	handler.GetReleasesByServiceId(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusNotFound {
@@ -183,7 +183,7 @@ func TestGetReleasesByServiceIdWithPagination(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.getReleasesByServiceId(rw, req)
+	handler.GetReleasesByServiceId(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusOK {
@@ -230,7 +230,7 @@ func TestGetReleasesByServiceIdInvalidPageParameter(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.getReleasesByServiceId(rw, req)
+	handler.GetReleasesByServiceId(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusBadRequest {
@@ -257,7 +257,7 @@ func TestGetReleasesByServiceIdInvalidPageSizeParameter(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.getReleasesByServiceId(rw, req)
+	handler.GetReleasesByServiceId(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusBadRequest {
@@ -284,7 +284,7 @@ func TestGetReleasesByServiceIdNegativePageParameter(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.getReleasesByServiceId(rw, req)
+	handler.GetReleasesByServiceId(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusBadRequest {
@@ -311,7 +311,7 @@ func TestGetReleasesByServiceIdZeroPageSizeParameter(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.getReleasesByServiceId(rw, req)
+	handler.GetReleasesByServiceId(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusBadRequest {
@@ -366,7 +366,7 @@ func TestGetReleasesInDateRangeSuccess(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.getReleasesInDateRange(rw, req)
+	handler.GetReleasesInDateRange(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusOK {
@@ -409,7 +409,7 @@ func TestGetReleasesInDateRangeInvalidStartDate(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.getReleasesInDateRange(rw, req)
+	handler.GetReleasesInDateRange(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusBadRequest {
@@ -440,7 +440,7 @@ func TestGetReleasesInDateRangeInvalidEndDate(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.getReleasesInDateRange(rw, req)
+	handler.GetReleasesInDateRange(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusBadRequest {
@@ -471,7 +471,7 @@ func TestGetReleasesInDateRangeEndDateBeforeStartDate(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.getReleasesInDateRange(rw, req)
+	handler.GetReleasesInDateRange(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusBadRequest {
