@@ -25,11 +25,42 @@ func SetupRouter(driver *neo4j.DriverWithContext) http.Handler {
 	router.Use(middleware.Recoverer)
 	router.Use(middleware.Compress(5))
 	setupSystemCalls(router)
-	services.Register(router, driver)
-	dependencies.Register(router, driver)
-	releases.Register(router, driver)
-	debt.Register(router, driver)
-	reports.Register(router, driver)
+
+	serviceHandler := services.New(driver)
+	debtHandler := debt.New(driver)
+	dependencyHandler := dependencies.New(driver)
+	releaseHandler := releases.New(driver)
+	reportHandler := reports.New(driver)
+
+	router.Get("/releases/{startDate}/{endDate}", releaseHandler.GetReleasesInDateRange)
+	router.Get("/reports/services/{id}/risk", reportHandler.GetServiceRiskReport)
+
+	router.Route("/services", func(r chi.Router) {
+		r.Get("/", serviceHandler.GetAllServices)
+		r.Post("/", serviceHandler.CreateService)
+		r.Patch("/debt/{id}", debtHandler.UpdateDebtStatus)
+		r.Route("/{id}", func(r chi.Router) {
+			r.Get("/", serviceHandler.GetById)
+			r.Put("/", serviceHandler.UpdateService)
+			r.Delete("/", serviceHandler.DeleteServiceById)
+
+			r.Get("/dependencies", dependencyHandler.GetDependencies)
+			r.Get("/dependents", dependencyHandler.GetDependents)
+			r.Post("/dependency", dependencyHandler.CreateDependency)
+			r.Delete("/dependency/{id2}", dependencyHandler.DeleteDependency)
+
+			r.Route("/debt", func(r chi.Router) {
+				r.Post("/", debtHandler.CreateDebt)
+				r.Get("/", debtHandler.GetDebtByServiceId)
+			})
+
+			r.Route("/release", func(r chi.Router) {
+				r.Post("/", releaseHandler.CreateRelease)
+				r.Get("/", releaseHandler.GetReleasesByServiceId)
+			})
+
+		})
+	})
 	return router
 }
 
