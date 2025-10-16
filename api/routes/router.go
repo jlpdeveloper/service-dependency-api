@@ -1,8 +1,7 @@
 package routes
 
 import (
-	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
-	"log"
+	"log/slog"
 	"net/http"
 	"service-dependency-api/api/debt"
 	"service-dependency-api/api/dependencies"
@@ -11,17 +10,32 @@ import (
 	"service-dependency-api/api/reports"
 	"service-dependency-api/api/services"
 	"service-dependency-api/api/system"
+	"service-dependency-api/internal"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
 
-func SetupRoutes(mux *http.ServeMux, driver *neo4j.DriverWithContext) {
-	log.Println("Setting up Routes")
-	mux.HandleFunc("GET /helloworld", hello_world.HelloWorld)
-	mux.HandleFunc("GET /time", system.GetTime)
-	mux.HandleFunc("GET /database", system.GetDbAddress)
+func SetupRouter(driver *neo4j.DriverWithContext) http.Handler {
+	slog.Debug("Setting up router")
+	router := chi.NewRouter()
 
-	services.Register(mux, driver)
-	dependencies.Register(mux, driver)
-	releases.Register(mux, driver)
-	debt.Register(mux, driver)
-	reports.Register(mux, driver)
+	router.Use(internal.StructuredLogger(slog.Default()))
+	router.Use(middleware.Recoverer)
+	router.Use(middleware.Compress(5))
+	setupSystemCalls(router)
+	services.Register(router, driver)
+	dependencies.Register(router, driver)
+	releases.Register(router, driver)
+	debt.Register(router, driver)
+	reports.Register(router, driver)
+	return router
+}
+
+func setupSystemCalls(r *chi.Mux) {
+	slog.Debug("Setting up system calls")
+	r.Get("/time", system.GetTime)
+	r.Get("/database", system.GetDbAddress)
+	r.Get("/helloworld", hello_world.HelloWorld)
 }

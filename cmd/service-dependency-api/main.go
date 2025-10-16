@@ -2,16 +2,24 @@ package main
 
 import (
 	"context"
-	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
+	"errors"
 	"log"
+	"log/slog"
 	"net/http"
+	"os"
+	"os/signal"
 	"service-dependency-api/api/routes"
 	"service-dependency-api/internal/config"
-	"service-dependency-api/middleware"
+	"syscall"
+	"time"
+
+	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
 
 func main() {
 	ctx := context.Background()
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	slog.SetDefault(logger)
 	driver, err := neo4j.NewDriverWithContext(
 		config.GetConfigValue("NEO4J_URL"),
 		neo4j.BasicAuth(config.GetConfigValue("NEO4J_USERNAME"), config.GetConfigValue("NEO4J_PASSWORD"), ""))
@@ -30,18 +38,25 @@ func main() {
 		panic(err)
 	}
 
-	mux := http.NewServeMux()
-	routes.SetupRoutes(mux, &driver)
-
-	middlewareHandler := middleware.CreateStack(
-		middleware.Logging,
-	)
+	mux := routes.SetupRouter(&driver)
 
 	server := &http.Server{
-		Handler: middlewareHandler(mux),
+		Handler: mux,
 		Addr:    config.GetConfigValue("address"),
 	}
 
 	log.Println("Starting Web Server")
-	log.Fatal(server.ListenAndServe())
+	go func() {
+		if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			log.Fatalf("listen: %s\n", err)
+		}
+	}()
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt, syscall.SIGQUIT, syscall.SIGTERM)
+	<-quit
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	if err := server.Shutdown(ctx); err != nil {
+		log.Fatal("Server forced to shutdown:", err)
+	}
 }

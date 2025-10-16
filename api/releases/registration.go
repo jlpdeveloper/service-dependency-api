@@ -1,17 +1,19 @@
 package releases
 
 import (
-	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 	"net/http"
 	"service-dependency-api/neo4jRepositories/releaseRepository"
 	"service-dependency-api/repositories"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
 
 type ServiceCallsHandler struct {
 	Repository repositories.ReleaseRepository
 }
 
-func (s *ServiceCallsHandler) Register(mux *http.ServeMux) {
+func (s *ServiceCallsHandler) Register(mux *chi.Mux) {
 	paths := map[string]func(http.ResponseWriter, *http.Request){
 		"POST /services/{id}/release":         s.createRelease,
 		"GET /services/{id}/releases":         s.getReleasesByServiceId,
@@ -22,7 +24,7 @@ func (s *ServiceCallsHandler) Register(mux *http.ServeMux) {
 	}
 }
 
-func Register(mux *http.ServeMux, driver *neo4j.DriverWithContext) {
+func Register(mux *chi.Mux, driver *neo4j.DriverWithContext) {
 	handler := ServiceCallsHandler{
 		Repository: releaseRepository.New(*driver),
 	}
