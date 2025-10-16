@@ -24,7 +24,7 @@ func StructuredLogger(logger *slog.Logger) func(http.Handler) http.Handler {
 				slog.Int("status", ww.status),
 				slog.String("remote", r.RemoteAddr),
 				slog.String("user_agent", r.UserAgent()),
-				slog.Int64("duration", duration.Milliseconds()),
+				slog.Int64("duration_ms", duration.Milliseconds()),
 			)
 		})
 	}
