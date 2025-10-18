@@ -38,7 +38,7 @@ func TestGetReleasesByServiceIdSuccess(t *testing.T) {
 	}
 
 	// Create a request with no pagination parameters (should use defaults)
-	req, err := http.NewRequest("GET", "/services/"+validServiceId+"/releases", nil)
+	req, err := http.NewRequest("GET", "/services/"+validServiceId+"/release", nil)
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
@@ -77,7 +77,7 @@ func TestGetReleasesByServiceIdInvalidPathParameter(t *testing.T) {
 	}
 
 	// Create a request
-	req, err := http.NewRequest("GET", "/services/invalid-id/releases", nil)
+	req, err := http.NewRequest("GET", "/services/invalid-id/release", nil)
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
@@ -104,7 +104,7 @@ func TestGetReleasesByServiceIdRepositoryError(t *testing.T) {
 	}
 
 	// Create a request
-	req, err := http.NewRequest("GET", "/services/"+validServiceId+"/releases", nil)
+	req, err := http.NewRequest("GET", "/services/"+validServiceId+"/release", nil)
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
@@ -134,7 +134,7 @@ func TestGetReleasesByServiceIdHTTPError(t *testing.T) {
 	}
 
 	// Create a request
-	req, err := http.NewRequest("GET", "/services/"+validServiceId+"/releases", nil)
+	req, err := http.NewRequest("GET", "/services/"+validServiceId+"/release", nil)
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
@@ -174,7 +174,7 @@ func TestGetReleasesByServiceIdWithPagination(t *testing.T) {
 	}
 
 	// Create a request with pagination parameters (page=1, pageSize=10)
-	req, err := http.NewRequest("GET", "/services/"+validServiceId+"/releases?page=2&pageSize=10", nil)
+	req, err := http.NewRequest("GET", "/services/"+validServiceId+"/release?page=2&pageSize=10", nil)
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
@@ -221,7 +221,7 @@ func TestGetReleasesByServiceIdInvalidPageParameter(t *testing.T) {
 	}
 
 	// Create a request with invalid page parameter
-	req, err := http.NewRequest("GET", "/services/"+validServiceId+"/releases?page=invalid", nil)
+	req, err := http.NewRequest("GET", "/services/"+validServiceId+"/release?page=invalid", nil)
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
@@ -248,7 +248,7 @@ func TestGetReleasesByServiceIdInvalidPageSizeParameter(t *testing.T) {
 	}
 
 	// Create a request with invalid pageSize parameter
-	req, err := http.NewRequest("GET", "/services/"+validServiceId+"/releases?pageSize=invalid", nil)
+	req, err := http.NewRequest("GET", "/services/"+validServiceId+"/release?pageSize=invalid", nil)
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
@@ -275,7 +275,7 @@ func TestGetReleasesByServiceIdNegativePageParameter(t *testing.T) {
 	}
 
 	// Create a request with negative page parameter
-	req, err := http.NewRequest("GET", "/services/"+validServiceId+"/releases?page=-1", nil)
+	req, err := http.NewRequest("GET", "/services/"+validServiceId+"/release?page=-1", nil)
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
@@ -302,7 +302,7 @@ func TestGetReleasesByServiceIdZeroPageSizeParameter(t *testing.T) {
 	}
 
 	// Create a request with zero pageSize parameter
-	req, err := http.NewRequest("GET", "/services/"+validServiceId+"/releases?pageSize=0", nil)
+	req, err := http.NewRequest("GET", "/services/"+validServiceId+"/release?pageSize=0", nil)
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
