@@ -54,7 +54,7 @@ func TestGetServiceRiskReportSuccess(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.getServiceRiskReport(rw, req)
+	handler.GetServiceRiskReport(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusOK {
@@ -99,7 +99,7 @@ func TestGetServiceRiskReportInvalidPathParameter(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.getServiceRiskReport(rw, req)
+	handler.GetServiceRiskReport(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusBadRequest {
@@ -126,7 +126,7 @@ func TestGetServiceRiskReportRepositoryError(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.getServiceRiskReport(rw, req)
+	handler.GetServiceRiskReport(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusInternalServerError {
@@ -156,7 +156,7 @@ func TestGetServiceRiskReportHTTPError(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.getServiceRiskReport(rw, req)
+	handler.GetServiceRiskReport(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusNotFound {

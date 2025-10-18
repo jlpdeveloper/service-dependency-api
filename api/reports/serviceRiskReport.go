@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func (c *CallsHandler) getServiceRiskReport(rw http.ResponseWriter, req *http.Request) {
+func (c *CallsHandler) GetServiceRiskReport(rw http.ResponseWriter, req *http.Request) {
 	id, ok := internal.GetGuidFromRequestPath("id", req)
 	if !ok {
 		http.Error(rw, "Invalid service ID", http.StatusBadRequest)

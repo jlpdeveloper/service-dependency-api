@@ -9,7 +9,7 @@ import (
 	"service-dependency-api/repositories"
 )
 
-func (s *ServiceCallsHandler) getDependencies(rw http.ResponseWriter, req *http.Request) {
+func (s *ServiceCallsHandler) GetDependencies(rw http.ResponseWriter, req *http.Request) {
 	id, ok := internal.GetGuidFromRequestPath("id", req)
 	if !ok {
 		http.Error(rw, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
@@ -27,7 +27,7 @@ func (s *ServiceCallsHandler) getDependencies(rw http.ResponseWriter, req *http.
 	}
 }
 
-func (s *ServiceCallsHandler) getDependents(rw http.ResponseWriter, req *http.Request) {
+func (s *ServiceCallsHandler) GetDependents(rw http.ResponseWriter, req *http.Request) {
 	id, ok := internal.GetGuidFromRequestPath("id", req)
 	if !ok {
 		http.Error(rw, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)

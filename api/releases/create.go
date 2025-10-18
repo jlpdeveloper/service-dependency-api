@@ -8,7 +8,7 @@ import (
 	"service-dependency-api/repositories"
 )
 
-func (s *ServiceCallsHandler) createRelease(rw http.ResponseWriter, req *http.Request) {
+func (s *ServiceCallsHandler) CreateRelease(rw http.ResponseWriter, req *http.Request) {
 	serviceId, ok := internal.GetGuidFromRequestPath("id", req)
 	if !ok {
 		http.Error(rw, "Invalid service ID", http.StatusBadRequest)

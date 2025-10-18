@@ -30,15 +30,15 @@ func TestDeleteServiceSuccess(t *testing.T) {
 	}
 	req.SetPathValue("id", "be00abbc-42c6-47aa-a45a-e4e02cb6363f")
 	rw := httptest.NewRecorder()
-	handler.deleteServiceById(rw, req)
+	handler.DeleteServiceById(rw, req)
 
 	if rw.Code != http.StatusNoContent {
-		t.Errorf("deleteServiceById returned wrong status code: got %v want %v", rw.Code, http.StatusNoContent)
+		t.Errorf("DeleteServiceById returned wrong status code: got %v want %v", rw.Code, http.StatusNoContent)
 	}
 
 	// Check that the response body is empty
 	if rw.Body.String() != "" {
-		t.Errorf("deleteServiceById returned unexpected body: got %v want empty string", rw.Body.String())
+		t.Errorf("DeleteServiceById returned unexpected body: got %v want empty string", rw.Body.String())
 	}
 }
 
@@ -62,10 +62,10 @@ func TestDeleteServiceInvalidId(t *testing.T) {
 	}
 
 	rw := httptest.NewRecorder()
-	handler.deleteServiceById(rw, req)
+	handler.DeleteServiceById(rw, req)
 
 	if rw.Code != http.StatusBadRequest {
-		t.Errorf("deleteServiceById returned wrong status code: got %v want %v", rw.Code, http.StatusBadRequest)
+		t.Errorf("DeleteServiceById returned wrong status code: got %v want %v", rw.Code, http.StatusBadRequest)
 	}
 }
 
@@ -89,10 +89,10 @@ func TestDeleteServiceError(t *testing.T) {
 	}
 	req.SetPathValue("id", "be00abbc-42c6-47aa-a45a-e4e02cb6363f")
 	rw := httptest.NewRecorder()
-	handler.deleteServiceById(rw, req)
+	handler.DeleteServiceById(rw, req)
 
 	if rw.Code != http.StatusInternalServerError {
-		t.Errorf("deleteServiceById returned wrong status code: got %v want %v", rw.Code, http.StatusInternalServerError)
+		t.Errorf("DeleteServiceById returned wrong status code: got %v want %v", rw.Code, http.StatusInternalServerError)
 	}
 }
 
@@ -116,10 +116,10 @@ func TestDeleteNonExistentService(t *testing.T) {
 	}
 	req.SetPathValue("id", "be00abbc-42c6-47aa-a45a-e4e02cb6363f")
 	rw := httptest.NewRecorder()
-	handler.deleteServiceById(rw, req)
+	handler.DeleteServiceById(rw, req)
 
 	// Delete should be idempotent, so deleting a non-existent service should still return 204
 	if rw.Code != http.StatusNoContent {
-		t.Errorf("deleteServiceById returned wrong status code: got %v want %v", rw.Code, http.StatusNoContent)
+		t.Errorf("DeleteServiceById returned wrong status code: got %v want %v", rw.Code, http.StatusNoContent)
 	}
 }

@@ -49,7 +49,7 @@ func TestGetDebtByServiceIdSuccess(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.getDebtByServiceId(rw, req)
+	handler.GetDebtByServiceId(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusOK {
@@ -109,7 +109,7 @@ func TestGetDebtByServiceIdEmptyResult(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.getDebtByServiceId(rw, req)
+	handler.GetDebtByServiceId(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusOK {
@@ -148,7 +148,7 @@ func TestGetDebtByServiceIdInvalidPathParameter(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.getDebtByServiceId(rw, req)
+	handler.GetDebtByServiceId(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusBadRequest {
@@ -176,7 +176,7 @@ func TestGetDebtByServiceIdRepositoryError(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.getDebtByServiceId(rw, req)
+	handler.GetDebtByServiceId(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusInternalServerError {
@@ -207,7 +207,7 @@ func TestGetDebtByServiceIdHTTPError(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.getDebtByServiceId(rw, req)
+	handler.GetDebtByServiceId(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusNotFound {

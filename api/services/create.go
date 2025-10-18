@@ -7,7 +7,7 @@ import (
 	"service-dependency-api/repositories"
 )
 
-func (u *ServiceCallsHandler) createService(w http.ResponseWriter, req *http.Request) {
+func (u *ServiceCallsHandler) CreateService(w http.ResponseWriter, req *http.Request) {
 
 	createServiceRequest := &repositories.Service{}
 	err := json.NewDecoder(req.Body).Decode(createServiceRequest)

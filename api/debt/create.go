@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func (c CallsHandler) createDebt(rw http.ResponseWriter, r *http.Request) {
+func (c CallsHandler) CreateDebt(rw http.ResponseWriter, r *http.Request) {
 	id, ok := internal.GetGuidFromRequestPath("id", r)
 	if !ok {
 		http.Error(rw, "service id not valid", http.StatusBadRequest)

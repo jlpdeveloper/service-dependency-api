@@ -41,7 +41,7 @@ func TestCreateReleaseSuccess(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.createRelease(rw, req)
+	handler.CreateRelease(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusCreated {
@@ -69,7 +69,7 @@ func TestCreateReleaseInvalidBody(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.createRelease(rw, req)
+	handler.CreateRelease(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusBadRequest {
@@ -105,7 +105,7 @@ func TestCreateReleaseInvalidPathParameter(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.createRelease(rw, req)
+	handler.CreateRelease(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusBadRequest {
@@ -142,7 +142,7 @@ func TestCreateReleaseRepositoryError(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.createRelease(rw, req)
+	handler.CreateRelease(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusInternalServerError {
@@ -182,7 +182,7 @@ func TestCreateReleaseHTTPError(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	// Call the handler
-	handler.createRelease(rw, req)
+	handler.CreateRelease(rw, req)
 
 	// Check the response
 	if rw.Code != http.StatusNotFound {

@@ -43,7 +43,7 @@ func TestUpdateServiceSuccess(t *testing.T) {
 	}
 	req.SetPathValue("id", "be00abbc-42c6-47aa-a45a-e4e02cb6363f")
 	rw := httptest.NewRecorder()
-	handler.updateService(rw, req)
+	handler.UpdateService(rw, req)
 
 	if rw.Code != http.StatusNoContent {
 		t.Errorf("Service UPDATE returned wrong status code: got %v want %v", rw.Code, http.StatusNoContent)
@@ -82,7 +82,7 @@ func TestUpdateServiceNotFound(t *testing.T) {
 	}
 	req.SetPathValue("id", "be00abbc-42c6-47aa-a45a-e4e02cb6363f")
 	rw := httptest.NewRecorder()
-	handler.updateService(rw, req)
+	handler.UpdateService(rw, req)
 	if rw.Code != http.StatusNotFound {
 		t.Errorf("Service UPDATE returned wrong status code: got %v want %v", rw.Code, http.StatusNotFound)
 	}
@@ -116,7 +116,7 @@ func TestUpdateServiceError(t *testing.T) {
 	}
 	req.SetPathValue("id", "be00abbc-42c6-47aa-a45a-e4e02cb6363f")
 	rw := httptest.NewRecorder()
-	handler.updateService(rw, req)
+	handler.UpdateService(rw, req)
 	if rw.Code != http.StatusInternalServerError {
 		t.Errorf("Service UPDATE returned wrong status code: got %v want %v", rw.Code, http.StatusInternalServerError)
 	}
@@ -138,7 +138,7 @@ func TestUpdateServiceInvalidBody(t *testing.T) {
 	req, err := http.NewRequest("PUT", "/services/1", io.NopCloser(strings.NewReader("some invalid json")))
 
 	rw := httptest.NewRecorder()
-	handler.updateService(rw, req)
+	handler.UpdateService(rw, req)
 	if err != nil {
 		t.Errorf("Service UPDATE errored with %s", err.Error())
 	}
@@ -173,7 +173,7 @@ func TestUpdateServiceInvalidId(t *testing.T) {
 	req, err := http.NewRequest("PUT", "/services/invalid", io.NopCloser(strings.NewReader(string(serviceJson))))
 
 	rw := httptest.NewRecorder()
-	handler.updateService(rw, req)
+	handler.UpdateService(rw, req)
 	if err != nil {
 		t.Errorf("Service UPDATE errored with %s", err.Error())
 	}
@@ -215,7 +215,7 @@ func TestUpdateServiceIdMismatch(t *testing.T) {
 	}
 	req.SetPathValue("id", "be00abbc-42c6-47aa-a45a-e4e02cb6363f")
 	rw := httptest.NewRecorder()
-	handler.updateService(rw, req)
+	handler.UpdateService(rw, req)
 
 	if rw.Code != http.StatusBadRequest {
 		t.Errorf("Service UPDATE returned wrong status code: got %v want %v", rw.Code, http.StatusBadRequest)

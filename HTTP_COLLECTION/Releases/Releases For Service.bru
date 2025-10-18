@@ -5,22 +5,22 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/services/:id/releases
+  url: {{baseUrl}}/services/:id/release
   body: none
   auth: none
 }
 
 params:path {
-  id: 5931d4b0-dd0a-4654-85fe-78f42890da0d
+  id: {{serviceId}}
 }
 
 docs {
   # Get All Releases for a Service
   
   This will return a list of releases associated with a service. The query dynamically includes properties based on their values, ensuring that empty string properties are not included in the Neo4j database.
-
+  
   ## Sample Response
-
+  
   ```json
   [
     {
@@ -33,11 +33,11 @@ docs {
     }
   ]
   ```
-
+  
   ## Parameters
   
   - **id**: The ID of the service for which to retrieve releases.
-
+  
   ## Response Codes
   | Status Code | Description |
   |-------------|-------------|
