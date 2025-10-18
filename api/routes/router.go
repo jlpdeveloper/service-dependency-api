@@ -65,7 +65,7 @@ func SetupRouter(driver neo4j.DriverWithContext) http.Handler {
 	return router
 }
 
-func setupSystemCalls(r *chi.Mux) {
+func setupSystemCalls(r chi.Router) {
 	slog.Debug("Setting up system calls")
 	r.Get("/time", system.GetTime)
 	r.Get("/database", system.GetDbAddress)
