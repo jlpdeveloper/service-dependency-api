@@ -38,7 +38,7 @@ func main() {
 		panic(err)
 	}
 
-	mux := routes.SetupRouter(&driver)
+	mux := routes.SetupRouter(driver)
 
 	server := &http.Server{
 		Handler: mux,

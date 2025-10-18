@@ -17,7 +17,7 @@ import (
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
 
-func SetupRouter(driver *neo4j.DriverWithContext) http.Handler {
+func SetupRouter(driver neo4j.DriverWithContext) http.Handler {
 	slog.Debug("Setting up router")
 	router := chi.NewRouter()
 

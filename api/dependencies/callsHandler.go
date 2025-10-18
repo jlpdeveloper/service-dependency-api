@@ -11,8 +11,8 @@ type ServiceCallsHandler struct {
 	Repository repositories.DependencyRepository
 }
 
-func New(driver *neo4j.DriverWithContext) *ServiceCallsHandler {
+func New(driver neo4j.DriverWithContext) *ServiceCallsHandler {
 	return &ServiceCallsHandler{
-		Repository: dependencyRepository.New(*driver),
+		Repository: dependencyRepository.New(driver),
 	}
 }

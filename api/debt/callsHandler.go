@@ -11,8 +11,8 @@ type CallsHandler struct {
 	Repository repositories.DebtRepository
 }
 
-func New(driver *neo4j.DriverWithContext) *CallsHandler {
+func New(driver neo4j.DriverWithContext) *CallsHandler {
 	return &CallsHandler{
-		Repository: debtRepository.New(*driver),
+		Repository: debtRepository.New(driver),
 	}
 }
