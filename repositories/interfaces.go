@@ -56,3 +56,17 @@ type ReportRepository interface {
 	// GetServiceRiskReport retrieves the risk report for a service.
 	GetServiceRiskReport(ctx context.Context, serviceId string) (*ServiceRiskReport, error)
 }
+
+// TeamRepository defines the methods for interacting with teams.
+type TeamRepository interface {
+	// CreateTeam creates a new team.
+	CreateTeam(ctx context.Context, team Team) error
+	// GetTeam retrieves a team by its ID.
+	GetTeam(ctx context.Context, teamId string) (Team, error)
+	// GetTeams retrieves all teams.
+	GetTeams(ctx context.Context) ([]Team, error)
+	// UpdateTeam updates an existing team.
+	UpdateTeam(ctx context.Context, team Team) error
+	// DeleteTeam deletes a team.
+	DeleteTeam(ctx context.Context, teamId string) error
+}
