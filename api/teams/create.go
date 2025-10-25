@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func (c CallsHandler) CreateTeam(r *http.Request, rw http.ResponseWriter) {
+func (c CallsHandler) CreateTeam(rw http.ResponseWriter, r *http.Request) {
 	team := &repositories.Team{}
 	const maxBodySize = 1 << 20 // 1 MB
 	r.Body = http.MaxBytesReader(rw, r.Body, maxBodySize)

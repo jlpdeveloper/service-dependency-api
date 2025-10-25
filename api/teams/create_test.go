@@ -29,7 +29,7 @@ func TestCreateTeamSuccess(t *testing.T) {
 	}
 	rw := httptest.NewRecorder()
 
-	handler.CreateTeam(req, rw)
+	handler.CreateTeam(rw, req)
 
 	if rw.Code != http.StatusCreated {
 		t.Errorf("expected status %d, got %s", http.StatusCreated, strconv.Itoa(rw.Code))
@@ -47,7 +47,7 @@ func TestCreateTeamRepositoryError(t *testing.T) {
 	}
 	rw := httptest.NewRecorder()
 
-	handler.CreateTeam(req, rw)
+	handler.CreateTeam(rw, req)
 
 	if rw.Code != http.StatusInternalServerError {
 		t.Errorf("expected status %d, got %s", http.StatusInternalServerError, strconv.Itoa(rw.Code))
@@ -63,7 +63,7 @@ func TestCreateTeamInvalidJSON(t *testing.T) {
 	}
 	rw := httptest.NewRecorder()
 
-	handler.CreateTeam(req, rw)
+	handler.CreateTeam(rw, req)
 
 	if rw.Code != http.StatusBadRequest {
 		t.Errorf("expected status %d, got %s", http.StatusBadRequest, strconv.Itoa(rw.Code))
@@ -81,7 +81,7 @@ func TestCreateTeamValidationError(t *testing.T) {
 	}
 	rw := httptest.NewRecorder()
 
-	handler.CreateTeam(req, rw)
+	handler.CreateTeam(rw, req)
 
 	if rw.Code != http.StatusBadRequest {
 		t.Errorf("expected status %d, got %s", http.StatusBadRequest, strconv.Itoa(rw.Code))
