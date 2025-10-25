@@ -62,9 +62,9 @@ type TeamRepository interface {
 	// CreateTeam creates a new team.
 	CreateTeam(ctx context.Context, team Team) error
 	// GetTeam retrieves a team by its ID.
-	GetTeam(ctx context.Context, teamId string) (Team, error)
+	GetTeam(ctx context.Context, teamId string) (*Team, error)
 	// GetTeams retrieves all teams.
-	GetTeams(ctx context.Context) ([]Team, error)
+	GetTeams(ctx context.Context, page, pageSize int) ([]Team, error)
 	// UpdateTeam updates an existing team.
 	UpdateTeam(ctx context.Context, team Team) error
 	// DeleteTeam deletes a team.
