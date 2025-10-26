@@ -3,7 +3,6 @@ package teamRepository
 import (
 	"context"
 	"service-dependency-api/repositories"
-	"strings"
 	"testing"
 	"time"
 
@@ -12,53 +11,55 @@ import (
 )
 
 func TestNeo4jTeamRepository_CreateTeam(t *testing.T) {
-	neo4jContainer, err := neo4j_tc.Run(context.Background(),
+	ctx := context.Background()
+	neo4jContainer, err := neo4j_tc.Run(ctx,
 		"neo4j:latest",
 		neo4j_tc.WithAdminPassword("letmein!"),
 	)
 	if err != nil {
 		t.Fatal(err)
 	}
-	neo4jContainer.Start(context.Background())
-	defer neo4jContainer.Terminate(context.Background())
-	db_port, err := neo4jContainer.MappedPort(context.Background(), "7687")
+	defer neo4jContainer.Terminate(ctx)
+	db_port, err := neo4jContainer.MappedPort(ctx, "7687/tcp")
 	if err != nil {
 		t.Fatal(err)
 	}
-	err = neo4jContainer.Start(context.Background())
+	err = neo4jContainer.Start(ctx)
 	if err != nil {
 	}
-	endpoint, err := neo4jContainer.Endpoint(context.Background(), "")
+	host, err := neo4jContainer.Host(ctx)
 	if err != nil {
 		t.Fatal(err)
 	}
-	endpoint = "neo4j://" + strings.Split(endpoint, ":")[0] + ":" + db_port.Port()
+	endpoint := "neo4j://" + host + ":" + db_port.Port()
 	driver, err := neo4j.NewDriverWithContext(
 		endpoint,
 		neo4j.BasicAuth("neo4j", "letmein!", ""))
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer driver.Close(context.Background())
+	defer driver.Close(ctx)
 	repo := New(driver)
 	team := repositories.Team{
 		Name: "test",
 	}
 	now := time.Now()
-	err = repo.CreateTeam(context.Background(), team)
-
-	session := driver.NewSession(context.Background(), neo4j.SessionConfig{
+	err = repo.CreateTeam(ctx, team)
+	if err != nil {
+		t.Fatal(err)
+	}
+	session := driver.NewSession(ctx, neo4j.SessionConfig{
 		AccessMode: neo4j.AccessModeRead,
 	})
 
-	defer session.Close(context.Background())
+	defer session.Close(ctx)
 
-	result, err := session.Run(context.Background(), "MATCH (n:Team) RETURN n.name as name, n.id as id, n.created as created", nil)
+	result, err := session.Run(ctx, "MATCH (n:Team) RETURN n.name as name, n.id as id, n.created as created", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	returned_team, err := result.Single(context.Background())
+	returned_team, err := result.Single(ctx)
 	if err != nil || returned_team == nil {
 		t.Fatal(err)
 	}
