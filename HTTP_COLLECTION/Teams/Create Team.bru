@@ -1,0 +1,47 @@
+meta {
+  name: Create Team
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/teams
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "{{$randomColor}}"
+  }
+}
+
+assert {
+  res.status: eq 201
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
+
+docs {
+  # Create a team
+  This call creates a new team.
+  
+  
+  ## Sample Body
+  ```json
+  {
+    "name": "SRE"
+  }
+  
+  ```
+  
+  ## Status Codes
+  | Status Code | Description |
+  |-------------|-------------|
+  | 201 Created      | Team created. |
+  | 400 Bad Request | Invalid body |
+  | 500 Internal Server Error | Failed to create team due to an internal server error. |
+}

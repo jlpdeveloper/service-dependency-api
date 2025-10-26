@@ -10,6 +10,7 @@ import (
 	"service-dependency-api/api/reports"
 	"service-dependency-api/api/services"
 	"service-dependency-api/api/system"
+	"service-dependency-api/api/teams"
 	"service-dependency-api/internal"
 
 	"github.com/go-chi/chi/v5"
@@ -31,6 +32,7 @@ func SetupRouter(driver neo4j.DriverWithContext) http.Handler {
 	dependencyHandler := dependencies.New(driver)
 	releaseHandler := releases.New(driver)
 	reportHandler := reports.New(driver)
+	teamHandler := teams.New(driver)
 
 	router.Get("/releases/{startDate}/{endDate}", releaseHandler.GetReleasesInDateRange)
 	router.Get("/reports/services/{id}/risk", reportHandler.GetServiceRiskReport)
@@ -61,6 +63,10 @@ func SetupRouter(driver neo4j.DriverWithContext) http.Handler {
 			})
 
 		})
+	})
+
+	router.Route("/teams", func(r chi.Router) {
+		r.Post("/", teamHandler.CreateTeam)
 	})
 	return router
 }
