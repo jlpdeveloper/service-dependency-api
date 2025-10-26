@@ -22,9 +22,9 @@ func (c CallsHandler) CreateTeam(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusBadRequest)
 		return
 	}
-	ctx_witn_timeout, cancel := context.WithTimeout(r.Context(), 10*time.Second)
+	ctxWithTimeout, cancel := context.WithTimeout(r.Context(), 10*time.Second)
 	defer cancel()
-	err = c.Repository.CreateTeam(ctx_witn_timeout, *team)
+	err = c.Repository.CreateTeam(ctxWithTimeout, *team)
 	if err != nil {
 		customErrors.HandleError(rw, err)
 		return
