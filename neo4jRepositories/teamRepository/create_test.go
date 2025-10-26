@@ -2,43 +2,33 @@ package teamRepository
 
 import (
 	"context"
+	"service-dependency-api/neo4jRepositories"
 	"service-dependency-api/repositories"
 	"testing"
 	"time"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
-	neo4j_tc "github.com/testcontainers/testcontainers-go/modules/neo4j"
 )
 
 func TestNeo4jTeamRepository_CreateTeam(t *testing.T) {
 	ctx := context.Background()
-	neo4jContainer, err := neo4j_tc.Run(ctx,
-		"neo4j:latest",
-		neo4j_tc.WithAdminPassword("letmein!"),
-	)
+	tc, err := neo4jRepositories.NewTestContainerHelper(ctx)
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer neo4jContainer.Terminate(ctx)
-	db_port, err := neo4jContainer.MappedPort(ctx, "7687/tcp")
-	if err != nil {
-		t.Fatal(err)
-	}
-	err = neo4jContainer.Start(ctx)
-	if err != nil {
-	}
-	host, err := neo4jContainer.Host(ctx)
-	if err != nil {
-		t.Fatal(err)
-	}
-	endpoint := "neo4j://" + host + ":" + db_port.Port()
+	t.Cleanup(func() {
+		_ = tc.Container.Terminate(ctx)
+	})
+
 	driver, err := neo4j.NewDriverWithContext(
-		endpoint,
+		tc.Endpoint,
 		neo4j.BasicAuth("neo4j", "letmein!", ""))
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer driver.Close(ctx)
+	defer func() {
+		_ = driver.Close(ctx)
+	}()
 	repo := New(driver)
 	team := repositories.Team{
 		Name: "test",
@@ -52,25 +42,67 @@ func TestNeo4jTeamRepository_CreateTeam(t *testing.T) {
 		AccessMode: neo4j.AccessModeRead,
 	})
 
-	defer session.Close(ctx)
+	defer func() {
+		_ = session.Close(ctx)
+	}()
 
-	result, err := session.Run(ctx, "MATCH (n:Team) RETURN n.name as name, n.id as id, n.created as created", nil)
+	// Query only the specific team we just created to avoid nondeterministic results
+	result, err := session.Run(ctx,
+		"MATCH (n:Team {name: $name}) RETURN n.name as name, n.id as id, n.created as created",
+		map[string]any{"name": team.Name},
+	)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	returned_team, err := result.Single(ctx)
-	if err != nil || returned_team == nil {
-		t.Fatal(err)
+	returnedTeam, err := result.Single(ctx)
+	if err != nil || returnedTeam == nil {
+		t.Fatalf("expected single team record, got error: %v", err)
 	}
 
-	if n, _ := returned_team.Get("name"); n != team.Name {
-		t.Errorf("Expected %s, got %s", team.Name, n)
+	// Validate name exists, is string, and matches
+	nameVal, ok := returnedTeam.Get("name")
+	if !ok {
+		t.Fatalf("missing 'name' field in record")
 	}
-	if n, _ := returned_team.Get("id"); n == "" {
-		t.Errorf("Expected ID, got %s", n)
+	nameStr, ok := nameVal.(string)
+	if !ok {
+		t.Fatalf("field 'name' is not a string: %T", nameVal)
 	}
-	if n, _ := returned_team.Get("created"); n.(time.Time).Before(now) || n.(time.Time).After(now.Add(time.Second*10)) {
-		t.Errorf("Expected created time between %s and %s, got %s", now, now.Add(time.Second*10), n)
+	if nameStr != team.Name {
+		t.Errorf("expected name %q, got %q", team.Name, nameStr)
+	}
+
+	// Validate id exists, is string, and non-empty
+	idVal, ok := returnedTeam.Get("id")
+	if !ok {
+		t.Fatalf("missing 'id' field in record")
+	}
+	idStr, ok := idVal.(string)
+	if !ok {
+		t.Fatalf("field 'id' is not a string: %T", idVal)
+	}
+	if idStr == "" {
+		t.Errorf("expected non-empty 'id', got empty string")
+	}
+
+	// Validate created exists and is a temporal value; accept time.Time or convert supported Neo4j temporal types
+	createdVal, ok := returnedTeam.Get("created")
+	if !ok {
+		t.Fatalf("missing 'created' field in record")
+	}
+
+	var createdTime time.Time
+	switch c := createdVal.(type) {
+	case time.Time:
+		createdTime = c
+	default:
+		// If other Neo4j temporal types appear in the future, report clearly
+		t.Fatalf("unsupported 'created' type %T; expected time.Time", createdVal)
+	}
+
+	// Bounds check to avoid flaky exact-equality time comparisons
+	if createdTime.Before(now) || createdTime.After(now.Add(10*time.Second)) {
+		t.Errorf("expected 'created' between %s and %s, got %s", now, now.Add(10*time.Second), createdTime)
 	}
 }
