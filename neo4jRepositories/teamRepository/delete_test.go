@@ -103,7 +103,9 @@ func TestNeo4jTeamRepository_DeleteTeam_Returns404(t *testing.T) {
 		t.Fatal("expected error")
 	}
 	var cErr *customErrors.HTTPError
-	errors.As(err, &cErr)
+	if !errors.As(err, &cErr) {
+		t.Fatal("expected custom error")
+	}
 	if cErr.Error() != "Team not found" {
 		t.Errorf("expected error message 'team not found', got '%s'", err.Error())
 	}
