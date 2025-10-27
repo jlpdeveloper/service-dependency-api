@@ -10,37 +10,36 @@ import (
 func (r Neo4jTeamRepository) DeleteTeam(ctx context.Context, id string) error {
 	deleteTeamTransaction := func(tx neo4j.ManagedTransaction) (any, error) {
 		result, err := tx.Run(ctx, `
-    		MATCH (s:Team { id: $id })
-    		RETURN count(s) as count
-		`, map[string]interface{}{"id": id})
-
+			OPTIONAL MATCH (t:Team { id: $id })
+			DETACH DELETE t
+			RETURN count(t) AS deletedCount
+		`, map[string]any{"id": id})
 		if err != nil {
 			return nil, err
 		}
 
-		if record, err := result.Single(ctx); err == nil {
-			count, _ := record.Get("count")
-			if count.(int64) == 0 {
-				return nil, &customErrors.HTTPError{
-					Status: 404,
-					Msg:    "Team not found",
-				}
-			}
-		}
-		result, err = tx.Run(ctx, `
-		MATCH(s:Team { id: $id})
-		DETACH DELETE s;`, map[string]interface{}{"id": id})
+		record, err := result.Single(ctx)
 		if err != nil {
 			return nil, err
 		}
 
-		summary, err := result.Consume(ctx)
-		if err != nil {
+		deletedVal, ok := record.Get("deletedCount")
+		if !ok {
 			return nil, &customErrors.HTTPError{Status: 500, Msg: "Error deleting team: " + id}
 		}
 
-		if summary.Counters().NodesDeleted() == 0 {
+		var deletedCount int64
+		switch v := deletedVal.(type) {
+		case int64:
+			deletedCount = v
+		case int:
+			deletedCount = int64(v)
+		default:
 			return nil, &customErrors.HTTPError{Status: 500, Msg: "Error deleting team: " + id}
+		}
+
+		if deletedCount == 0 {
+			return nil, &customErrors.HTTPError{Status: 404, Msg: "Team not found"}
 		}
 		return nil, nil
 	}
