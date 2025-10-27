@@ -34,7 +34,7 @@ func TestNeo4jTeamRepository_CreateTeam(t *testing.T) {
 		Name: "test",
 	}
 	now := time.Now()
-	err = repo.CreateTeam(ctx, team)
+	_, err = repo.CreateTeam(ctx, team)
 	if err != nil {
 		t.Fatal(err)
 	}

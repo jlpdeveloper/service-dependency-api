@@ -24,11 +24,11 @@ func (repo mockTeamRepository) GetTeams(_ context.Context, _ int, _ int) ([]repo
 	}
 	return repo.teams, nil
 }
-func (repo mockTeamRepository) CreateTeam(_ context.Context, _ repositories.Team) error {
+func (repo mockTeamRepository) CreateTeam(_ context.Context, _ repositories.Team) (string, error) {
 	if repo.Err != nil {
-		return repo.Err
+		return "", repo.Err
 	}
-	return nil
+	return "", nil
 }
 func (repo mockTeamRepository) UpdateTeam(_ context.Context, _ repositories.Team) error {
 	if repo.Err != nil {

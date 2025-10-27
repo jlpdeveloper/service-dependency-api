@@ -1,0 +1,42 @@
+meta {
+  name: Delete Team
+  type: http
+  seq: 2
+}
+
+delete {
+  url: {{baseUrl}}/teams/:id
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: f666a36a-a9df-4acf-b8ea-838a61f2a330
+}
+
+assert {
+  res.status: eq 204
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
+
+docs {
+  # Delete Team
+  
+  This deletes the team from the database 
+  
+  ## Path Parameters
+  
+  - id: the guid for the team id
+  
+  ## Status Codes
+  | Status Code | Description |
+  |-------------|-------------|
+  | 204 No Content      | Team deleted |
+  | 400 Bad Request | Invalid body |
+  | 404 Not Found | Team was not found by id | 
+  | 500 Internal Server Error | Failed to delete team due to an internal server error |
+}

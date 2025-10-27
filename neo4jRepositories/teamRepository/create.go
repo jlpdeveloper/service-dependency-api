@@ -9,9 +9,9 @@ import (
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
 
-func (r Neo4jTeamRepository) CreateTeam(ctx context.Context, team repositories.Team) error {
+func (r Neo4jTeamRepository) CreateTeam(ctx context.Context, team repositories.Team) (string, error) {
 	createTeamTransaction := func(tx neo4j.ManagedTransaction) (any, error) {
-		_, err := tx.Run(
+		result, err := tx.Run(
 			ctx, `
         CREATE (n: Team {id: randomuuid(), created: datetime(), updated: datetime(), name: $name})
         RETURN n.id AS id
@@ -22,15 +22,35 @@ func (r Neo4jTeamRepository) CreateTeam(ctx context.Context, team repositories.T
 			return nil, err
 		}
 
-		return nil, nil
-	}
-	_, err := r.manager.ExecuteWrite(ctx, createTeamTransaction)
+		if result.Next(ctx) {
+			id, ok := result.Record().Get("id")
+			if !ok {
+				return nil, &customErrors.HTTPError{
+					Status: http.StatusInternalServerError,
+					Msg:    "Id not returned when creating team",
+				}
+			}
+			return id, nil
+		}
+		return nil, &customErrors.HTTPError{
+			Status: http.StatusInternalServerError,
+			Msg:    "No id returned from creating team",
+		}
 
+	}
+	result, err := r.manager.ExecuteWrite(ctx, createTeamTransaction)
 	if err != nil {
-		return &customErrors.HTTPError{
+		return "", &customErrors.HTTPError{
 			Status: http.StatusInternalServerError,
 			Msg:    "Error creating team",
 		}
 	}
-	return nil
+	id, ok := result.(string)
+	if !ok {
+		return "", &customErrors.HTTPError{
+			Status: http.StatusInternalServerError,
+			Msg:    "Error creating team",
+		}
+	}
+	return id, nil
 }

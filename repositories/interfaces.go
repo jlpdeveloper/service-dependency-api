@@ -60,7 +60,7 @@ type ReportRepository interface {
 // TeamRepository defines the methods for interacting with teams.
 type TeamRepository interface {
 	// CreateTeam creates a new team.
-	CreateTeam(ctx context.Context, team Team) error
+	CreateTeam(ctx context.Context, team Team) (string, error)
 	// GetTeam retrieves a team by its ID.
 	GetTeam(ctx context.Context, teamId string) (*Team, error)
 	// GetTeams retrieves all teams.

@@ -12,6 +12,8 @@ type TestContainerHelper struct {
 	Endpoint  string
 }
 
+// NewTestContainerHelper creates a new Neo4j container for testing purposes
+// returns a TestContainerHelper struct that contains the container and the endpoint
 func NewTestContainerHelper(ctx context.Context) (*TestContainerHelper, error) {
 	neo4jContainer, err := neo4j.Run(ctx,
 		"neo4j:latest",
