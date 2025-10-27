@@ -97,7 +97,7 @@ func TestNeo4jTeamRepository_DeleteTeam_Returns404(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-
+	//using team name here was purposeful, to ensure that the team is not found by id
 	err = repo.DeleteTeam(ctx, team.Name)
 	if err == nil {
 		t.Fatal("expected error")
