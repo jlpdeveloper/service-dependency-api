@@ -26,14 +26,14 @@ func (r Neo4jTeamRepository) CreateTeam(ctx context.Context, team repositories.T
 			id, ok := result.Record().Get("id")
 			if !ok {
 				return nil, &customErrors.HTTPError{
-					Status: 500,
+					Status: http.StatusInternalServerError,
 					Msg:    "Id not returned when creating team",
 				}
 			}
 			return id, nil
 		}
 		return nil, &customErrors.HTTPError{
-			Status: 500,
+			Status: http.StatusInternalServerError,
 			Msg:    "No id returned from creating team",
 		}
 
