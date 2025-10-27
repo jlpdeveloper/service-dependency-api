@@ -9,9 +9,9 @@ import (
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
 
-func (r Neo4jTeamRepository) CreateTeam(ctx context.Context, team repositories.Team) error {
+func (r Neo4jTeamRepository) CreateTeam(ctx context.Context, team repositories.Team) (string, error) {
 	createTeamTransaction := func(tx neo4j.ManagedTransaction) (any, error) {
-		_, err := tx.Run(
+		result, err := tx.Run(
 			ctx, `
         CREATE (n: Team {id: randomuuid(), created: datetime(), updated: datetime(), name: $name})
         RETURN n.id AS id
@@ -22,15 +22,20 @@ func (r Neo4jTeamRepository) CreateTeam(ctx context.Context, team repositories.T
 			return nil, err
 		}
 
+		if result.Next(ctx) {
+			id, _ := result.Record().Get("id")
+			return id, nil
+		}
 		return nil, nil
+
 	}
-	_, err := r.manager.ExecuteWrite(ctx, createTeamTransaction)
+	id, err := r.manager.ExecuteWrite(ctx, createTeamTransaction)
 
 	if err != nil {
-		return &customErrors.HTTPError{
+		return "", &customErrors.HTTPError{
 			Status: http.StatusInternalServerError,
 			Msg:    "Error creating team",
 		}
 	}
-	return nil
+	return id.(string), nil
 }
