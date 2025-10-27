@@ -24,10 +24,11 @@ func (c CallsHandler) CreateTeam(rw http.ResponseWriter, r *http.Request) {
 	}
 	ctxWithTimeout, cancel := context.WithTimeout(r.Context(), 10*time.Second)
 	defer cancel()
-	err = c.Repository.CreateTeam(ctxWithTimeout, *team)
+	id, err := c.Repository.CreateTeam(ctxWithTimeout, *team)
 	if err != nil {
 		customErrors.HandleError(rw, err)
 		return
 	}
 	rw.WriteHeader(http.StatusCreated)
+	_, _ = rw.Write([]byte(id))
 }
