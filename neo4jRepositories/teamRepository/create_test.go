@@ -11,6 +11,9 @@ import (
 )
 
 func TestNeo4jTeamRepository_CreateTeam(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode.")
+	}
 	ctx := context.Background()
 	tc, err := neo4jRepositories.NewTestContainerHelper(ctx)
 	if err != nil {
