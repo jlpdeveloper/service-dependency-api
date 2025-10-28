@@ -13,6 +13,9 @@ import (
 )
 
 func TestNeo4jTeamRepository_DeleteTeam(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode.")
+	}
 	ctx := context.Background()
 	tc, err := neo4jRepositories.NewTestContainerHelper(ctx)
 	if err != nil {
@@ -70,6 +73,9 @@ func TestNeo4jTeamRepository_DeleteTeam(t *testing.T) {
 }
 
 func TestNeo4jTeamRepository_DeleteTeam_Returns404(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode.")
+	}
 	ctx := context.Background()
 	tc, err := neo4jRepositories.NewTestContainerHelper(ctx)
 	if err != nil {

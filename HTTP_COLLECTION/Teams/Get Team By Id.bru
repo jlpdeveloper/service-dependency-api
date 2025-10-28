@@ -1,0 +1,56 @@
+meta {
+  name: Get Team By Id
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/teams/:id
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: c5ee7354-81b2-4a86-9041-ff70bc72bd5e
+}
+
+assert {
+  res.status: eq 200
+  res.body.name: isDefined
+  res.body.name: isNotEmpty
+  res.body.id: length 36
+  res.body.created: isNotEmpty
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
+
+docs {
+  # Get Team By Id
+  
+  Gets the team using the id sent in. 
+  
+  ## Sample Return Object
+  ```json
+  {
+    "name": "plum",
+    "created": "2025-10-25T18:40:52.109Z",
+    "updated": "2025-10-25T18:40:52.109Z",
+    "id": "c5ee7354-81b2-4a86-9041-ff70bc72bd5e"
+  }
+  ```
+  
+  ## Path Parameters
+  - id: the id of the team to get
+  
+  
+  ## Status Codes
+  | Status Code | Description |
+  |-------------|-------------|
+  | 200 OK      | Team returned in body |
+  | 400 Bad Request | Invalid id |
+  | 404 Not Found | Team was not found by id | 
+  | 500 Internal Server Error | Failed to find team due to an internal server error |
+}
