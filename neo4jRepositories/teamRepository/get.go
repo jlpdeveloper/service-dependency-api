@@ -28,6 +28,12 @@ func (r Neo4jTeamRepository) GetTeam(ctx context.Context, teamId string) (*repos
 		}
 
 		if !result.Next(ctx) {
+			if err := result.Err(); err != nil {
+				return nil, customErrors.HTTPError{
+					Status: http.StatusInternalServerError,
+					Msg:    err.Error(),
+				}
+			}
 			return nil, customErrors.HTTPError{
 				Status: http.StatusNotFound,
 				Msg:    "Team not found",
@@ -39,7 +45,7 @@ func (r Neo4jTeamRepository) GetTeam(ctx context.Context, teamId string) (*repos
 		if !ok {
 			return nil, customErrors.HTTPError{
 				Status: http.StatusInternalServerError,
-				Msg:    "Error converting result to team",
+				Msg:    "Failed to extract team node from query result",
 			}
 		}
 
@@ -47,7 +53,7 @@ func (r Neo4jTeamRepository) GetTeam(ctx context.Context, teamId string) (*repos
 		if !ok {
 			return nil, customErrors.HTTPError{
 				Status: http.StatusInternalServerError,
-				Msg:    "Error converting result to team",
+				Msg:    "Failed to convert query result to Node type",
 			}
 		}
 
@@ -59,7 +65,10 @@ func (r Neo4jTeamRepository) GetTeam(ctx context.Context, teamId string) (*repos
 	}
 	team, ok := result.(repositories.Team)
 	if !ok {
-		return nil, errors.New("error converting result to team")
+		return nil, customErrors.HTTPError{
+			Status: http.StatusInternalServerError,
+			Msg:    "Error converting result to team",
+		}
 	}
 	return &team, nil
 
