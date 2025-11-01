@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"service-dependency-api/internal"
 	"service-dependency-api/internal/customErrors"
+	"strconv"
 )
 
 func (c CallsHandler) GetTeam(rw http.ResponseWriter, r *http.Request) {
@@ -24,5 +25,30 @@ func (c CallsHandler) GetTeam(rw http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(err)
 	}
+}
 
+func (c CallsHandler) GetTeams(rw http.ResponseWriter, r *http.Request) {
+	page, err := strconv.Atoi(r.URL.Query().Get("page"))
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusBadRequest)
+		return
+	}
+	pageSize, err := strconv.Atoi(r.URL.Query().Get("pageSize"))
+	if err != nil {
+		pageSize = 10
+	}
+	if pageSize < 1 || pageSize > 100 {
+		http.Error(rw, "pageSize must be between 1 and 100", http.StatusBadRequest)
+		return
+	}
+	teams, err := c.Repository.GetTeams(r.Context(), page, pageSize)
+	if err != nil {
+		customErrors.HandleError(rw, err)
+		return
+	}
+	rw.Header().Set("Content-Type", "application/json")
+	err = json.NewEncoder(rw).Encode(teams)
+	if err != nil {
+		log.Println(err)
+	}
 }
