@@ -1,0 +1,58 @@
+meta {
+  name: Update Team
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{baseUrl}}/teams/:id
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: {{id}}
+}
+
+body:json {
+  {
+    "id": "{{id}}",
+    "name": "{{$randomColor}}"
+  }
+}
+
+vars:pre-request {
+  id: f1b7fc5b-8714-4b3e-8b80-14c07fe52874
+}
+
+assert {
+  res.status: eq 202
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
+
+docs {
+  # Update a team
+  This call updates an existing team.
+  
+  
+  ## Sample Body
+  ```json
+  {
+    "id": "f1b7fc5b-8714-4b3e-8b80-14c07fe52874"
+    "name": "SRE"
+  }
+  
+  ```
+  
+  ## Status Codes
+  | Status Code | Description |
+  |-------------|-------------|
+  | 201 Created      | Team updated |
+  | 404 Not Found| Team not found for updating |
+  | 400 Bad Request | Invalid body |
+  | 500 Internal Server Error | Failed to update team due to an internal server error. |
+}
