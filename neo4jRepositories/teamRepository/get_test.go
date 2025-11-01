@@ -91,3 +91,74 @@ func TestNeo4jTeamRepository_GetTeam(t *testing.T) {
 		t.Errorf("expected Created between %s and %s, got %s", now, now.Add(10*time.Second), got.Created)
 	}
 }
+
+func TestNeo4jTeamRepository_GetTeams(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode.")
+	}
+	ctx := context.Background()
+
+	// Start Neo4j test container
+	tc, err := neo4jRepositories.NewTestContainerHelper(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() {
+		_ = tc.Container.Terminate(ctx)
+	})
+
+	// Connect driver
+	driver, err := neo4j.NewDriverWithContext(
+		tc.Endpoint,
+		neo4j.BasicAuth("neo4j", "letmein!", ""),
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = driver.Close(ctx) }()
+
+	repo := New(driver)
+
+	// Create three teams to test pagination and ordering (newest first)
+	names := []string{"get-teams-1", "get-teams-2", "get-teams-3"}
+	for _, n := range names {
+		if _, err := repo.CreateTeam(ctx, repositories.Team{Name: n}); err != nil {
+			t.Fatalf("failed creating team %s: %v", n, err)
+		}
+		// Small sleep to make ordering by created deterministic
+		time.Sleep(5 * time.Millisecond)
+	}
+
+	// Page 1, size 2 -> expect last two created: 3, 2
+	page1, err := repo.GetTeams(ctx, 1, 2)
+	if err != nil {
+		t.Fatalf("GetTeams page1 returned error: %v", err)
+	}
+	if len(page1) != 2 {
+		t.Fatalf("expected 2 teams on page1, got %d", len(page1))
+	}
+	if page1[0].Name != "get-teams-3" || page1[1].Name != "get-teams-2" {
+		t.Errorf("unexpected names on page1: got [%s, %s], want [get-teams-3, get-teams-2]", page1[0].Name, page1[1].Name)
+	}
+	if page1[0].Created.Before(page1[1].Created) {
+		t.Errorf("expected page1 to be ordered by created desc, got %s before %s", page1[0].Created, page1[1].Created)
+	}
+	if page1[0].Id == "" || page1[1].Id == "" {
+		t.Errorf("expected non-empty ids in page1 results")
+	}
+
+	// Page 2, size 2 -> expect the remaining oldest: 1
+	page2, err := repo.GetTeams(ctx, 2, 2)
+	if err != nil {
+		t.Fatalf("GetTeams page2 returned error: %v", err)
+	}
+	if len(page2) != 1 {
+		t.Fatalf("expected 1 team on page2, got %d", len(page2))
+	}
+	if page2[0].Name != "get-teams-1" {
+		t.Errorf("unexpected name on page2: got %s, want get-teams-1", page2[0].Name)
+	}
+	if page2[0].Id == "" {
+		t.Errorf("expected non-empty id in page2 result")
+	}
+}

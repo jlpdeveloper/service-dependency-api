@@ -2,7 +2,6 @@ package teamRepository
 
 import (
 	"context"
-	"errors"
 	"net/http"
 	"service-dependency-api/internal/customErrors"
 	"service-dependency-api/repositories"
@@ -75,5 +74,60 @@ func (r Neo4jTeamRepository) GetTeam(ctx context.Context, teamId string) (*repos
 }
 
 func (r Neo4jTeamRepository) GetTeams(ctx context.Context, page, pageSize int) ([]repositories.Team, error) {
-	return nil, errors.New("not implemented")
+	getPageTransaction := func(tx neo4j.ManagedTransaction) (any, error) {
+		skip := (page - 1) * pageSize
+
+		result, err := tx.Run(ctx, `
+		    MATCH (s:Team)
+			RETURN s
+			ORDER BY s.created DESC
+			SKIP $skip
+			LIMIT $limit
+		`, map[string]any{
+			"skip":  skip,
+			"limit": pageSize,
+		})
+		if err != nil {
+			return nil, customErrors.HTTPError{
+				Status: http.StatusInternalServerError,
+				Msg:    err.Error(),
+			}
+		}
+		records, err := result.Collect(ctx)
+		if err != nil {
+			return nil, customErrors.HTTPError{
+				Status: http.StatusInternalServerError,
+				Msg:    err.Error(),
+			}
+		}
+		teams := []repositories.Team{}
+		for _, record := range records {
+			node, ok := record.Get("s")
+			if !ok {
+				continue
+			}
+			n, ok := node.(neo4j.Node)
+			if !ok {
+				continue
+			}
+			team := r.mapNodeToTeam(n)
+			teams = append(teams, team)
+		}
+		return teams, nil
+	}
+	pagedResult, err := r.manager.ExecuteRead(ctx, getPageTransaction)
+	if err != nil {
+		return nil, customErrors.HTTPError{
+			Status: http.StatusInternalServerError,
+			Msg:    err.Error(),
+		}
+	}
+	teams, ok := pagedResult.([]repositories.Team)
+	if !ok {
+		return nil, customErrors.HTTPError{
+			Status: http.StatusInternalServerError,
+			Msg:    "unexpected return type from transaction",
+		}
+	}
+	return teams, nil
 }
