@@ -32,15 +32,21 @@ func (r Neo4jTeamRepository) UpdateTeam(ctx context.Context, team repositories.T
 		if updateErr != nil {
 			return nil, customErrors.HTTPError{
 				Status: http.StatusInternalServerError,
-				Msg:    err.Error(),
+				Msg:    updateErr.Error(),
 			}
 		}
 
 		// Confirm update was successful
 		if !updateResult.Next(ctx) {
-			err = customErrors.HTTPError{
+			if resultErr := updateResult.Err(); resultErr != nil {
+				return nil, customErrors.HTTPError{
+					Status: http.StatusInternalServerError,
+					Msg:    resultErr.Error(),
+				}
+			}
+			return nil, customErrors.HTTPError{
 				Status: http.StatusInternalServerError,
-				Msg:    "update Team failed",
+				Msg:    "Failed to confirm update",
 			}
 		}
 		return nil, nil
