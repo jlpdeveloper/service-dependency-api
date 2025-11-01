@@ -202,3 +202,41 @@ func TestGetTeamsPageSizeTooLarge(t *testing.T) {
 		t.Errorf("expected pageSize bounds error, got %q", body)
 	}
 }
+
+func TestGetTeamsPageZero(t *testing.T) {
+	h := CallsHandler{Repository: mockTeamRepository{}}
+
+	req, err := http.NewRequest("GET", "/teams?page=0&pageSize=10", nil)
+	if err != nil {
+		t.Fatalf("failed to create request: %v", err)
+	}
+	rw := httptest.NewRecorder()
+
+	h.GetTeams(rw, req)
+
+	if rw.Code != http.StatusBadRequest {
+		t.Fatalf("expected status %d, got %d", http.StatusBadRequest, rw.Code)
+	}
+	if body := rw.Body.String(); !strings.Contains(body, "page must be positive") {
+		t.Errorf("expected page positivity error, got %q", body)
+	}
+}
+
+func TestGetTeamsPageNegative(t *testing.T) {
+	h := CallsHandler{Repository: mockTeamRepository{}}
+
+	req, err := http.NewRequest("GET", "/teams?page=-1&pageSize=10", nil)
+	if err != nil {
+		t.Fatalf("failed to create request: %v", err)
+	}
+	rw := httptest.NewRecorder()
+
+	h.GetTeams(rw, req)
+
+	if rw.Code != http.StatusBadRequest {
+		t.Fatalf("expected status %d, got %d", http.StatusBadRequest, rw.Code)
+	}
+	if body := rw.Body.String(); !strings.Contains(body, "page must be positive") {
+		t.Errorf("expected page positivity error, got %q", body)
+	}
+}

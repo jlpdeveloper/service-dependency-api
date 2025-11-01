@@ -33,6 +33,10 @@ func (c CallsHandler) GetTeams(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusBadRequest)
 		return
 	}
+	if page < 1 {
+		http.Error(rw, "page must be positive", http.StatusBadRequest)
+		return
+	}
 	pageSize, err := strconv.Atoi(r.URL.Query().Get("pageSize"))
 	if err != nil {
 		pageSize = 10
