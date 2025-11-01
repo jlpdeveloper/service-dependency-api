@@ -240,3 +240,22 @@ func TestGetTeamsPageNegative(t *testing.T) {
 		t.Errorf("expected page positivity error, got %q", body)
 	}
 }
+
+func TestGetTeamsMissingPageParameter(t *testing.T) {
+	h := CallsHandler{Repository: mockTeamRepository{}}
+
+	req, err := http.NewRequest("GET", "/teams?pageSize=10", nil)
+	if err != nil {
+		t.Fatalf("failed to create request: %v", err)
+	}
+	rw := httptest.NewRecorder()
+
+	h.GetTeams(rw, req)
+
+	if rw.Code != http.StatusBadRequest {
+		t.Fatalf("expected status %d, got %d", http.StatusBadRequest, rw.Code)
+	}
+	if body := rw.Body.String(); !strings.Contains(body, "invalid syntax") {
+		t.Errorf("expected invalid syntax error in body for missing page parameter, got %q", body)
+	}
+}
