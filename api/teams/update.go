@@ -22,6 +22,7 @@ func (c CallsHandler) UpdateTeam(rw http.ResponseWriter, r *http.Request) {
 	}
 	if err := team.Validate(); err != nil {
 		http.Error(rw, err.Error(), http.StatusBadRequest)
+		return
 	}
 	if id != team.Id {
 		http.Error(rw, "Invalid team ID", http.StatusBadRequest)
