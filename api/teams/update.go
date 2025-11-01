@@ -32,5 +32,5 @@ func (c CallsHandler) UpdateTeam(rw http.ResponseWriter, r *http.Request) {
 		customErrors.HandleError(rw, err)
 		return
 	}
-	rw.WriteHeader(http.StatusNoContent)
+	rw.WriteHeader(http.StatusAccepted)
 }

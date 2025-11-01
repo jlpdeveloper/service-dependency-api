@@ -32,8 +32,8 @@ func TestUpdateTeamSuccess(t *testing.T) {
 
 	handler.UpdateTeam(rw, req)
 
-	if rw.Code != http.StatusNoContent {
-		t.Errorf("expected status %d, got %d", http.StatusNoContent, rw.Code)
+	if rw.Code != http.StatusAccepted {
+		t.Errorf("expected status %d, got %d", http.StatusAccepted, rw.Code)
 	}
 }
 
