@@ -69,6 +69,7 @@ func SetupRouter(driver neo4j.DriverWithContext) http.Handler {
 		r.Post("/", teamHandler.CreateTeam)
 		r.Delete("/{id}", teamHandler.DeleteTeam)
 		r.Get("/{id}", teamHandler.GetTeam)
+		r.Get("/", teamHandler.GetTeams)
 	})
 	return router
 }
