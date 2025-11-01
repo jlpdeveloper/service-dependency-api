@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"service-dependency-api/internal/customErrors"
 	"service-dependency-api/repositories"
 	"strings"
 	"testing"
@@ -134,5 +135,27 @@ func TestUpdateTeamValidationError(t *testing.T) {
 
 	if rw.Code != http.StatusBadRequest {
 		t.Errorf("expected status %d, got %d", http.StatusBadRequest, rw.Code)
+	}
+}
+
+func TestUpdateTeamNotFound(t *testing.T) {
+	handler := CallsHandler{Repository: mockTeamRepository{Err: &customErrors.HTTPError{Status: http.StatusNotFound, Msg: "not found"}}}
+
+	team := repositories.Team{
+		Id:   "be00abbc-42c6-47aa-a45a-e4e02cb6363f",
+		Name: "Platform Team",
+	}
+	payload, _ := json.Marshal(&team)
+	req, err := http.NewRequest("PUT", "/teams/"+team.Id, io.NopCloser(strings.NewReader(string(payload))))
+	if err != nil {
+		t.Fatalf("failed to create request: %v", err)
+	}
+	req.SetPathValue("id", team.Id)
+	rw := httptest.NewRecorder()
+
+	handler.UpdateTeam(rw, req)
+
+	if rw.Code != http.StatusNotFound {
+		t.Errorf("expected status %d, got %d", http.StatusNotFound, rw.Code)
 	}
 }
