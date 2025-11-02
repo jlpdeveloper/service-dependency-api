@@ -15,7 +15,7 @@ func TestCreateTeamAssociationSuccess(t *testing.T) {
 	serviceID := uuid.New().String()
 	h := CallsHandler{Repository: mockTeamRepository{}}
 
-	req, err := http.NewRequest("POST", "/teams/"+teamID+"/services/"+serviceID, nil)
+	req, err := http.NewRequest("PUT", "/teams/"+teamID+"/services/"+serviceID, nil)
 	if err != nil {
 		t.Fatalf("failed to create request: %v", err)
 	}
@@ -34,7 +34,7 @@ func TestCreateTeamAssociationInvalidTeamID(t *testing.T) {
 	serviceID := uuid.New().String()
 	h := CallsHandler{Repository: mockTeamRepository{}}
 
-	req, err := http.NewRequest("POST", "/teams/not-a-guid/services/"+serviceID, nil)
+	req, err := http.NewRequest("PUT", "/teams/not-a-guid/services/"+serviceID, nil)
 	if err != nil {
 		t.Fatalf("failed to create request: %v", err)
 	}
@@ -56,7 +56,7 @@ func TestCreateTeamAssociationInvalidServiceID(t *testing.T) {
 	teamID := uuid.New().String()
 	h := CallsHandler{Repository: mockTeamRepository{}}
 
-	req, err := http.NewRequest("POST", "/teams/"+teamID+"/services/not-a-guid", nil)
+	req, err := http.NewRequest("PUT", "/teams/"+teamID+"/services/not-a-guid", nil)
 	if err != nil {
 		t.Fatalf("failed to create request: %v", err)
 	}
@@ -79,7 +79,7 @@ func TestCreateTeamAssociationRepositoryError(t *testing.T) {
 	serviceID := uuid.New().String()
 	h := CallsHandler{Repository: mockTeamRepository{Err: errors.New("repo error")}}
 
-	req, err := http.NewRequest("POST", "/teams/"+teamID+"/services/"+serviceID, nil)
+	req, err := http.NewRequest("PUT", "/teams/"+teamID+"/services/"+serviceID, nil)
 	if err != nil {
 		t.Fatalf("failed to create request: %v", err)
 	}
