@@ -12,7 +12,7 @@ func (r Neo4jTeamRepository) CreateTeamAssociation(ctx context.Context, teamId, 
 	createTeamAssociationTransaction := func(tx neo4j.ManagedTransaction) (any, error) {
 		result, err := tx.Run(ctx, `
 			MATCH (s:Service {id: $serviceId}), (t:Team {id: $teamId})
-			CREATE (t) -[r:OWNS]-> (s)
+			MERGE (t) -[r:OWNS]-> (s)
 			RETURN r
 		`, map[string]any{
 			"serviceId": serviceId,
