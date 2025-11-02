@@ -45,6 +45,7 @@ func (c CallsHandler) DeleteTeamAssociation(rw http.ResponseWriter, r *http.Requ
 	err := c.Repository.DeleteTeamAssociation(ctxWithTimeout, teamId, serviceId)
 	if err != nil {
 		customErrors.HandleError(rw, err)
+		return
 	}
 	rw.WriteHeader(http.StatusAccepted)
 }
