@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"service-dependency-api/internal/customErrors"
+	nRepo "service-dependency-api/neo4jRepositories"
 	"service-dependency-api/repositories"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
@@ -56,7 +57,7 @@ func (r Neo4jTeamRepository) GetTeam(ctx context.Context, teamId string) (*repos
 			}
 		}
 
-		return r.mapNodeToTeam(n), nil
+		return nRepo.MapNodeToTeam(n), nil
 	}
 	result, err := r.manager.ExecuteRead(ctx, getTeamTransaction)
 	if err != nil {
@@ -110,7 +111,7 @@ func (r Neo4jTeamRepository) GetTeams(ctx context.Context, page, pageSize int) (
 			if !ok {
 				continue
 			}
-			team := r.mapNodeToTeam(n)
+			team := nRepo.MapNodeToTeam(n)
 			teams = append(teams, team)
 		}
 		return teams, nil
