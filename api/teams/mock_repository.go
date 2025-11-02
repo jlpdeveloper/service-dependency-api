@@ -43,3 +43,17 @@ func (repo mockTeamRepository) DeleteTeam(_ context.Context, _ string) error {
 	}
 	return nil
 }
+
+func (repo mockTeamRepository) CreateTeamAssociation(_ context.Context, _, _ string) error {
+	if repo.Err != nil {
+		return repo.Err
+	}
+	return nil
+}
+
+func (repo mockTeamRepository) DeleteTeamAssociation(_ context.Context, _, _ string) error {
+	if repo.Err != nil {
+		return repo.Err
+	}
+	return nil
+}

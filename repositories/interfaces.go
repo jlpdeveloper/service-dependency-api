@@ -69,4 +69,8 @@ type TeamRepository interface {
 	UpdateTeam(ctx context.Context, team Team) error
 	// DeleteTeam deletes a team.
 	DeleteTeam(ctx context.Context, teamId string) error
+	// CreateTeamAssociation creates a new team association with a service.
+	CreateTeamAssociation(ctx context.Context, teamId, serviceId string) error
+	// DeleteTeamAssociation deletes a team association with a service.
+	DeleteTeamAssociation(ctx context.Context, teamId, serviceId string) error
 }

@@ -1,0 +1,47 @@
+meta {
+  name: Delete Team Association
+  type: http
+  seq: 7
+}
+
+delete {
+  url: {{baseUrl}}/teams/:teamId/services/:serviceId
+  body: none
+  auth: inherit
+}
+
+params:path {
+  teamId: c5ee7354-81b2-4a86-9041-ff70bc72bd5e
+  serviceId: 426e53ad-8a3b-4648-aa1d-bde79b2ad41c
+}
+
+assert {
+  res.status: eq 202
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
+
+docs {
+  # Delete Team Association
+  
+  Deletes an existing team to service association
+  
+  Path: `/teams/:teamId/services/:serviceId`
+  
+  ## Path Parameters
+  | Name | Type | Notes |
+  | ---- | ---- | ----- |
+  | serviceId | guid | the service id | 
+  | teamId | guid | the team id | 
+  
+  ## Status Codes
+  | Status Code | Description |
+  |-------------|-------------|
+  | 202 Accepted      | Team association deleted |
+  | 404 Not Found| Team or service not found |
+  | 400 Bad Request | Invalid body |
+  | 500 Internal Server Error | Failed due to internal server error. |
+}
