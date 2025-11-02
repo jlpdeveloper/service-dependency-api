@@ -1,0 +1,47 @@
+meta {
+  name: Add Team Association
+  type: http
+  seq: 6
+}
+
+put {
+  url: {{baseUrl}}/teams/:teamId/services/:serviceId
+  body: none
+  auth: inherit
+}
+
+params:path {
+  teamId: c5ee7354-81b2-4a86-9041-ff70bc72bd5e
+  serviceId: 426e53ad-8a3b-4648-aa1d-bde79b2ad41c
+}
+
+assert {
+  res.status: eq 201
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
+
+docs {
+  # Add Team Association
+  
+  Adds a team ownership to a service
+  
+  Path: `/teams/:teamId/services/:serviceId`
+  
+  ## Path Parameters
+  | Name | Type | Notes |
+  | ---- | ---- | ----- |
+  | serviceId | guid | the service to associate the team with | 
+  | teamId | guid | the team id | 
+  
+  ## Status Codes
+  | Status Code | Description |
+  |-------------|-------------|
+  | 201 Created      | Team association created |
+  | 404 Not Found| Team or service not found |
+  | 400 Bad Request | Invalid body |
+  | 500 Internal Server Error | Failed due to internal server error. |
+}
