@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"service-dependency-api/api/debt"
 	"service-dependency-api/api/dependencies"
-	"service-dependency-api/api/hello_world"
+	"service-dependency-api/api/helloworld"
 	"service-dependency-api/api/releases"
 	"service-dependency-api/api/reports"
 	"service-dependency-api/api/services"
@@ -84,5 +84,5 @@ func setupSystemCalls(r chi.Router) {
 	slog.Debug("Setting up system calls")
 	r.Get("/time", system.GetTime)
 	r.Get("/database", system.GetDbAddress)
-	r.Get("/helloworld", hello_world.HelloWorld)
+	r.Get("/helloworld", helloworld.HelloWorld)
 }
