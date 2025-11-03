@@ -3,6 +3,7 @@ package serviceRepository
 import (
 	"context"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
+	nRepo "service-dependency-api/neo4jRepositories"
 	"service-dependency-api/repositories"
 )
 
@@ -38,7 +39,7 @@ func (d *Neo4jServiceRepository) GetAllServices(ctx context.Context, page int, p
 				continue
 			}
 
-			svc := d.mapNodeToService(n)
+			svc := nRepo.MapNodeToService(n)
 			services = append(services, svc)
 		}
 		return services, nil
@@ -79,7 +80,7 @@ func (d *Neo4jServiceRepository) GetServiceById(ctx context.Context, id string) 
 			return repositories.Service{}, nil
 		}
 
-		return d.mapNodeToService(n), nil
+		return nRepo.MapNodeToService(n), nil
 	}
 
 	service, readErr := d.manager.ExecuteRead(ctx, getServiceById)

@@ -75,6 +75,7 @@ func SetupRouter(driver neo4j.DriverWithContext) http.Handler {
 			r.Put("/", teamHandler.CreateTeamAssociation)
 			r.Delete("/", teamHandler.DeleteTeamAssociation)
 		})
+		r.Get("/{teamId}/services", reportHandler.GetServicesByTeam)
 	})
 	return router
 }
