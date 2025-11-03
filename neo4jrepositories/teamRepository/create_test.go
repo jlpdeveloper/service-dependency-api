@@ -2,7 +2,7 @@ package teamRepository
 
 import (
 	"context"
-	"service-dependency-api/neo4jRepositories"
+	"service-dependency-api/neo4jrepositories"
 	"service-dependency-api/repositories"
 	"testing"
 	"time"
@@ -15,7 +15,7 @@ func TestNeo4jTeamRepository_CreateTeam(t *testing.T) {
 		t.Skip("skipping test in short mode.")
 	}
 	ctx := context.Background()
-	tc, err := neo4jRepositories.NewTestContainerHelper(ctx)
+	tc, err := neo4jrepositories.NewTestContainerHelper(ctx)
 	if err != nil {
 		t.Fatal(err)
 	}

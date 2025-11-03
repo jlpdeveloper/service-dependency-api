@@ -1,4 +1,4 @@
-package neo4jRepositories
+package neo4jrepositories
 
 import (
 	"service-dependency-api/repositories"

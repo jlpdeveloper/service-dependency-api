@@ -2,7 +2,7 @@ package teamRepository
 
 import (
 	"context"
-	"service-dependency-api/neo4jRepositories"
+	"service-dependency-api/neo4jrepositories"
 	"service-dependency-api/repositories"
 	"testing"
 	"time"
@@ -18,7 +18,7 @@ func TestNeo4jTeamRepository_GetTeam(t *testing.T) {
 	ctx := context.Background()
 
 	// Start Neo4j test container
-	tc, err := neo4jRepositories.NewTestContainerHelper(ctx)
+	tc, err := neo4jrepositories.NewTestContainerHelper(ctx)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -99,7 +99,7 @@ func TestNeo4jTeamRepository_GetTeams(t *testing.T) {
 	ctx := context.Background()
 
 	// Start Neo4j test container
-	tc, err := neo4jRepositories.NewTestContainerHelper(ctx)
+	tc, err := neo4jrepositories.NewTestContainerHelper(ctx)
 	if err != nil {
 		t.Fatal(err)
 	}

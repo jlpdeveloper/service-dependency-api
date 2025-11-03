@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 	"service-dependency-api/internal/customerrors"
-	nRepo "service-dependency-api/neo4jRepositories"
+	nRepo "service-dependency-api/neo4jrepositories"
 	"service-dependency-api/repositories"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"

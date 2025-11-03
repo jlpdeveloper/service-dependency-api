@@ -1,7 +1,7 @@
 package releases
 
 import (
-	"service-dependency-api/neo4jRepositories/releaseRepository"
+	"service-dependency-api/neo4jrepositories/releaseRepository"
 	"service-dependency-api/repositories"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"

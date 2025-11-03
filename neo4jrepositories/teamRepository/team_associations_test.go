@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"service-dependency-api/neo4jRepositories"
+	"service-dependency-api/neo4jrepositories"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
@@ -16,7 +16,7 @@ func TestNeo4jTeamRepository_CreateTeamAssociation(t *testing.T) {
 	ctx := context.Background()
 
 	// Start Neo4j test container
-	tc, err := neo4jRepositories.NewTestContainerHelper(ctx)
+	tc, err := neo4jrepositories.NewTestContainerHelper(ctx)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -96,7 +96,7 @@ func TestNeo4jTeamRepository_DeleteTeamAssociation(t *testing.T) {
 	ctx := context.Background()
 
 	// Start Neo4j test container
-	tc, err := neo4jRepositories.NewTestContainerHelper(ctx)
+	tc, err := neo4jrepositories.NewTestContainerHelper(ctx)
 	if err != nil {
 		t.Fatal(err)
 	}

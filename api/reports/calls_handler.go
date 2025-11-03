@@ -1,7 +1,7 @@
 package reports
 
 import (
-	"service-dependency-api/neo4jRepositories/reportRepository"
+	"service-dependency-api/neo4jrepositories/reportRepository"
 	"service-dependency-api/repositories"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
