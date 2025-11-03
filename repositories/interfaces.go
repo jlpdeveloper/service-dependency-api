@@ -55,6 +55,8 @@ type ReleaseRepository interface {
 type ReportRepository interface {
 	// GetServiceRiskReport retrieves the risk report for a service.
 	GetServiceRiskReport(ctx context.Context, serviceId string) (*ServiceRiskReport, error)
+	// GetServicesByTeam retrieves all services associated with a team.
+	GetServicesByTeam(ctx context.Context, teamId string) ([]Service, error)
 }
 
 // TeamRepository defines the methods for interacting with teams.
