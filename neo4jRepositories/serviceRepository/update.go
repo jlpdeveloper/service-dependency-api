@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
-	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/internal/customerrors"
 	"service-dependency-api/repositories"
 )
 
@@ -25,7 +25,7 @@ func (d *Neo4jServiceRepository) UpdateService(ctx context.Context, service repo
 
 		found := result.Next(ctx)
 		if !found {
-			return nil, &customErrors.HTTPError{
+			return nil, &customerrors.HTTPError{
 				Status: 404,
 				Msg:    "Service not found",
 			}

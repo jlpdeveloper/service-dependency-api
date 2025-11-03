@@ -6,7 +6,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
-	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/internal/customerrors"
 	"service-dependency-api/repositories"
 	"strings"
 	"testing"
@@ -139,7 +139,7 @@ func TestUpdateTeamValidationError(t *testing.T) {
 }
 
 func TestUpdateTeamNotFound(t *testing.T) {
-	handler := CallsHandler{Repository: mockTeamRepository{Err: &customErrors.HTTPError{Status: http.StatusNotFound, Msg: "not found"}}}
+	handler := CallsHandler{Repository: mockTeamRepository{Err: &customerrors.HTTPError{Status: http.StatusNotFound, Msg: "not found"}}}
 
 	team := repositories.Team{
 		Id:   "be00abbc-42c6-47aa-a45a-e4e02cb6363f",

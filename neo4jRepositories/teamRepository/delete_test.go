@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"net/http"
-	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/internal/customerrors"
 	"service-dependency-api/neo4jRepositories"
 	"service-dependency-api/repositories"
 	"testing"
@@ -108,7 +108,7 @@ func TestNeo4jTeamRepository_DeleteTeam_Returns404(t *testing.T) {
 	if err == nil {
 		t.Fatal("expected error")
 	}
-	var cErr *customErrors.HTTPError
+	var cErr *customerrors.HTTPError
 	if !errors.As(err, &cErr) {
 		t.Fatal("expected custom error")
 	}

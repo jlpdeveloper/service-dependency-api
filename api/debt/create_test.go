@@ -6,7 +6,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
-	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/internal/customerrors"
 	"service-dependency-api/repositories"
 	"strings"
 	"testing"
@@ -167,7 +167,7 @@ func TestCreateDebtHTTPError(t *testing.T) {
 	validServiceId := "123e4567-e89b-12d3-a456-426614174000" // Valid GUID
 	handler := CallsHandler{
 		Repository: mockDebtRepository{
-			Err: &customErrors.HTTPError{
+			Err: &customerrors.HTTPError{
 				Status: http.StatusNotFound,
 				Msg:    "Service not found",
 			}, // Simulate an HTTP error

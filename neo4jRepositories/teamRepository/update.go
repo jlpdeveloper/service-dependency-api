@@ -3,7 +3,7 @@ package teamRepository
 import (
 	"context"
 	"net/http"
-	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/internal/customerrors"
 
 	"service-dependency-api/repositories"
 
@@ -30,7 +30,7 @@ func (r Neo4jTeamRepository) UpdateTeam(ctx context.Context, team repositories.T
 		})
 
 		if updateErr != nil {
-			return nil, customErrors.HTTPError{
+			return nil, customerrors.HTTPError{
 				Status: http.StatusInternalServerError,
 				Msg:    updateErr.Error(),
 			}
@@ -39,12 +39,12 @@ func (r Neo4jTeamRepository) UpdateTeam(ctx context.Context, team repositories.T
 		// Confirm update was successful
 		if !updateResult.Next(ctx) {
 			if resultErr := updateResult.Err(); resultErr != nil {
-				return nil, customErrors.HTTPError{
+				return nil, customerrors.HTTPError{
 					Status: http.StatusInternalServerError,
 					Msg:    resultErr.Error(),
 				}
 			}
-			return nil, customErrors.HTTPError{
+			return nil, customerrors.HTTPError{
 				Status: http.StatusInternalServerError,
 				Msg:    "Failed to confirm update",
 			}

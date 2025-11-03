@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
-	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/internal/customerrors"
 	"service-dependency-api/repositories"
 )
 
@@ -30,7 +30,7 @@ func (d *Neo4jDependencyRepository) AddDependency(ctx context.Context, id string
 			return nil, err
 		}
 		if len(records) == 0 {
-			return nil, &customErrors.HTTPError{
+			return nil, &customerrors.HTTPError{
 				Status: 404,
 				Msg:    fmt.Sprintf("One or both services not found: %s, %s", id, dependency.Id),
 			}

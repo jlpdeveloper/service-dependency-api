@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
-	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/internal/customerrors"
 	"service-dependency-api/repositories"
 	"time"
 )
@@ -26,7 +26,7 @@ func (c CallsHandler) CreateTeam(rw http.ResponseWriter, r *http.Request) {
 	defer cancel()
 	id, err := c.Repository.CreateTeam(ctxWithTimeout, *team)
 	if err != nil {
-		customErrors.HandleError(rw, err)
+		customerrors.HandleError(rw, err)
 		return
 	}
 	rw.WriteHeader(http.StatusCreated)

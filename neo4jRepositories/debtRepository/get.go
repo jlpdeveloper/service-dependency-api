@@ -4,13 +4,13 @@ import (
 	"context"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 	"net/http"
-	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/internal/customerrors"
 	"service-dependency-api/repositories"
 )
 
 func (n Neo4jDebtRepository) GetDebtByServiceId(ctx context.Context, id string, page, pageSize int, onlyResolved bool) ([]repositories.Debt, error) {
 	if page <= 0 || pageSize <= 0 {
-		return nil, &customErrors.HTTPError{
+		return nil, &customerrors.HTTPError{
 			Status: http.StatusBadRequest,
 			Msg:    "page and page size must be positive integers",
 		}
@@ -61,7 +61,7 @@ func (n Neo4jDebtRepository) GetDebtByServiceId(ctx context.Context, id string, 
 			if id, ok := record.Get("id"); ok && id != nil {
 				debt.Id = id.(string)
 			} else {
-				return nil, &customErrors.HTTPError{
+				return nil, &customerrors.HTTPError{
 					Status: 500,
 					Msg:    "debt id is nil",
 				}
@@ -84,7 +84,7 @@ func (n Neo4jDebtRepository) GetDebtByServiceId(ctx context.Context, id string, 
 	if typedDebtList, ok := debtList.([]repositories.Debt); ok {
 		return typedDebtList, nil
 	}
-	return nil, &customErrors.HTTPError{
+	return nil, &customerrors.HTTPError{
 		Status: http.StatusInternalServerError,
 		Msg:    "unexpected return type from transaction",
 	}

@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"service-dependency-api/internal"
-	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/internal/customerrors"
 	"time"
 )
 
@@ -19,7 +19,7 @@ func (c *CallsHandler) GetServiceRiskReport(rw http.ResponseWriter, req *http.Re
 	defer cancel()
 	report, err := c.repository.GetServiceRiskReport(contextWithTimeout, id)
 	if err != nil {
-		customErrors.HandleError(rw, err)
+		customerrors.HandleError(rw, err)
 		return
 	}
 	err = json.NewEncoder(rw).Encode(report)

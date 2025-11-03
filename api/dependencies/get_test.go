@@ -5,7 +5,7 @@ import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
-	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/internal/customerrors"
 	"service-dependency-api/repositories"
 	"testing"
 )
@@ -149,7 +149,7 @@ func TestGetByIdHTTPError(t *testing.T) {
 			Data: func() []map[string]any {
 				return []map[string]any{} // Empty data, not used in this test
 			},
-			Err: &customErrors.HTTPError{
+			Err: &customerrors.HTTPError{
 				Status: http.StatusNotFound,
 				Msg:    "Service not found",
 			}, // Simulate an HTTP error
@@ -316,7 +316,7 @@ func TestGetDependentsByIdHTTPError(t *testing.T) {
 			Data: func() []map[string]any {
 				return []map[string]any{} // Empty data, not used in this test
 			},
-			Err: &customErrors.HTTPError{
+			Err: &customerrors.HTTPError{
 				Status: http.StatusNotFound,
 				Msg:    "Service not found",
 			}, // Simulate an HTTP error

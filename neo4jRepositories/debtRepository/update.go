@@ -3,7 +3,7 @@ package debtRepository
 import (
 	"context"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
-	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/internal/customerrors"
 )
 
 func (n Neo4jDebtRepository) UpdateStatus(ctx context.Context, id, status string) error {
@@ -22,7 +22,7 @@ func (n Neo4jDebtRepository) UpdateStatus(ctx context.Context, id, status string
 		if result.Next(ctx) {
 			ctr, _ := result.Record().Get("updatedCount")
 			if ct, ok := ctr.(int64); ok && ct == 0 {
-				return nil, &customErrors.HTTPError{
+				return nil, &customerrors.HTTPError{
 					Status: 404,
 					Msg:    "Debt not found",
 				}

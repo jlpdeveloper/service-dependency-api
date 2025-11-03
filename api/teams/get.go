@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 	"service-dependency-api/internal"
-	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/internal/customerrors"
 	"strconv"
 )
 
@@ -17,7 +17,7 @@ func (c CallsHandler) GetTeam(rw http.ResponseWriter, r *http.Request) {
 	}
 	team, err := c.Repository.GetTeam(r.Context(), id)
 	if err != nil {
-		customErrors.HandleError(rw, err)
+		customerrors.HandleError(rw, err)
 		return
 	}
 	rw.Header().Set("Content-Type", "application/json")
@@ -47,7 +47,7 @@ func (c CallsHandler) GetTeams(rw http.ResponseWriter, r *http.Request) {
 	}
 	teams, err := c.Repository.GetTeams(r.Context(), page, pageSize)
 	if err != nil {
-		customErrors.HandleError(rw, err)
+		customerrors.HandleError(rw, err)
 		return
 	}
 	rw.Header().Set("Content-Type", "application/json")

@@ -3,7 +3,7 @@ package reportRepository
 import (
 	"context"
 	"net/http"
-	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/internal/customerrors"
 	nRepo "service-dependency-api/neo4jRepositories"
 	"service-dependency-api/repositories"
 
@@ -20,7 +20,7 @@ func (r Neo4jReportRepository) GetServicesByTeam(ctx context.Context, teamId str
 			"teamId": teamId,
 		})
 		if err != nil {
-			return nil, customErrors.HTTPError{
+			return nil, customerrors.HTTPError{
 				Status: http.StatusInternalServerError,
 				Msg:    err.Error(),
 			}
@@ -50,7 +50,7 @@ func (r Neo4jReportRepository) GetServicesByTeam(ctx context.Context, teamId str
 	}
 	services, ok := servicesResult.([]repositories.Service)
 	if !ok {
-		return nil, customErrors.HTTPError{
+		return nil, customerrors.HTTPError{
 			Status: http.StatusInternalServerError,
 			Msg:    "unexpected return type from transaction",
 		}

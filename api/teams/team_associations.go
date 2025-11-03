@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 	"service-dependency-api/internal"
-	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/internal/customerrors"
 	"time"
 )
 
@@ -23,7 +23,7 @@ func (c CallsHandler) CreateTeamAssociation(rw http.ResponseWriter, r *http.Requ
 	defer cancel()
 	err := c.Repository.CreateTeamAssociation(ctxWithTimeout, teamId, serviceId)
 	if err != nil {
-		customErrors.HandleError(rw, err)
+		customerrors.HandleError(rw, err)
 		return
 	}
 	rw.WriteHeader(http.StatusCreated)
@@ -44,7 +44,7 @@ func (c CallsHandler) DeleteTeamAssociation(rw http.ResponseWriter, r *http.Requ
 	defer cancel()
 	err := c.Repository.DeleteTeamAssociation(ctxWithTimeout, teamId, serviceId)
 	if err != nil {
-		customErrors.HandleError(rw, err)
+		customerrors.HandleError(rw, err)
 		return
 	}
 	rw.WriteHeader(http.StatusAccepted)

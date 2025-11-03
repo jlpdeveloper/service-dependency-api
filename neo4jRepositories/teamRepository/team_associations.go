@@ -3,7 +3,7 @@ package teamRepository
 import (
 	"context"
 	"net/http"
-	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/internal/customerrors"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
@@ -19,19 +19,19 @@ func (r Neo4jTeamRepository) CreateTeamAssociation(ctx context.Context, teamId, 
 			"teamId":    teamId,
 		})
 		if err != nil {
-			return nil, customErrors.HTTPError{
+			return nil, customerrors.HTTPError{
 				Status: http.StatusInternalServerError,
 				Msg:    err.Error(),
 			}
 		}
 		if rErr := result.Err(); rErr != nil {
-			return nil, customErrors.HTTPError{
+			return nil, customerrors.HTTPError{
 				Status: http.StatusInternalServerError,
 				Msg:    rErr.Error(),
 			}
 		}
 		if !result.Next(ctx) {
-			return nil, customErrors.HTTPError{
+			return nil, customerrors.HTTPError{
 				Status: http.StatusNotFound,
 				Msg:    "Failed to create team association",
 			}
@@ -58,19 +58,19 @@ func (r Neo4jTeamRepository) DeleteTeamAssociation(ctx context.Context, teamId, 
 			"teamId":    teamId,
 		})
 		if err != nil {
-			return nil, customErrors.HTTPError{
+			return nil, customerrors.HTTPError{
 				Status: http.StatusInternalServerError,
 				Msg:    err.Error(),
 			}
 		}
 		if rErr := result.Err(); rErr != nil {
-			return nil, customErrors.HTTPError{
+			return nil, customerrors.HTTPError{
 				Status: http.StatusInternalServerError,
 				Msg:    rErr.Error(),
 			}
 		}
 		if !result.Next(ctx) {
-			return nil, customErrors.HTTPError{
+			return nil, customerrors.HTTPError{
 				Status: http.StatusNotFound,
 				Msg:    "Failed to delete team association",
 			}

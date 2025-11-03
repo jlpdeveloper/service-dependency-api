@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"service-dependency-api/internal"
-	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/internal/customerrors"
 	"strconv"
 )
 
@@ -17,13 +17,13 @@ func (s *ServiceCallsHandler) GetReleasesByServiceId(rw http.ResponseWriter, req
 
 	page, pageSize, err := validatePageParams(req)
 	if err != nil {
-		customErrors.HandleError(rw, err)
+		customerrors.HandleError(rw, err)
 		return
 	}
 
 	releases, err := s.Repository.GetReleasesByServiceId(req.Context(), serviceId, page, pageSize)
 	if err != nil {
-		customErrors.HandleError(rw, err)
+		customerrors.HandleError(rw, err)
 		return
 	}
 
@@ -56,13 +56,13 @@ func (s *ServiceCallsHandler) GetReleasesInDateRange(rw http.ResponseWriter, req
 
 	page, pageSize, err := validatePageParams(req)
 	if err != nil {
-		customErrors.HandleError(rw, err)
+		customerrors.HandleError(rw, err)
 		return
 	}
 
 	releases, err := s.Repository.GetReleasesInDateRange(req.Context(), startDate, endDate, page, pageSize)
 	if err != nil {
-		customErrors.HandleError(rw, err)
+		customerrors.HandleError(rw, err)
 		return
 	}
 	rw.Header().Set("Content-Type", "application/json")
@@ -86,7 +86,7 @@ func validatePageParams(req *http.Request) (int, int, error) {
 	if pageStr != "" {
 		parsedPage, err := strconv.Atoi(pageStr)
 		if err != nil || parsedPage <= 0 {
-			return 0, 0, &customErrors.HTTPError{
+			return 0, 0, &customerrors.HTTPError{
 				Status: http.StatusBadRequest,
 				Msg:    "Invalid page parameter",
 			}
@@ -98,7 +98,7 @@ func validatePageParams(req *http.Request) (int, int, error) {
 	if pageSizeStr != "" {
 		parsedPageSize, err := strconv.Atoi(pageSizeStr)
 		if err != nil || parsedPageSize <= 0 {
-			return 0, 0, &customErrors.HTTPError{
+			return 0, 0, &customerrors.HTTPError{
 				Status: http.StatusBadRequest,
 				Msg:    "Invalid pageSize parameter",
 			}

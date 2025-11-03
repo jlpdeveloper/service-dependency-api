@@ -2,7 +2,7 @@ package teamRepository
 
 import (
 	"context"
-	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/internal/customerrors"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
@@ -25,7 +25,7 @@ func (r Neo4jTeamRepository) DeleteTeam(ctx context.Context, id string) error {
 
 		deletedVal, ok := record.Get("deletedCount")
 		if !ok {
-			return nil, &customErrors.HTTPError{Status: 500, Msg: "Error deleting team: " + id}
+			return nil, &customerrors.HTTPError{Status: 500, Msg: "Error deleting team: " + id}
 		}
 
 		var deletedCount int64
@@ -35,11 +35,11 @@ func (r Neo4jTeamRepository) DeleteTeam(ctx context.Context, id string) error {
 		case int:
 			deletedCount = int64(v)
 		default:
-			return nil, &customErrors.HTTPError{Status: 500, Msg: "Error deleting team: " + id}
+			return nil, &customerrors.HTTPError{Status: 500, Msg: "Error deleting team: " + id}
 		}
 
 		if deletedCount == 0 {
-			return nil, &customErrors.HTTPError{Status: 404, Msg: "Team not found"}
+			return nil, &customerrors.HTTPError{Status: 404, Msg: "Team not found"}
 		}
 		return nil, nil
 	}

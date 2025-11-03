@@ -5,14 +5,14 @@ import (
 	"fmt"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 	"net/http"
-	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/internal/customerrors"
 	"service-dependency-api/repositories"
 	"time"
 )
 
 func (r *Neo4jReleaseRepository) GetReleasesByServiceId(ctx context.Context, serviceId string, page, pageSize int) ([]*repositories.Release, error) {
 	if page <= 0 || pageSize <= 0 {
-		return nil, &customErrors.HTTPError{
+		return nil, &customerrors.HTTPError{
 			Status: http.StatusBadRequest,
 			Msg:    "page and page size must be positive integers",
 		}
@@ -37,7 +37,7 @@ func (r *Neo4jReleaseRepository) GetReleasesByServiceId(ctx context.Context, ser
 			return nil, err
 		}
 		if len(records) == 0 {
-			return nil, &customErrors.HTTPError{
+			return nil, &customerrors.HTTPError{
 				Status: 404,
 				Msg:    fmt.Sprintf("Service not found: %s", serviceId),
 			}

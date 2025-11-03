@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 	"service-dependency-api/internal"
-	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/internal/customerrors"
 	"service-dependency-api/repositories"
 )
 
@@ -17,7 +17,7 @@ func (s *ServiceCallsHandler) GetDependencies(rw http.ResponseWriter, req *http.
 	}
 	dep, err := s.Repository.GetDependencies(req.Context(), id)
 	if err != nil {
-		customErrors.HandleError(rw, err)
+		customerrors.HandleError(rw, err)
 		return
 	}
 	rw.Header().Set("Content-Type", "application/json")
@@ -35,7 +35,7 @@ func (s *ServiceCallsHandler) GetDependents(rw http.ResponseWriter, req *http.Re
 	}
 	deps, err := s.Repository.GetDependents(req.Context(), id)
 	if err != nil {
-		customErrors.HandleError(rw, err)
+		customerrors.HandleError(rw, err)
 		return
 	}
 	rw.Header().Set("Content-Type", "application/json")

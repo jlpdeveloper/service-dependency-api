@@ -3,7 +3,7 @@ package teamRepository
 import (
 	"context"
 	"net/http"
-	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/internal/customerrors"
 	"service-dependency-api/repositories"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
@@ -25,14 +25,14 @@ func (r Neo4jTeamRepository) CreateTeam(ctx context.Context, team repositories.T
 		if result.Next(ctx) {
 			id, ok := result.Record().Get("id")
 			if !ok {
-				return nil, &customErrors.HTTPError{
+				return nil, &customerrors.HTTPError{
 					Status: http.StatusInternalServerError,
 					Msg:    "Id not returned when creating team",
 				}
 			}
 			return id, nil
 		}
-		return nil, &customErrors.HTTPError{
+		return nil, &customerrors.HTTPError{
 			Status: http.StatusInternalServerError,
 			Msg:    "No id returned from creating team",
 		}
@@ -40,14 +40,14 @@ func (r Neo4jTeamRepository) CreateTeam(ctx context.Context, team repositories.T
 	}
 	result, err := r.manager.ExecuteWrite(ctx, createTeamTransaction)
 	if err != nil {
-		return "", &customErrors.HTTPError{
+		return "", &customerrors.HTTPError{
 			Status: http.StatusInternalServerError,
 			Msg:    "Error creating team",
 		}
 	}
 	id, ok := result.(string)
 	if !ok {
-		return "", &customErrors.HTTPError{
+		return "", &customerrors.HTTPError{
 			Status: http.StatusInternalServerError,
 			Msg:    "Error creating team",
 		}

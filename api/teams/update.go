@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"service-dependency-api/internal"
-	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/internal/customerrors"
 	"service-dependency-api/repositories"
 )
 
@@ -30,7 +30,7 @@ func (c CallsHandler) UpdateTeam(rw http.ResponseWriter, r *http.Request) {
 	}
 	err = c.Repository.UpdateTeam(r.Context(), *team)
 	if err != nil {
-		customErrors.HandleError(rw, err)
+		customerrors.HandleError(rw, err)
 		return
 	}
 	rw.WriteHeader(http.StatusAccepted)
