@@ -1,0 +1,61 @@
+meta {
+  name: Get Services By Team
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/teams/:id/services
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: c5ee7354-81b2-4a86-9041-ff70bc72bd5e
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
+
+docs {
+  # Get Services by Team
+  
+  This endpoint gets all services that have been associated with a team
+  
+  ## Path Parameters
+  | Paramter | Type | Notes |
+  | ------- | ---- | ----- |
+  | id | guid | the team id |
+  
+  ## Sample Response
+  ```json
+  [
+    {
+      "id": "426e53ad-8a3b-4648-aa1d-bde79b2ad41c",
+      "name": "East Leonardo",
+      "type": "service",
+      "description": "this is a test form bruno",
+      "created": "2025-11-02T00:56:59.298Z",
+      "updated": "0001-01-01T00:00:00Z",
+      "url": "https://trained-cricket.com"
+    },
+    {
+      "id": "173c5d9d-36b5-4de1-ba05-30e0163ba576",
+      "name": "Paterson",
+      "type": "service",
+      "description": "this is a test form bruno",
+      "created": "2025-11-03T00:45:04.056Z",
+      "updated": "0001-01-01T00:00:00Z",
+      "url": "https://pleasing-merit.name"
+    }
+  ]
+  ```
+  ## Status Codes
+  | Status Code | Description |
+  |-------------|-------------|
+  | 200 OK      | Services retrieved successfully |
+  | 400 Bad Request | Invalid team id |
+  | 500 Internal Server Error | Failed to retrieve services due to an internal server error. |
+}
