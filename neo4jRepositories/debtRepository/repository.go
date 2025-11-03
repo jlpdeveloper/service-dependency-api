@@ -2,15 +2,15 @@ package debtRepository
 
 import (
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
-	"service-dependency-api/databaseAdapter"
+	"service-dependency-api/databaseadapter"
 )
 
 type Neo4jDebtRepository struct {
-	manager databaseAdapter.DriverManager
+	manager databaseadapter.DriverManager
 }
 
 func New(driver neo4j.DriverWithContext) *Neo4jDebtRepository {
-	return &Neo4jDebtRepository{manager: databaseAdapter.NewDriverManager(driver)}
+	return &Neo4jDebtRepository{manager: databaseadapter.NewDriverManager(driver)}
 }
 
 const (

@@ -2,16 +2,16 @@ package releaseRepository
 
 import (
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
-	"service-dependency-api/databaseAdapter"
+	"service-dependency-api/databaseadapter"
 )
 
 type Neo4jReleaseRepository struct {
-	manager databaseAdapter.DriverManager
+	manager databaseadapter.DriverManager
 }
 
 func New(driver neo4j.DriverWithContext) *Neo4jReleaseRepository {
 	return &Neo4jReleaseRepository{
-		manager: databaseAdapter.NewDriverManager(driver),
+		manager: databaseadapter.NewDriverManager(driver),
 	}
 }
 
