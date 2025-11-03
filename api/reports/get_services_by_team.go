@@ -19,10 +19,10 @@ func (c *CallsHandler) GetServicesByTeam(rw http.ResponseWriter, r *http.Request
 		customErrors.HandleError(rw, err)
 		return
 	}
-
+	rw.Header().Set("Content-Type", "application/json")
 	err = json.NewEncoder(rw).Encode(services)
 	if err != nil {
 		log.Println(err)
 	}
-	rw.Header().Set("Content-Type", "application/json")
+
 }
