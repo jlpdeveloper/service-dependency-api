@@ -1,7 +1,7 @@
 package teams
 
 import (
-	"service-dependency-api/neo4jrepositories/teamRepository"
+	"service-dependency-api/neo4jrepositories/teamrepository"
 	"service-dependency-api/repositories"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
@@ -13,6 +13,6 @@ type CallsHandler struct {
 
 func New(driver neo4j.DriverWithContext) *CallsHandler {
 	return &CallsHandler{
-		Repository: teamRepository.New(driver),
+		Repository: teamrepository.New(driver),
 	}
 }

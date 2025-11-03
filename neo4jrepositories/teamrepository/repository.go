@@ -1,4 +1,4 @@
-package teamRepository
+package teamrepository
 
 import (
 	"service-dependency-api/databaseadapter"

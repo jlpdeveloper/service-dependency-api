@@ -6,7 +6,7 @@ import (
 
 	neo4jRepositories "service-dependency-api/neo4jrepositories"
 	"service-dependency-api/neo4jrepositories/serviceRepository"
-	"service-dependency-api/neo4jrepositories/teamRepository"
+	"service-dependency-api/neo4jrepositories/teamrepository"
 	"service-dependency-api/repositories"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
@@ -32,7 +32,7 @@ func TestNeo4jReportRepository_GetServicesByTeam_ReturnsServices(t *testing.T) {
 	}
 	defer func() { _ = driver.Close(ctx) }()
 
-	teamRepo := teamRepository.New(driver)
+	teamRepo := teamrepository.New(driver)
 	svcRepo := serviceRepository.New(driver)
 	reportRepo := New(driver)
 
@@ -121,7 +121,7 @@ func TestNeo4jReportRepository_GetServicesByTeam_EmptyWhenNoServices(t *testing.
 	defer func() { _ = driver.Close(ctx) }()
 
 	reportRepo := New(driver)
-	teamRepo := teamRepository.New(driver)
+	teamRepo := teamrepository.New(driver)
 
 	teamID, err := teamRepo.CreateTeam(ctx, repositories.Team{Name: "lonely-team"})
 	if err != nil {

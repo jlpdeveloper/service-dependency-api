@@ -1,4 +1,4 @@
-package teamRepository
+package teamrepository
 
 import (
 	"context"
