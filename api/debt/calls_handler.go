@@ -1,7 +1,7 @@
 package debt
 
 import (
-	"service-dependency-api/neo4jrepositories/debtRepository"
+	"service-dependency-api/neo4jrepositories/debtrepository"
 	"service-dependency-api/repositories"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
@@ -13,6 +13,6 @@ type CallsHandler struct {
 
 func New(driver neo4j.DriverWithContext) *CallsHandler {
 	return &CallsHandler{
-		Repository: debtRepository.New(driver),
+		Repository: debtrepository.New(driver),
 	}
 }

@@ -1,4 +1,4 @@
-package debtRepository
+package debtrepository
 
 import (
 	"context"
