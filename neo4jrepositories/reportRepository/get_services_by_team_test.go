@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	neo4jRepositories "service-dependency-api/neo4jrepositories"
+	nRepo "service-dependency-api/neo4jrepositories"
 	"service-dependency-api/neo4jrepositories/serviceRepository"
 	"service-dependency-api/neo4jrepositories/teamrepository"
 	"service-dependency-api/repositories"
@@ -18,7 +18,7 @@ func TestNeo4jReportRepository_GetServicesByTeam_ReturnsServices(t *testing.T) {
 	}
 	ctx := context.Background()
 	// spin up test container
-	tc, err := neo4jRepositories.NewTestContainerHelper(ctx)
+	tc, err := nRepo.NewTestContainerHelper(ctx)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -106,7 +106,7 @@ func TestNeo4jReportRepository_GetServicesByTeam_EmptyWhenNoServices(t *testing.
 		t.Skip("skipping test in short mode.")
 	}
 	ctx := context.Background()
-	tc, err := neo4jRepositories.NewTestContainerHelper(ctx)
+	tc, err := nRepo.NewTestContainerHelper(ctx)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -142,7 +142,7 @@ func TestNeo4jReportRepository_GetServicesByTeam_EmptyWhenTeamNotFound(t *testin
 		t.Skip("skipping test in short mode.")
 	}
 	ctx := context.Background()
-	tc, err := neo4jRepositories.NewTestContainerHelper(ctx)
+	tc, err := nRepo.NewTestContainerHelper(ctx)
 	if err != nil {
 		t.Fatal(err)
 	}
