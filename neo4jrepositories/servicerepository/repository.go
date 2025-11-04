@@ -1,4 +1,4 @@
-package serviceRepository
+package servicerepository
 
 import (
 	"service-dependency-api/databaseadapter"

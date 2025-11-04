@@ -1,4 +1,4 @@
-package serviceRepository
+package servicerepository
 
 import (
 	"context"

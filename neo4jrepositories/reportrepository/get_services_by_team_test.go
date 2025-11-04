@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	nRepo "service-dependency-api/neo4jrepositories"
-	"service-dependency-api/neo4jrepositories/serviceRepository"
+	"service-dependency-api/neo4jrepositories/servicerepository"
 	"service-dependency-api/neo4jrepositories/teamrepository"
 	"service-dependency-api/repositories"
 
@@ -33,7 +33,7 @@ func TestNeo4jReportRepository_GetServicesByTeam_ReturnsServices(t *testing.T) {
 	defer func() { _ = driver.Close(ctx) }()
 
 	teamRepo := teamrepository.New(driver)
-	svcRepo := serviceRepository.New(driver)
+	svcRepo := servicerepository.New(driver)
 	reportRepo := New(driver)
 
 	// Arrange: create a team

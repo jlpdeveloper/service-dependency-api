@@ -8,7 +8,7 @@ import (
 	"service-dependency-api/internal/customerrors"
 	nRepo "service-dependency-api/neo4jrepositories"
 	"service-dependency-api/neo4jrepositories/debtrepository"
-	"service-dependency-api/neo4jrepositories/serviceRepository"
+	"service-dependency-api/neo4jrepositories/servicerepository"
 	"service-dependency-api/repositories"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
@@ -32,7 +32,7 @@ func TestNeo4jReportRepository_GetServiceRiskReport_Success(t *testing.T) {
 	defer func() { _ = driver.Close(ctx) }()
 
 	reportRepo := New(driver)
-	svcRepo := serviceRepository.New(driver)
+	svcRepo := servicerepository.New(driver)
 	debtRepo := debtrepository.New(driver)
 
 	// Arrange: create target service

@@ -1,7 +1,7 @@
 package services
 
 import (
-	"service-dependency-api/neo4jrepositories/serviceRepository"
+	"service-dependency-api/neo4jrepositories/servicerepository"
 	"service-dependency-api/repositories"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
@@ -13,6 +13,6 @@ type ServiceCallsHandler struct {
 
 func New(driver neo4j.DriverWithContext) *ServiceCallsHandler {
 	return &ServiceCallsHandler{
-		Repository: serviceRepository.New(driver),
+		Repository: servicerepository.New(driver),
 	}
 }
