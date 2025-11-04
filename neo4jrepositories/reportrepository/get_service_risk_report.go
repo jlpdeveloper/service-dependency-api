@@ -1,4 +1,4 @@
-package reportRepository
+package reportrepository
 
 import (
 	"context"
@@ -44,7 +44,8 @@ func (n Neo4jReportRepository) GetServiceRiskReport(ctx context.Context, service
 	var wg sync.WaitGroup
 	errCh := make(chan error, 2)
 	var dependentCount int64
-	var debtCount map[string]int64
+	// initialize map to avoid nil map assignment during aggregation
+	debtCount := make(map[string]int64)
 
 	wg.Add(1)
 	go func() {

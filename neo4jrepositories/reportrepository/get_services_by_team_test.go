@@ -1,4 +1,4 @@
-package reportRepository
+package reportrepository
 
 import (
 	"context"
