@@ -15,6 +15,9 @@ import (
 )
 
 func TestNeo4jReportRepository_GetServiceRiskReport_Success(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode.")
+	}
 	ctx := context.Background()
 	// spin up test container
 	tc, err := nRepo.NewTestContainerHelper(ctx)
@@ -99,6 +102,9 @@ func TestNeo4jReportRepository_GetServiceRiskReport_Success(t *testing.T) {
 }
 
 func TestNeo4jReportRepository_GetServiceRiskReport_NotFound(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode.")
+	}
 	ctx := context.Background()
 	tc, err := nRepo.NewTestContainerHelper(ctx)
 	if err != nil {
