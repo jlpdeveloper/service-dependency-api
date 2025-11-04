@@ -1,4 +1,4 @@
-package dependencyRepository
+package dependencyrepository
 
 import (
 	"context"
