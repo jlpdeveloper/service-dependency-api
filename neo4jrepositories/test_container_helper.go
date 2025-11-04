@@ -16,7 +16,7 @@ type TestContainerHelper struct {
 // returns a TestContainerHelper struct that contains the container and the endpoint
 func NewTestContainerHelper(ctx context.Context) (*TestContainerHelper, error) {
 	neo4jContainer, err := neo4j.Run(ctx,
-		"neo4j:latest",
+		"neo4j:2025.09.0",
 		neo4j.WithAdminPassword("letmein!"),
 	)
 	if err != nil {
