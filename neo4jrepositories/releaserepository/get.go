@@ -1,4 +1,4 @@
-package releaseRepository
+package releaserepository
 
 import (
 	"context"
