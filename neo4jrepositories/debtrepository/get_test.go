@@ -26,7 +26,7 @@ func TestNeo4jDebtRepository_GetDebtByServiceId_BasicAndFilter(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Cleanup(func() { _ = tc.Container.Terminate(ctx) })
+	t.Cleanup(func() { _ = tc.Container.Terminate(context.Background()) })
 
 	// Connect driver
 	driver, err := neo4j.NewDriverWithContext(tc.Endpoint, neo4j.BasicAuth("neo4j", "letmein!", ""))
