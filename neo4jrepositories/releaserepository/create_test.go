@@ -14,18 +14,24 @@ import (
 )
 
 func TestNeo4jReleaseRepository_CreateRelease_Success(t *testing.T) {
-	if testing.Short() { t.Skip("skipping test in short mode.") }
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	if testing.Short() {
+		t.Skip("skipping test in short mode.")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 	defer cancel()
 
 	// Start Neo4j test container
 	tc, err := neo4jrepositories.NewTestContainerHelper(ctx)
-	if err != nil { t.Fatal(err) }
+	if err != nil {
+		t.Fatal(err)
+	}
 	t.Cleanup(func() { _ = tc.Container.Terminate(ctx) })
 
 	// Connect driver
 	driver, err := neo4j.NewDriverWithContext(tc.Endpoint, neo4j.BasicAuth("neo4j", "letmein!", ""))
-	if err != nil { t.Fatal(err) }
+	if err != nil {
+		t.Fatal(err)
+	}
 	defer func() { _ = driver.Close(ctx) }()
 
 	repo := New(driver)
@@ -57,9 +63,13 @@ func TestNeo4jReleaseRepository_CreateRelease_Success(t *testing.T) {
 		"MATCH (:Service {id: $sid})-[rel:RELEASED]->(r:Release) RETURN r.releaseDate AS releaseDate, r.url AS url, r.version AS version",
 		map[string]any{"sid": serviceID},
 	)
-	if err != nil { t.Fatalf("verify query error: %v", err) }
+	if err != nil {
+		t.Fatalf("verify query error: %v", err)
+	}
 	rec, err := res.Single(ctx)
-	if err != nil { t.Fatalf("expected single release record: %v", err) }
+	if err != nil {
+		t.Fatalf("expected single release record: %v", err)
+	}
 	// Neo4j returns datetime to driver as time.Time
 	gotDate, _ := rec.Get("releaseDate")
 	if gd, ok := gotDate.(time.Time); !ok {
@@ -76,16 +86,22 @@ func TestNeo4jReleaseRepository_CreateRelease_Success(t *testing.T) {
 }
 
 func TestNeo4jReleaseRepository_CreateRelease_ServiceNotFound(t *testing.T) {
-	if testing.Short() { t.Skip("skipping test in short mode.") }
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	if testing.Short() {
+		t.Skip("skipping test in short mode.")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 	defer cancel()
 
 	tc, err := neo4jrepositories.NewTestContainerHelper(ctx)
-	if err != nil { t.Fatal(err) }
+	if err != nil {
+		t.Fatal(err)
+	}
 	t.Cleanup(func() { _ = tc.Container.Terminate(ctx) })
 
 	driver, err := neo4j.NewDriverWithContext(tc.Endpoint, neo4j.BasicAuth("neo4j", "letmein!", ""))
-	if err != nil { t.Fatal(err) }
+	if err != nil {
+		t.Fatal(err)
+	}
 	defer func() { _ = driver.Close(ctx) }()
 
 	repo := New(driver)
@@ -96,8 +112,14 @@ func TestNeo4jReleaseRepository_CreateRelease_ServiceNotFound(t *testing.T) {
 		Url:         "https://nowhere",
 	}
 	err = repo.CreateRelease(ctx, rel)
-	if err == nil { t.Fatalf("expected error for missing service") }
+	if err == nil {
+		t.Fatalf("expected error for missing service")
+	}
 	var httpErr *customerrors.HTTPError
-	if !errors.As(err, &httpErr) { t.Fatalf("expected *customerrors.HTTPError, got %T: %v", err, err) }
-	if httpErr.Status != 404 { t.Fatalf("expected HTTP 404, got %d", httpErr.Status) }
+	if !errors.As(err, &httpErr) {
+		t.Fatalf("expected *customerrors.HTTPError, got %T: %v", err, err)
+	}
+	if httpErr.Status != 404 {
+		t.Fatalf("expected HTTP 404, got %d", httpErr.Status)
+	}
 }

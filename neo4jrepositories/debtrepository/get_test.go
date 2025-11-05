@@ -18,7 +18,7 @@ func TestNeo4jDebtRepository_GetDebtByServiceId_BasicAndFilter(t *testing.T) {
 		t.Skip("skipping test in short mode.")
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 	defer cancel()
 
 	// Start Neo4j test container
@@ -30,7 +30,9 @@ func TestNeo4jDebtRepository_GetDebtByServiceId_BasicAndFilter(t *testing.T) {
 
 	// Connect driver
 	driver, err := neo4j.NewDriverWithContext(tc.Endpoint, neo4j.BasicAuth("neo4j", "letmein!", ""))
-	if err != nil { t.Fatal(err) }
+	if err != nil {
+		t.Fatal(err)
+	}
 	defer func() { _ = driver.Close(ctx) }()
 
 	repo := New(driver)
@@ -49,8 +51,12 @@ func TestNeo4jDebtRepository_GetDebtByServiceId_BasicAndFilter(t *testing.T) {
 	// Create two debts via repository (status will be DefaultStatus)
 	d1 := repositories.Debt{Type: "debt", Title: "Debt One", Description: "first", ServiceId: serviceID}
 	d2 := repositories.Debt{Type: "debt", Title: "Debt Two", Description: "second", ServiceId: serviceID}
-	if err := repo.CreateDebtItem(ctx, d1); err != nil { t.Fatalf("CreateDebtItem(d1) error: %v", err) }
-	if err := repo.CreateDebtItem(ctx, d2); err != nil { t.Fatalf("CreateDebtItem(d2) error: %v", err) }
+	if err := repo.CreateDebtItem(ctx, d1); err != nil {
+		t.Fatalf("CreateDebtItem(d1) error: %v", err)
+	}
+	if err := repo.CreateDebtItem(ctx, d2); err != nil {
+		t.Fatalf("CreateDebtItem(d2) error: %v", err)
+	}
 
 	// Fetch IDs back for further checks
 	read := driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeRead})
@@ -59,9 +65,13 @@ func TestNeo4jDebtRepository_GetDebtByServiceId_BasicAndFilter(t *testing.T) {
 		"MATCH (:Service {id: $sid})-[:OWNS]->(d:Debt) RETURN collect({id:d.id,title:d.title,status:d.status}) AS debts",
 		map[string]any{"sid": serviceID},
 	)
-	if err != nil { t.Fatalf("query failed: %v", err) }
+	if err != nil {
+		t.Fatalf("query failed: %v", err)
+	}
 	rec, err := res.Single(ctx)
-	if err != nil { t.Fatalf("expected single record: %v", err) }
+	if err != nil {
+		t.Fatalf("expected single record: %v", err)
+	}
 	vals, _ := rec.Get("debts")
 	arr := vals.([]any)
 	if len(arr) < 2 {
@@ -78,18 +88,32 @@ func TestNeo4jDebtRepository_GetDebtByServiceId_BasicAndFilter(t *testing.T) {
 
 	// Act: Get without filter (should return both)
 	list, err := repo.GetDebtByServiceId(ctx, serviceID, 1, 10, false)
-	if err != nil { t.Fatalf("GetDebtByServiceId error: %v", err) }
-	if len(list) < 2 { t.Fatalf("expected at least 2 debts, got %d", len(list)) }
+	if err != nil {
+		t.Fatalf("GetDebtByServiceId error: %v", err)
+	}
+	if len(list) < 2 {
+		t.Fatalf("expected at least 2 debts, got %d", len(list))
+	}
 	for _, d := range list {
-		if d.ServiceId != serviceID { t.Errorf("expected ServiceId %s, got %s", serviceID, d.ServiceId) }
-		if d.Id == "" { t.Errorf("expected non-empty id") }
-		if d.Title == "" { t.Errorf("expected non-empty title") }
-		if d.Status == "" { t.Errorf("expected non-empty status") }
+		if d.ServiceId != serviceID {
+			t.Errorf("expected ServiceId %s, got %s", serviceID, d.ServiceId)
+		}
+		if d.Id == "" {
+			t.Errorf("expected non-empty id")
+		}
+		if d.Title == "" {
+			t.Errorf("expected non-empty title")
+		}
+		if d.Status == "" {
+			t.Errorf("expected non-empty status")
+		}
 	}
 
 	// Act: Get only resolved
 	resolved, err := repo.GetDebtByServiceId(ctx, serviceID, 1, 10, true)
-	if err != nil { t.Fatalf("GetDebtByServiceId(onlyResolved) error: %v", err) }
+	if err != nil {
+		t.Fatalf("GetDebtByServiceId(onlyResolved) error: %v", err)
+	}
 	if len(resolved) != 1 {
 		t.Fatalf("expected exactly 1 resolved debt, got %d", len(resolved))
 	}
@@ -99,30 +123,48 @@ func TestNeo4jDebtRepository_GetDebtByServiceId_BasicAndFilter(t *testing.T) {
 }
 
 func TestNeo4jDebtRepository_GetDebtByServiceId_InvalidPaging(t *testing.T) {
-	if testing.Short() { t.Skip("skipping test in short mode.") }
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	if testing.Short() {
+		t.Skip("skipping test in short mode.")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 	defer cancel()
 
 	// Start Neo4j test container
 	tc, err := neo4jrepositories.NewTestContainerHelper(ctx)
-	if err != nil { t.Fatal(err) }
+	if err != nil {
+		t.Fatal(err)
+	}
 	t.Cleanup(func() { _ = tc.Container.Terminate(ctx) })
 
 	// Connect driver
 	driver, err := neo4j.NewDriverWithContext(tc.Endpoint, neo4j.BasicAuth("neo4j", "letmein!", ""))
-	if err != nil { t.Fatal(err) }
+	if err != nil {
+		t.Fatal(err)
+	}
 	defer func() { _ = driver.Close(ctx) }()
 
 	repo := New(driver)
 
 	_, err = repo.GetDebtByServiceId(ctx, "some-service", 0, 10, false)
-	if err == nil { t.Fatalf("expected error for invalid page") }
+	if err == nil {
+		t.Fatalf("expected error for invalid page")
+	}
 	var httpErr *customerrors.HTTPError
-	if !errors.As(err, &httpErr) { t.Fatalf("expected *customerrors.HTTPError, got %T: %v", err, err) }
-	if httpErr.Status != 400 { t.Fatalf("expected 400, got %d", httpErr.Status) }
+	if !errors.As(err, &httpErr) {
+		t.Fatalf("expected *customerrors.HTTPError, got %T: %v", err, err)
+	}
+	if httpErr.Status != 400 {
+		t.Fatalf("expected 400, got %d", httpErr.Status)
+	}
 
 	_, err = repo.GetDebtByServiceId(ctx, "some-service", 1, 0, false)
-	if err == nil { t.Fatalf("expected error for invalid page size") }
-	if !errors.As(err, &httpErr) { t.Fatalf("expected *customerrors.HTTPError, got %T: %v", err, err) }
-	if httpErr.Status != 400 { t.Fatalf("expected 400, got %d", httpErr.Status) }
+	if err == nil {
+		t.Fatalf("expected error for invalid page size")
+	}
+	if !errors.As(err, &httpErr) {
+		t.Fatalf("expected *customerrors.HTTPError, got %T: %v", err, err)
+	}
+	if httpErr.Status != 400 {
+		t.Fatalf("expected 400, got %d", httpErr.Status)
+	}
 }

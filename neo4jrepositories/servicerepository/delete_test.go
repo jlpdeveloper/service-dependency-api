@@ -17,7 +17,7 @@ func TestNeo4jServiceRepository_DeleteService_Success(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode.")
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 	defer cancel()
 
 	tc, err := nRepo.NewTestContainerHelper(ctx)
@@ -71,7 +71,7 @@ func TestNeo4jServiceRepository_DeleteService_NotFound(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode.")
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 	defer cancel()
 
 	tc, err := nRepo.NewTestContainerHelper(ctx)
