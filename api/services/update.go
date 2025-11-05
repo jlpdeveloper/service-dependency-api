@@ -5,7 +5,7 @@ import (
 	"errors"
 	"net/http"
 	"service-dependency-api/internal"
-	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/internal/customerrors"
 	"service-dependency-api/repositories"
 )
 
@@ -28,7 +28,7 @@ func (u *ServiceCallsHandler) UpdateService(rw http.ResponseWriter, req *http.Re
 
 	err = u.Repository.UpdateService(req.Context(), *updateServiceRequest)
 
-	var httpErr *customErrors.HTTPError
+	var httpErr *customerrors.HTTPError
 	if err != nil {
 		if errors.As(err, &httpErr) {
 			http.Error(rw, httpErr.Error(), httpErr.Status)

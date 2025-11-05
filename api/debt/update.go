@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"service-dependency-api/internal"
-	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/internal/customerrors"
 	"time"
 )
 
@@ -29,7 +29,7 @@ func (c CallsHandler) UpdateDebtStatus(rw http.ResponseWriter, r *http.Request) 
 	defer cancel()
 	err = c.Repository.UpdateStatus(timeout, id, body["status"])
 	if err != nil {
-		customErrors.HandleError(rw, err)
+		customerrors.HandleError(rw, err)
 		return
 	}
 	rw.WriteHeader(http.StatusNoContent)

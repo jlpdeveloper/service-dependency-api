@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"service-dependency-api/internal"
-	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/internal/customerrors"
 	"service-dependency-api/repositories"
 	"time"
 )
@@ -33,7 +33,7 @@ func (c CallsHandler) CreateDebt(rw http.ResponseWriter, r *http.Request) {
 	ctxWithTimeout, cancel := context.WithTimeout(r.Context(), 15*time.Second)
 	defer cancel()
 	if err = c.Repository.CreateDebtItem(ctxWithTimeout, *debt); err != nil {
-		customErrors.HandleError(rw, err)
+		customerrors.HandleError(rw, err)
 		return
 	}
 	rw.WriteHeader(http.StatusCreated)

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"service-dependency-api/internal"
-	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/internal/customerrors"
 	"service-dependency-api/repositories"
 )
 
@@ -33,7 +33,7 @@ func (s *ServiceCallsHandler) CreateRelease(rw http.ResponseWriter, req *http.Re
 	}
 	err = s.Repository.CreateRelease(req.Context(), *r)
 	if err != nil {
-		customErrors.HandleError(rw, err)
+		customerrors.HandleError(rw, err)
 		return
 	}
 	rw.WriteHeader(http.StatusCreated)

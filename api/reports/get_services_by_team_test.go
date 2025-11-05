@@ -5,7 +5,7 @@ import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
-	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/internal/customerrors"
 	"service-dependency-api/repositories"
 	"testing"
 )
@@ -84,7 +84,7 @@ func TestGetServicesByTeamRepositoryError(t *testing.T) {
 
 func TestGetServicesByTeamHTTPError(t *testing.T) {
 	validTeamId := "123e4567-e89b-12d3-a456-426614174000"
-	h := CallsHandler{repository: mockReportRepository{Err: &customErrors.HTTPError{Status: http.StatusNotFound, Msg: "team not found"}}}
+	h := CallsHandler{repository: mockReportRepository{Err: &customerrors.HTTPError{Status: http.StatusNotFound, Msg: "team not found"}}}
 
 	req, err := http.NewRequest("GET", "/reports/teams/"+validTeamId+"/services", nil)
 	if err != nil {

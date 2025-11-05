@@ -3,7 +3,7 @@ package dependencies
 import (
 	"context"
 	"fmt"
-	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/internal/customerrors"
 	"service-dependency-api/repositories"
 )
 
@@ -87,7 +87,7 @@ func (repo mockDependencyRepository) DeleteDependency(_ context.Context, id stri
 
 	// If DependencyExists is false, return a 404 error
 	if !repo.DependencyExists {
-		return &customErrors.HTTPError{
+		return &customerrors.HTTPError{
 			Status: 404,
 			Msg:    fmt.Sprintf("Dependency relationship not found between services: %s -> %s", id, dependsOnID),
 		}

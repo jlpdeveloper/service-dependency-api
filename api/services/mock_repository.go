@@ -2,7 +2,7 @@ package services
 
 import (
 	"context"
-	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/internal/customerrors"
 	"service-dependency-api/repositories"
 	"time"
 )
@@ -104,7 +104,7 @@ func (repo mockServiceRepository) UpdateService(_ context.Context, service repos
 	}
 
 	// Service not found
-	return &customErrors.HTTPError{
+	return &customerrors.HTTPError{
 		Status: 404,
 		Msg:    "Service not found",
 	}

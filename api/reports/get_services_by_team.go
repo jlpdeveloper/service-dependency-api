@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 	"service-dependency-api/internal"
-	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/internal/customerrors"
 )
 
 func (c *CallsHandler) GetServicesByTeam(rw http.ResponseWriter, r *http.Request) {
@@ -16,7 +16,7 @@ func (c *CallsHandler) GetServicesByTeam(rw http.ResponseWriter, r *http.Request
 	}
 	services, err := c.repository.GetServicesByTeam(r.Context(), teamId)
 	if err != nil {
-		customErrors.HandleError(rw, err)
+		customerrors.HandleError(rw, err)
 		return
 	}
 	rw.Header().Set("Content-Type", "application/json")

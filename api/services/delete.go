@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 	"service-dependency-api/internal"
-	errors2 "service-dependency-api/internal/customErrors"
+	errors2 "service-dependency-api/internal/customerrors"
 )
 
 func (u *ServiceCallsHandler) DeleteServiceById(rw http.ResponseWriter, req *http.Request) {

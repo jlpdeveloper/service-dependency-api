@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"service-dependency-api/internal"
-	"service-dependency-api/internal/customErrors"
+	"service-dependency-api/internal/customerrors"
 	"strconv"
 )
 
@@ -16,14 +16,14 @@ func (c CallsHandler) GetDebtByServiceId(rw http.ResponseWriter, r *http.Request
 	}
 	page, pageSize, err := validatePageParams(r)
 	if err != nil {
-		customErrors.HandleError(rw, err)
+		customerrors.HandleError(rw, err)
 		return
 	}
 	onlyResolved := r.URL.Query().Get("onlyResolved")
 
 	debt, err := c.Repository.GetDebtByServiceId(r.Context(), id, page, pageSize, onlyResolved == "true")
 	if err != nil {
-		customErrors.HandleError(rw, err)
+		customerrors.HandleError(rw, err)
 		return
 	}
 	rw.Header().Set("Content-Type", "application/json")
@@ -48,7 +48,7 @@ func validatePageParams(req *http.Request) (int, int, error) {
 	if pageStr != "" {
 		parsedPage, err := strconv.Atoi(pageStr)
 		if err != nil || parsedPage <= 0 {
-			return 0, 0, &customErrors.HTTPError{
+			return 0, 0, &customerrors.HTTPError{
 				Status: http.StatusBadRequest,
 				Msg:    "Invalid page parameter",
 			}
@@ -60,7 +60,7 @@ func validatePageParams(req *http.Request) (int, int, error) {
 	if pageSizeStr != "" {
 		parsedPageSize, err := strconv.Atoi(pageSizeStr)
 		if err != nil || parsedPageSize <= 0 {
-			return 0, 0, &customErrors.HTTPError{
+			return 0, 0, &customerrors.HTTPError{
 				Status: http.StatusBadRequest,
 				Msg:    "Invalid pageSize parameter",
 			}
