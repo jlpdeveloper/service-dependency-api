@@ -72,16 +72,28 @@ func TestNeo4jDebtRepository_GetDebtByServiceId_BasicAndFilter(t *testing.T) {
 	if err != nil {
 		t.Fatalf("expected single record: %v", err)
 	}
-	vals, _ := rec.Get("debts")
-	arr := vals.([]any)
+	vals, ok := rec.Get("debts")
+	if !ok {
+		t.Fatalf("missing 'debts' property")
+	}
+	arr, ok := vals.([]any)
+	if !ok {
+		t.Fatalf("expected array, got %T", vals)
+	}
 	if len(arr) < 2 {
 		t.Fatalf("expected at least 2 debts, got %d", len(arr))
 	}
 	// Update one to remediated using repository UpdateStatus through a fresh repo to mirror prod usage
 	updRepo := New(driver)
 	// pull one id
-	first := arr[0].(map[string]any)
-	firstID := first["id"].(string)
+	first, ok := arr[0].(map[string]any)
+	if !ok {
+		t.Fatalf("expected map[string]any, got %T", arr[0])
+	}
+	firstID, ok := first["id"].(string)
+	if !ok {
+		t.Fatalf("expected string, got %T", first["id"])
+	}
 	if err := updRepo.UpdateStatus(ctx, firstID, "remediated"); err != nil {
 		t.Fatalf("UpdateStatus error: %v", err)
 	}

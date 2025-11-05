@@ -74,7 +74,10 @@ func TestNeo4jDependencyRepository_AddDependency_WithVersion(t *testing.T) {
 	if err != nil {
 		t.Fatalf("expected single record verifying dependency: %v", err)
 	}
-	ver, _ := rec.Get("version")
+	ver, ok := rec.Get("version")
+	if !ok {
+		t.Fatalf("missing version property")
+	}
 	if ver != "1.2.3" {
 		t.Fatalf("expected version %q, got %#v", "1.2.3", ver)
 	}
@@ -135,7 +138,10 @@ func TestNeo4jDependencyRepository_AddDependency_WithoutVersion(t *testing.T) {
 	if err != nil {
 		t.Fatalf("expected single record: %v", err)
 	}
-	ver, _ := rec.Get("version")
+	ver, ok := rec.Get("version")
+	if !ok {
+		t.Fatalf("missing version property")
+	}
 	if ver != nil && ver != "" {
 		t.Fatalf("expected no version property, got %#v", ver)
 	}

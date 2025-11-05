@@ -40,8 +40,12 @@ func TestNeo4jReleaseRepository_CreateRelease_Success(t *testing.T) {
 	serviceID := "11111111-2222-3333-4444-555555555555"
 	write := driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
 	defer func() { _ = write.Close(ctx) }()
-	if _, err = write.Run(ctx, "CREATE (s:Service {id: $id, name: 'svc-release', type: 'api'}) RETURN s", map[string]any{"id": serviceID}); err != nil {
+	result, err := write.Run(ctx, "CREATE (s:Service {id: $id, name: 'svc-release', type: 'api'}) RETURN s", map[string]any{"id": serviceID})
+	if err != nil {
 		t.Fatalf("failed to create service: %v", err)
+	}
+	if _, err = result.Consume(ctx); err != nil {
+		t.Fatalf("failed to consume result: %v", err)
 	}
 
 	// Act: create a Release with URL and Version

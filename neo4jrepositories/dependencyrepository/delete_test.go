@@ -69,7 +69,10 @@ func TestNeo4jDependencyRepository_DeleteDependency_Success(t *testing.T) {
 	if err != nil {
 		t.Fatalf("expected single record: %v", err)
 	}
-	cnt, _ := rec.Get("cnt")
+	cnt, ok := rec.Get("cnt")
+	if !ok {
+		t.Fatalf("missing 'cnt' property")
+	}
 	if cnt.(int64) != 0 {
 		t.Fatalf("expected no relationship, found %d", cnt.(int64))
 	}

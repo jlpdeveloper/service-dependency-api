@@ -218,7 +218,12 @@ func TestNeo4jDependencyRepository_GetDependents_NotFound(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Cleanup(func() { _ = tc.Container.Terminate(ctx) })
+	t.Cleanup(func() {
+		cErr := tc.Container.Terminate(context.Background())
+		if cErr != nil {
+			t.Logf("error terminating container: %v", cErr)
+		}
+	})
 
 	driver, err := neo4j.NewDriverWithContext(tc.Endpoint, neo4j.BasicAuth("neo4j", "letmein!", ""))
 	if err != nil {
