@@ -45,10 +45,10 @@ func main() {
 		Addr:    config.GetConfigValue("address"),
 	}
 
-	log.Println("Starting Web Server")
+	slog.Info("Starting Web Server")
 	go func() {
 		if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			log.Fatalf("listen: %s\n", err)
+			slog.Error("listen: %s\n", err)
 		}
 	}()
 	quit := make(chan os.Signal, 1)
@@ -57,6 +57,6 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	if err := server.Shutdown(ctx); err != nil {
-		log.Fatal("Server forced to shutdown:", err)
+		slog.Error("Server forced to shutdown:", err)
 	}
 }
