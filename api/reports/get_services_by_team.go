@@ -2,7 +2,7 @@ package reports
 
 import (
 	"encoding/json"
-	"log"
+	"log/slog"
 	"net/http"
 	"service-dependency-api/internal"
 	"service-dependency-api/internal/customerrors"
@@ -10,6 +10,7 @@ import (
 
 func (c *CallsHandler) GetServicesByTeam(rw http.ResponseWriter, r *http.Request) {
 	teamId, ok := internal.GetGuidFromRequestPath("teamId", r)
+	logger := internal.LoggerFromContext(r.Context())
 	if !ok {
 		http.Error(rw, "Invalid team ID", http.StatusBadRequest)
 		return
@@ -22,7 +23,9 @@ func (c *CallsHandler) GetServicesByTeam(rw http.ResponseWriter, r *http.Request
 	rw.Header().Set("Content-Type", "application/json")
 	err = json.NewEncoder(rw).Encode(services)
 	if err != nil {
-		log.Println(err)
+		logger.Debug("Error encoding services json",
+			slog.String("error", err.Error()),
+		)
 	}
 
 }
