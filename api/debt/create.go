@@ -38,7 +38,6 @@ func (c CallsHandler) CreateDebt(rw http.ResponseWriter, r *http.Request) {
 	defer cancel()
 	if err = c.Repository.CreateDebtItem(ctxWithTimeout, *debt); err != nil {
 		logger.Debug("Error creating debt item:",
-
 			slog.String("error", err.Error()))
 		customerrors.HandleError(rw, err)
 		return
