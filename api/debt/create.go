@@ -3,6 +3,8 @@ package debt
 import (
 	"context"
 	"encoding/json"
+	"errors"
+	"log/slog"
 	"net/http"
 	"service-dependency-api/internal"
 	"service-dependency-api/internal/customerrors"
@@ -11,6 +13,7 @@ import (
 )
 
 func (c CallsHandler) CreateDebt(rw http.ResponseWriter, r *http.Request) {
+	logger := internal.LoggerFromContext(r.Context())
 	id, ok := internal.GetGuidFromRequestPath("id", r)
 	if !ok {
 		http.Error(rw, "service id not valid", http.StatusBadRequest)
@@ -27,12 +30,15 @@ func (c CallsHandler) CreateDebt(rw http.ResponseWriter, r *http.Request) {
 	debt.ServiceId = id
 
 	if err = debt.Validate(); err != nil {
+		logger.Debug("Invalid debt item:", slog.String("error", err.Error()))
 		http.Error(rw, err.Error(), http.StatusBadRequest)
 		return
 	}
-	ctxWithTimeout, cancel := context.WithTimeout(r.Context(), 15*time.Second)
+	ctxWithTimeout, cancel := context.WithTimeoutCause(r.Context(), 15*time.Second, errors.New("database timeout"))
 	defer cancel()
 	if err = c.Repository.CreateDebtItem(ctxWithTimeout, *debt); err != nil {
+		logger.Debug("Error creating debt item:",
+			slog.String("error", err.Error()))
 		customerrors.HandleError(rw, err)
 		return
 	}

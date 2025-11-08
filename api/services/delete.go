@@ -1,31 +1,30 @@
 package services
 
 import (
-	"errors"
-	"log"
+	"context"
+	"log/slog"
 	"net/http"
 	"service-dependency-api/internal"
-	errors2 "service-dependency-api/internal/customerrors"
+	"service-dependency-api/internal/customerrors"
+	"time"
 )
 
-func (u *ServiceCallsHandler) DeleteServiceById(rw http.ResponseWriter, req *http.Request) {
-	id, ok := internal.GetGuidFromRequestPath("id", req)
-	log.Println("Request received - DeleteServiceById - " + id)
+func (u *ServiceCallsHandler) DeleteServiceById(rw http.ResponseWriter, r *http.Request) {
+	logger := internal.LoggerFromContext(r.Context())
+	id, ok := internal.GetGuidFromRequestPath("id", r)
+	logger.Debug("Request received - DeleteServiceById - " + id)
 	if !ok {
 		http.Error(rw, "Invalid Request", http.StatusBadRequest)
-		log.Println("Invalid Request - " + id)
+		logger.Debug("Invalid Request - " + id)
 		return
 	}
-
-	err := u.Repository.DeleteService(req.Context(), id)
-	var httpErr *errors2.HTTPError
+	ctxWithTimeout, cancel := context.WithTimeout(r.Context(), 10*time.Second)
+	defer cancel()
+	err := u.Repository.DeleteService(ctxWithTimeout, id)
 	if err != nil {
-		if errors.As(err, &httpErr) {
-			http.Error(rw, httpErr.Error(), httpErr.Status)
-		} else {
-			http.Error(rw, err.Error(), http.StatusInternalServerError)
-			log.Println("Error deleting service: " + err.Error())
-		}
+		logger.Debug("Error deleting service:",
+			slog.String("error", err.Error()))
+		customerrors.HandleError(rw, err)
 		return
 	}
 	rw.WriteHeader(http.StatusNoContent)

@@ -2,7 +2,7 @@ package dependencies
 
 import (
 	"encoding/json"
-	"log"
+	"log/slog"
 	"net/http"
 	"service-dependency-api/internal"
 	"service-dependency-api/internal/customerrors"
@@ -11,6 +11,7 @@ import (
 
 func (s *ServiceCallsHandler) GetDependencies(rw http.ResponseWriter, req *http.Request) {
 	id, ok := internal.GetGuidFromRequestPath("id", req)
+
 	if !ok {
 		http.Error(rw, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
@@ -23,7 +24,10 @@ func (s *ServiceCallsHandler) GetDependencies(rw http.ResponseWriter, req *http.
 	rw.Header().Set("Content-Type", "application/json")
 	err = json.NewEncoder(rw).Encode(dep)
 	if err != nil {
-		log.Println(err)
+		logger := internal.LoggerFromContext(req.Context())
+		logger.Debug("Error encoding dependencies json",
+			slog.String("error", err.Error()),
+		)
 	}
 }
 
@@ -53,6 +57,9 @@ func (s *ServiceCallsHandler) GetDependents(rw http.ResponseWriter, req *http.Re
 
 	err = json.NewEncoder(rw).Encode(returnObj)
 	if err != nil {
-		log.Println(err)
+		logger := internal.LoggerFromContext(req.Context())
+		logger.Debug("Error encoding dependencies json",
+			slog.String("error", err.Error()),
+		)
 	}
 }

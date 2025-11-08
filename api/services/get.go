@@ -2,14 +2,16 @@ package services
 
 import (
 	"encoding/json"
-	"log"
+	"log/slog"
 	"net/http"
 	"service-dependency-api/internal"
+	"service-dependency-api/internal/customerrors"
 	"strconv"
 )
 
-func (u *ServiceCallsHandler) GetAllServices(rw http.ResponseWriter, req *http.Request) {
-	page, err := strconv.Atoi(req.URL.Query().Get("page"))
+func (u *ServiceCallsHandler) GetAllServices(rw http.ResponseWriter, r *http.Request) {
+	logger := internal.LoggerFromContext(r.Context())
+	page, err := strconv.Atoi(r.URL.Query().Get("page"))
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusBadRequest)
 		return
@@ -20,7 +22,7 @@ func (u *ServiceCallsHandler) GetAllServices(rw http.ResponseWriter, req *http.R
 		http.Error(rw, "page must be positive", http.StatusBadRequest)
 		return
 	}
-	pageSize, err := strconv.Atoi(req.URL.Query().Get("pageSize"))
+	pageSize, err := strconv.Atoi(r.URL.Query().Get("pageSize"))
 	if err != nil {
 		pageSize = 10
 	}
@@ -30,7 +32,7 @@ func (u *ServiceCallsHandler) GetAllServices(rw http.ResponseWriter, req *http.R
 		http.Error(rw, "pageSize must be between 1 and 100", http.StatusBadRequest)
 		return
 	}
-	services, err := u.Repository.GetAllServices(req.Context(), page, pageSize)
+	services, err := u.Repository.GetAllServices(r.Context(), page, pageSize)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 		return
@@ -38,21 +40,23 @@ func (u *ServiceCallsHandler) GetAllServices(rw http.ResponseWriter, req *http.R
 	rw.Header().Set("Content-Type", "application/json")
 	err = json.NewEncoder(rw).Encode(services)
 	if err != nil {
-		log.Println(err)
+		logger.Debug("Error encoding services json",
+			slog.String("error", err.Error()))
 	}
 }
 
-func (u *ServiceCallsHandler) GetById(rw http.ResponseWriter, req *http.Request) {
-	id, ok := internal.GetGuidFromRequestPath("id", req)
+func (u *ServiceCallsHandler) GetById(rw http.ResponseWriter, r *http.Request) {
+	logger := internal.LoggerFromContext(r.Context())
+	id, ok := internal.GetGuidFromRequestPath("id", r)
 
 	if !ok {
 		http.Error(rw, "Service id is required", http.StatusBadRequest)
 		return
 	}
 
-	service, err := u.Repository.GetServiceById(req.Context(), id)
+	service, err := u.Repository.GetServiceById(r.Context(), id)
 	if err != nil {
-		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		customerrors.HandleError(rw, err)
 		return
 	}
 
@@ -65,6 +69,7 @@ func (u *ServiceCallsHandler) GetById(rw http.ResponseWriter, req *http.Request)
 	rw.Header().Set("Content-Type", "application/json")
 	err = json.NewEncoder(rw).Encode(service)
 	if err != nil {
-		log.Println(err)
+		logger.Debug("Error encoding service json",
+			slog.String("error", err.Error()))
 	}
 }

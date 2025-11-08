@@ -1,14 +1,19 @@
 package debt
 
 import (
+	"context"
 	"encoding/json"
+	"errors"
+	"log/slog"
 	"net/http"
 	"service-dependency-api/internal"
 	"service-dependency-api/internal/customerrors"
 	"strconv"
+	"time"
 )
 
 func (c CallsHandler) GetDebtByServiceId(rw http.ResponseWriter, r *http.Request) {
+	logger := internal.LoggerFromContext(r.Context())
 	id, ok := internal.GetGuidFromRequestPath("id", r)
 	if !ok {
 		http.Error(rw, "service id not valid", http.StatusBadRequest)
@@ -20,8 +25,9 @@ func (c CallsHandler) GetDebtByServiceId(rw http.ResponseWriter, r *http.Request
 		return
 	}
 	onlyResolved := r.URL.Query().Get("onlyResolved")
-
-	debt, err := c.Repository.GetDebtByServiceId(r.Context(), id, page, pageSize, onlyResolved == "true")
+	ctxWithTimeout, cancel := context.WithTimeoutCause(r.Context(), 10*time.Second, errors.New("database timeout"))
+	defer cancel()
+	debt, err := c.Repository.GetDebtByServiceId(ctxWithTimeout, id, page, pageSize, onlyResolved == "true")
 	if err != nil {
 		customerrors.HandleError(rw, err)
 		return
@@ -29,6 +35,8 @@ func (c CallsHandler) GetDebtByServiceId(rw http.ResponseWriter, r *http.Request
 	rw.Header().Set("Content-Type", "application/json")
 	err = json.NewEncoder(rw).Encode(debt)
 	if err != nil {
+		logger.Debug("Error encoding response:",
+			slog.String("error", err.Error()))
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 		return
 	}

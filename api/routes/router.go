@@ -22,7 +22,8 @@ func SetupRouter(driver neo4j.DriverWithContext) http.Handler {
 	slog.Debug("Setting up router")
 	router := chi.NewRouter()
 
-	router.Use(internal.StructuredLogger(slog.Default()))
+	router.Use(internal.RequestIDLogger)
+	router.Use(internal.StructuredLoggerFromContext())
 	router.Use(middleware.Recoverer)
 	router.Use(middleware.Compress(5))
 	setupSystemCalls(router)
