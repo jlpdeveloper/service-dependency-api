@@ -44,42 +44,47 @@ func TestGetConfigValue_MissingEnvVar_LogsAndReturnsEmpty(t *testing.T) {
 	keys := []string{"neo4j_url", "neo4j_username", "neo4j_password"}
 
 	for i, env := range vars {
-		// Save current value and ensure the variable is truly unset (LookupEnv returns found=false)
-		prev, hadPrev := os.LookupEnv(env)
-		_ = os.Unsetenv(env)
+		env := env       // capture loop variable
+		key := keys[i]   // capture matching key
 
-		// Capture logs
-		buf := &bytes.Buffer{}
-		prevOut := log.Writer()
-		prevFlags := log.Flags()
-		prevPrefix := log.Prefix()
-		log.SetOutput(buf)
-		log.SetFlags(0)
-		log.SetPrefix("")
-
-		// Restore environment and logger after each iteration
-		t.Cleanup(func() {
-			if hadPrev {
-				_ = os.Setenv(env, prev)
-			} else {
+		t.Run(env, func(t *testing.T) {
+			// Snapshot current state and ensure variable is truly unset for this subtest
+			if prev, hadPrev := os.LookupEnv(env); hadPrev {
+				// Ensure original value is restored automatically after subtest
+				t.Setenv(env, prev)
 				_ = os.Unsetenv(env)
+			} else {
+				// No previous value: ensure it's unset now and at cleanup
+				_ = os.Unsetenv(env)
+				t.Cleanup(func() { _ = os.Unsetenv(env) })
 			}
-			log.SetOutput(prevOut)
-			log.SetFlags(prevFlags)
-			log.SetPrefix(prevPrefix)
+
+			// Capture logs without leaking global state beyond this subtest
+			buf := &bytes.Buffer{}
+			prevOut := log.Writer()
+			prevFlags := log.Flags()
+			prevPrefix := log.Prefix()
+			log.SetOutput(buf)
+			log.SetFlags(0)
+			log.SetPrefix("")
+			t.Cleanup(func() {
+				log.SetOutput(prevOut)
+				log.SetFlags(prevFlags)
+				log.SetPrefix(prevPrefix)
+			})
+
+			// Call the function and assert empty string
+			if got := GetConfigValue(key); got != "" {
+				t.Fatalf("expected empty string for %s when %s is missing, got %q", key, env, got)
+			}
+
+			// Ensure the log contains the expected message substring
+			logged := buf.String()
+			expectedSub := "Environment variable " + env + " not found"
+			if !strings.Contains(logged, expectedSub) {
+				t.Fatalf("expected log to contain %q, got %q", expectedSub, logged)
+			}
 		})
-
-		// Call the function and assert empty string
-		if got := GetConfigValue(keys[i]); got != "" {
-			t.Fatalf("expected empty string for %s when %s is missing, got %q", keys[i], env, got)
-		}
-
-		// Ensure the log contains the expected message substring
-		logged := buf.String()
-		expectedSub := "Environment variable " + env + " not found"
-		if !strings.Contains(logged, expectedSub) {
-			t.Fatalf("expected log to contain %q, got %q", expectedSub, logged)
-		}
 	}
 }
 
