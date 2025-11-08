@@ -21,7 +21,7 @@ func (n Neo4jDriverAdapter) executeInSession(ctx context.Context, work func(tx n
 	session := n.driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: mode})
 	logger := internal.LoggerFromContext(ctx)
 	defer func() {
-		err := session.Close(ctx)
+		err := session.Close(context.Background())
 		if err != nil {
 			logger.Error("Error closing session: ",
 				slog.String("error", err.Error()),
