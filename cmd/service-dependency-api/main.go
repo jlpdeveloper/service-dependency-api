@@ -31,6 +31,7 @@ func main() {
 	}()
 	if err != nil {
 		slog.Error("Error creating driver: ", slog.Any("error", err))
+		os.Exit(1)
 	}
 
 	err = driver.VerifyConnectivity(ctx)
@@ -57,13 +58,15 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	if err := server.Shutdown(ctx); err != nil {
-		slog.Error("Server forced to shutdown:", err)
+		slog.Error("Server forced to shutdown:", slog.Any("error", err))
 	}
 }
 
 func getLogger() *slog.Logger {
-	lvlEnv, _ := os.LookupEnv("LOG_LEVEL")
-
+	lvlEnv, ok := os.LookupEnv("LOG_LEVEL")
+	if !ok {
+		lvlEnv = "info"
+	}
 	switch strings.ToLower(lvlEnv) {
 	case "debug":
 		return slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
