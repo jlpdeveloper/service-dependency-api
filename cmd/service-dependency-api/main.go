@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"errors"
-	"log"
 	"log/slog"
 	"net/http"
 	"os"
@@ -27,11 +26,11 @@ func main() {
 	defer func() {
 		closeErr := driver.Close(ctx)
 		if closeErr != nil {
-			log.Fatal(closeErr)
+			slog.Error("error closing driver: ", slog.Any("error", closeErr))
 		}
 	}()
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Error creating driver: ", slog.Any("error", err))
 	}
 
 	err = driver.VerifyConnectivity(ctx)
@@ -49,7 +48,7 @@ func main() {
 	slog.Info("Starting Web Server")
 	go func() {
 		if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			slog.Error("listen: %s\n", err)
+			slog.Error("listen error", slog.Any("error", err))
 		}
 	}()
 	quit := make(chan os.Signal, 1)
