@@ -10,6 +10,7 @@ import (
 	"os/signal"
 	"service-dependency-api/api/routes"
 	"service-dependency-api/internal/config"
+	"strings"
 	"syscall"
 	"time"
 
@@ -18,7 +19,7 @@ import (
 
 func main() {
 	ctx := context.Background()
-	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	logger := getLogger()
 	slog.SetDefault(logger)
 	driver, err := neo4j.NewDriverWithContext(
 		config.GetConfigValue("NEO4J_URL"),
@@ -59,4 +60,25 @@ func main() {
 	if err := server.Shutdown(ctx); err != nil {
 		slog.Error("Server forced to shutdown:", err)
 	}
+}
+
+func getLogger() *slog.Logger {
+	lvlEnv, _ := os.LookupEnv("LOG_LEVEL")
+
+	switch strings.ToLower(lvlEnv) {
+	case "debug":
+		return slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+			Level: slog.LevelDebug,
+		}))
+	case "error":
+		return slog.New(slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{
+			Level: slog.LevelError,
+		}))
+	case "warning":
+		return slog.New(slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{
+			Level: slog.LevelWarn,
+		}))
+	}
+	return slog.New(slog.NewJSONHandler(os.Stdout, nil))
+
 }
