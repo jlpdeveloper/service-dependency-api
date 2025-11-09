@@ -36,6 +36,7 @@ Service was chosen as the initial use case for this api was to catalog microserv
 flowchart LR
     id1((Service A)) -- Depends On --> id2((Service B))
     id1 -- Released --> r1((Release 1))
+    t1((Team A)) -- Owns --> id1
 
 ```
 
@@ -110,4 +111,11 @@ The server listens on port 8080 by default.
 
 ## API Endpoints
 
-For more information on endpoints, see the [Bruno Collection](./HTTP_COLLECTION) or the [OAS file](./_http_docs/service-dependency.yaml)
+For more information on endpoints, see the [Bruno Collection](./HTTP_COLLECTION) or the [OAS file](./_http_docs/v1.2.0.yaml)
+
+## ChangeLog
+### V1.2.0
+*2025-11-09*
+- Refactors to use Chi http routing library
+- Adds support for associating teams to services
+- Adds test container tests to neo4j repositories
