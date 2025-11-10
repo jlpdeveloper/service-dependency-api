@@ -115,7 +115,7 @@ For more information on endpoints, see the [Bruno Collection](./HTTP_COLLECTION)
 
 ## ChangeLog
 ### V1.2.0
-*2025-11-09*
+_Date: 2025-11-09_
 - Refactors to use Chi http routing library
 - Adds support for associating teams to services
 - Adds test container tests to neo4j repositories

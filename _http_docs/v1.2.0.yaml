@@ -3,7 +3,7 @@ info:
   title: Service Dependency API
   version: 1.2.0
 paths:
-  /services/:id/debt:
+  /services/{id}/debt:
     post:
       summary: Create Debt
       operationId: Create Debt
@@ -51,7 +51,7 @@ paths:
           description: ''
           required: true
           example: '{{serviceId}}'
-  /debt/:id:
+  /debt/{id}:
     patch:
       summary: Update Debt Status
       operationId: Update Debt Status
@@ -69,7 +69,7 @@ paths:
           example: 8a576da2-4eeb-4024-999e-519e055f0e82
       requestBody:
         $ref: '#/components/requestBodies/update_debt_status'
-  /services/:id/dependency:
+  /services/{id}/dependency:
     post:
       summary: Create dependency
       operationId: Create dependency
@@ -87,7 +87,7 @@ paths:
           example: '{{serviceId}}'
       requestBody:
         $ref: '#/components/requestBodies/create_dependency'
-  /services/:id/dependency/:targetId:
+  /services/{id}/dependency/{targetId}:
     delete:
       summary: Delete dependency
       operationId: Delete dependency
@@ -108,7 +108,7 @@ paths:
           description: ''
           required: true
           example: 5931d4b0-dd0a-4654-85fe-78f42890da0d
-  /services/:id/dependencies:
+  /services/{id}/dependencies:
     get:
       summary: Dependencies for a service
       operationId: Dependencies for a service
@@ -124,7 +124,7 @@ paths:
           description: ''
           required: true
           example: '{{serviceId}}'
-  /services/:id/dependents:
+  /services/{id}/dependents:
     get:
       summary: Dependents on service
       operationId: Dependents on service
@@ -145,7 +145,7 @@ paths:
           description: ''
           required: true
           example: 12973952-0165-400b-9178-a0fdbd90f967
-  /services/:serviceId/release:
+  /services/{serviceId}/release:
     post:
       summary: Create Release
       operationId: Create Release
@@ -163,7 +163,7 @@ paths:
           example: '{{serviceId}}'
       requestBody:
         $ref: '#/components/requestBodies/create_release'
-  /services/:id/release:
+  /services/{id}/release:
     get:
       summary: Releases For Service
       operationId: Releases For Service
@@ -179,7 +179,7 @@ paths:
           description: ''
           required: true
           example: '{{serviceId}}'
-  /releases/:startDate/:endDate:
+  /releases/{startDate}/{endDate}:
     get:
       summary: Releases In Date Range
       operationId: Releases In Date Range
@@ -200,7 +200,7 @@ paths:
           description: ''
           required: true
           example: '2025-05-20'
-  /teams/:id/services:
+  /teams/{id}/services:
     get:
       summary: Get Services By Team
       operationId: Get Services By Team
@@ -216,7 +216,7 @@ paths:
           description: ''
           required: true
           example: c5ee7354-81b2-4a86-9041-ff70bc72bd5e
-  /reports/services/:id/risk:
+  /reports/services/{id}/risk:
     get:
       summary: Service Risk Report
       operationId: Service Risk Report
@@ -264,7 +264,7 @@ paths:
           description: ''
           required: true
           example: '10'
-  /services/:id:
+  /services/{id}:
     delete:
       summary: Delete Service
       operationId: Delete Service
@@ -348,7 +348,7 @@ paths:
       responses:
         '200':
           description: ''
-  /teams/:teamId/services/:serviceId:
+  /teams/{teamId}/services/{serviceId}:
     put:
       summary: Add Team Association
       operationId: Add Team Association
@@ -421,7 +421,7 @@ paths:
           description: ''
           required: true
           example: '10'
-  /teams/:id:
+  /teams/{id}:
     delete:
       summary: Delete Team
       operationId: Delete Team
