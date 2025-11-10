@@ -1,0 +1,599 @@
+openapi: 3.0.0
+info:
+  title: Service Dependency API
+  version: 1.2.0
+paths:
+  /services/{id}/debt:
+    post:
+      summary: Create Debt
+      operationId: Create Debt
+      description: ''
+      tags:
+        - Debt
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          example: 'c56e119a-94ed-425d-b936-9dfc54b2307f'
+      requestBody:
+        $ref: '#/components/requestBodies/create_debt'
+    get:
+      summary: Get Debt By Service
+      operationId: Get Debt By Service
+      description: ''
+      tags:
+        - Debt
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: onlyResolved
+          in: query
+          description: ''
+          required: false
+          example: 'true'
+        - name: page
+          in: query
+          description: ''
+          required: false
+          example: '1'
+        - name: pageSize
+          in: query
+          description: ''
+          required: false
+          example: '25'
+        - name: id
+          in: path
+          description: ''
+          required: true
+          example: 'c56e119a-94ed-425d-b936-9dfc54b2307f'
+  /debt/{id}:
+    patch:
+      summary: Update Debt Status
+      operationId: Update Debt Status
+      description: ''
+      tags:
+        - Debt
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          example: 8a576da2-4eeb-4024-999e-519e055f0e82
+      requestBody:
+        $ref: '#/components/requestBodies/update_debt_status'
+  /services/{id}/dependency:
+    post:
+      summary: Create dependency
+      operationId: Create dependency
+      description: ''
+      tags:
+        - Dependency
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          example: 'c56e119a-94ed-425d-b936-9dfc54b2307f'
+      requestBody:
+        $ref: '#/components/requestBodies/create_dependency'
+  /services/{id}/dependency/{targetId}:
+    delete:
+      summary: Delete dependency
+      operationId: Delete dependency
+      description: ''
+      tags:
+        - Dependency
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: targetId
+          in: path
+          description: ''
+          required: true
+          example: 05c980e5-cb47-4659-bd2b-2a72371c1b79
+        - name: id
+          in: path
+          description: ''
+          required: true
+          example: 5931d4b0-dd0a-4654-85fe-78f42890da0d
+  /services/{id}/dependencies:
+    get:
+      summary: Dependencies for a service
+      operationId: Dependencies for a service
+      description: ''
+      tags:
+        - Dependency
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          example: 'c56e119a-94ed-425d-b936-9dfc54b2307f'
+  /services/{id}/dependents:
+    get:
+      summary: Dependents on service
+      operationId: Dependents on service
+      description: ''
+      tags:
+        - Dependency
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          in: query
+          description: ''
+          required: false
+          example: 1.5.0
+        - name: id
+          in: path
+          description: ''
+          required: true
+          example: 12973952-0165-400b-9178-a0fdbd90f967
+  /services/{serviceId}/release:
+    post:
+      summary: Create Release
+      operationId: Create Release
+      description: ''
+      tags:
+        - Release
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: serviceId
+          in: path
+          description: ''
+          required: true
+          example: 'c56e119a-94ed-425d-b936-9dfc54b2307f'
+      requestBody:
+        $ref: '#/components/requestBodies/create_release'
+  /services/{id}/release:
+    get:
+      summary: Releases For Service
+      operationId: Releases For Service
+      description: ''
+      tags:
+        - Release
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          example: 'c56e119a-94ed-425d-b936-9dfc54b2307f'
+  /releases/{startDate}/{endDate}:
+    get:
+      summary: Releases In Date Range
+      operationId: Releases In Date Range
+      description: ''
+      tags:
+        - Release
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: startDate
+          in: path
+          description: ''
+          required: true
+          example: '2025-05-14'
+        - name: endDate
+          in: path
+          description: ''
+          required: true
+          example: '2025-05-20'
+  /teams/{id}/services:
+    get:
+      summary: Get Services By Team
+      operationId: Get Services By Team
+      description: ''
+      tags:
+        - Report
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          example: c5ee7354-81b2-4a86-9041-ff70bc72bd5e
+  /reports/services/{id}/risk:
+    get:
+      summary: Service Risk Report
+      operationId: Service Risk Report
+      description: ''
+      tags:
+        - Report
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          example: 5931d4b0-dd0a-4654-85fe-78f42890da0d
+  /services:
+    post:
+      summary: Create service
+      operationId: Create service
+      description: ''
+      tags:
+        - Service
+      responses:
+        '200':
+          description: ''
+      requestBody:
+        $ref: '#/components/requestBodies/create_service'
+    get:
+      summary: List all services
+      operationId: List all services
+      description: ''
+      tags:
+        - Service
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: page
+          in: query
+          description: ''
+          required: true
+          example: '1'
+        - name: pageSize
+          in: query
+          description: ''
+          required: true
+          example: '10'
+  /services/{id}:
+    delete:
+      summary: Delete Service
+      operationId: Delete Service
+      description: ''
+      tags:
+        - Service
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          example: 05c980e5-cb47-4659-bd2b-2a72371c1b79
+    get:
+      summary: Get service by id
+      operationId: Get service by id
+      description: ''
+      tags:
+        - Service
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          example: 'c56e119a-94ed-425d-b936-9dfc54b2307f'
+    put:
+      summary: Update Service
+      operationId: Update Service
+      description: ''
+      tags:
+        - Service
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          example: 'c56e119a-94ed-425d-b936-9dfc54b2307f'
+      requestBody:
+        $ref: '#/components/requestBodies/update_service'
+  /database:
+    get:
+      summary: Database URL
+      operationId: Database URL
+      description: ''
+      tags:
+        - System
+      responses:
+        '200':
+          description: ''
+  /helloworld:
+    get:
+      summary: Hello World
+      operationId: Hello World
+      description: ''
+      tags:
+        - System
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: name
+          in: query
+          description: ''
+          required: false
+          example: user
+  /time:
+    get:
+      summary: Time
+      operationId: Time
+      description: ''
+      tags:
+        - System
+      responses:
+        '200':
+          description: ''
+  /teams/{teamId}/services/{serviceId}:
+    put:
+      summary: Add Team Association
+      operationId: Add Team Association
+      description: ''
+      tags:
+        - Team
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: teamId
+          in: path
+          description: ''
+          required: true
+          example: c5ee7354-81b2-4a86-9041-ff70bc72bd5e
+        - name: serviceId
+          in: path
+          description: ''
+          required: true
+          example: 426e53ad-8a3b-4648-aa1d-bde79b2ad41c
+    delete:
+      summary: Delete Team Association
+      operationId: Delete Team Association
+      description: ''
+      tags:
+        - Team
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: teamId
+          in: path
+          description: ''
+          required: true
+          example: c5ee7354-81b2-4a86-9041-ff70bc72bd5e
+        - name: serviceId
+          in: path
+          description: ''
+          required: true
+          example: 426e53ad-8a3b-4648-aa1d-bde79b2ad41c
+  /teams:
+    post:
+      summary: Create Team
+      operationId: Create Team
+      description: ''
+      tags:
+        - Team
+      responses:
+        '200':
+          description: ''
+      requestBody:
+        $ref: '#/components/requestBodies/create_team'
+    get:
+      summary: Get All Teams
+      operationId: Get All Teams
+      description: ''
+      tags:
+        - Team
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: page
+          in: query
+          description: ''
+          required: true
+          example: '1'
+        - name: pageSize
+          in: query
+          description: ''
+          required: true
+          example: '10'
+  /teams/{id}:
+    delete:
+      summary: Delete Team
+      operationId: Delete Team
+      description: ''
+      tags:
+        - Team
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          example: f666a36a-a9df-4acf-b8ea-838a61f2a330
+    get:
+      summary: Get Team By Id
+      operationId: Get Team By Id
+      description: ''
+      tags:
+        - Team
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          example: c5ee7354-81b2-4a86-9041-ff70bc72bd5e
+    put:
+      summary: Update Team
+      operationId: Update Team
+      description: ''
+      tags:
+        - Team
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          example: 'c56e119a-94ed-425d-b936-9dfc54b2307f'
+      requestBody:
+        $ref: '#/components/requestBodies/update_team'
+servers:
+  - url: http://localhost:8080
+components:
+  schemas:
+    create_debt:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+    update_debt_status:
+      type: object
+      properties:
+        status:
+          type: string
+    create_dependency:
+      type: object
+      properties:
+        id:
+          type: string
+        version:
+          type: string
+    create_release:
+      type: object
+      properties:
+        url:
+          type: string
+        version:
+          type: string
+        release_date:
+          type: string
+    create_service:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        description:
+          type: string
+        url:
+          type: string
+    update_service:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        description:
+          type: string
+        url:
+          type: string
+    create_team:
+      type: object
+      properties:
+        name:
+          type: string
+    update_team:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+  requestBodies:
+    create_debt:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/create_debt'
+      description: ''
+      required: true
+    update_debt_status:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/update_debt_status'
+      description: ''
+      required: true
+    create_dependency:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/create_dependency'
+      description: ''
+      required: true
+    create_release:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/create_release'
+      description: ''
+      required: true
+    create_service:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/create_service'
+      description: ''
+      required: true
+    update_service:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/update_service'
+      description: ''
+      required: true
+    create_team:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/create_team'
+      description: ''
+      required: true
+    update_team:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/update_team'
+      description: ''
+      required: true
+  securitySchemes: {}
