@@ -13,7 +13,7 @@ func SetupPrompts(server *mcp.Server) {
 	}, helloWorld)
 }
 
-func helloWorld(ctx context.Context, req *mcp.GetPromptRequest) (*mcp.GetPromptResult, error) {
+func helloWorld(_ context.Context, _ *mcp.GetPromptRequest) (*mcp.GetPromptResult, error) {
 	return &mcp.GetPromptResult{
 		Description: "Hi prompt",
 		Messages: []*mcp.PromptMessage{
