@@ -14,7 +14,7 @@ type Output struct {
 	Greeting string `json:"greeting" jsonschema:"the greeting to tell to the user"`
 }
 
-func HelloWorld(ctx context.Context, req *mcp.CallToolRequest, input Input) (
+func HelloWorld(_ context.Context, _ *mcp.CallToolRequest, input Input) (
 	*mcp.CallToolResult,
 	Output,
 	error,
