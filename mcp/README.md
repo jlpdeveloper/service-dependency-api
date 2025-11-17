@@ -14,7 +14,7 @@ Points a user to use the hello world tool.
 
 ## Testing
 
-To test the mcp server locally, use the `ModelContextProtcolInspector`.
+To test the mcp server locally, use the `ModelContextProtocolInspector`.
 This tool requires node and can be run with the following command from the root of the project:
 
 ```bash
