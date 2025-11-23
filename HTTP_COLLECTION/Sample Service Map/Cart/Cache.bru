@@ -21,6 +21,6 @@ body:json {
 
 script:post-response {
   if (res.status == 201) {
-    bru.setEnvVar('cart_api_id', res.body.id, { persist: false})
+    bru.setEnvVar('cart_cache_id', res.body.id, { persist: false})
   }
 }
