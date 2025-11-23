@@ -4,6 +4,8 @@ services:
     ports:
       - "7474:7474"
       - "7687:7687"
+    env_file:
+      - .env
     environment:
       NEO4J_AUTH: ${NEO4J_USERNAME}/${NEO4J_PASSWORD}
     healthcheck:
