@@ -1,0 +1,26 @@
+meta {
+  name: Event Bus
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/services
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Warehouse Event Bus",
+    "type": "event_bus",
+    "description": "warehouse bus to stream item quantities",
+    "url": "{{$randomUrl}}"
+  }
+}
+
+script:post-response {
+  if (res.status == 201) {
+    bru.setEnvVar('warehouse_bus_id', res.body.id, { persist: false})
+  }
+}

@@ -1,0 +1,13 @@
+include:
+  - compose.yml
+
+services:
+  service_map:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      neo4j:
+        condition: service_healthy
+    env_file:
+      - .env

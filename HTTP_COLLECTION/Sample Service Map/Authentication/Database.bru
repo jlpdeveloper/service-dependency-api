@@ -1,0 +1,26 @@
+meta {
+  name: Database
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/services
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Authentication Database",
+    "type": "database",
+    "description": "auth db",
+    "url": "{{$randomUrl}}"
+  }
+}
+
+script:post-response {
+  if (res.status == 201) {
+    bru.setEnvVar('auth_db_id', res.body.id, { persist: false})
+  }
+}

@@ -1,0 +1,49 @@
+meta {
+  name: Sample Service Map
+  seq: 8
+}
+
+auth {
+  mode: inherit
+}
+
+docs {
+  # Sample Service Map
+  
+  This folder is used to create a sample shopping cart service
+  
+  ## Databases
+  - Customer
+  - Order
+  - Warehouse
+  - Authentication
+  - Cart
+  
+  ## Services
+  ### Authentication Service
+  Depends on:
+  - Authentication Database
+  
+  ### Customer Service
+  Depends on:
+  - Customer Database
+  
+  ### Cart Service
+  Depends on:
+  - Cart Database
+  - Warehouse Service
+  - Cart Cache
+  
+  ### Warehouse Service
+  Depends on: 
+  - Warehouse Database
+  - Warehouse Event Bus
+  - Warehouse Cache
+  
+  ### Order Service
+  Depends on:
+  - Order Database
+  - Warehouse Service
+  - Customer Service
+  
+}

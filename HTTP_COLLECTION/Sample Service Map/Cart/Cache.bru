@@ -1,0 +1,26 @@
+meta {
+  name: Cache
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/services
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Cart Cache",
+    "type": "cache",
+    "description": "cart memcache",
+    "url": "{{$randomUrl}}"
+  }
+}
+
+script:post-response {
+  if (res.status == 201) {
+    bru.setEnvVar('cart_cache_id', res.body.id, { persist: false})
+  }
+}
