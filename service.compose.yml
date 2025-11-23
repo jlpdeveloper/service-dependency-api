@@ -1,0 +1,15 @@
+include:
+  - compose.yml
+
+services:
+  service_map:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      neo4j:
+        condition: service_healthy
+    environment:
+      - NEO4J_URL=neo4j://neo4j
+      - NEO4J_USERNAME=neo4j
+      - NEO4J_PASSWORD=1234%qwerT
