@@ -1,6 +1,6 @@
 {
   "version": "1",
-  "name": "Service Dependency Matrix API",
+  "name": "Service Mapper",
   "type": "collection",
   "ignore": [
     "node_modules",

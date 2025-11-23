@@ -1,0 +1,33 @@
+meta {
+  name: Warehouse Service Dependency
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/services/:id/dependency
+  body: json
+  auth: none
+}
+
+params:path {
+  id: {{api_id}}
+}
+
+body:json {
+  {
+    "id": "{{db_id}}"
+  }
+}
+
+vars:pre-request {
+  api_id: 
+  db_id: 
+}
+
+script:pre-request {
+  bru.setVar('api_id', bru.getEnvVar('order_api_id'))
+  bru.setVar('db_id', bru.getEnvVar('warehouse_api_id'))
+  
+  
+}

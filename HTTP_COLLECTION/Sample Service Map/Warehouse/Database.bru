@@ -1,0 +1,26 @@
+meta {
+  name: Database
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/services
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Warehouse Database",
+    "type": "database",
+    "description": "warehouse database",
+    "url": "{{$randomUrl}}"
+  }
+}
+
+script:post-response {
+  if (res.status == 201) {
+    bru.setEnvVar('warehouse_db_id', res.body.id, { persist: false})
+  }
+}

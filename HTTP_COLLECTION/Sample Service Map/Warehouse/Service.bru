@@ -1,0 +1,26 @@
+meta {
+  name: Service
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/services
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Warehouse API",
+    "type": "service",
+    "description": "warehouse api",
+    "url": "{{$randomUrl}}"
+  }
+}
+
+script:post-response {
+  if (res.status == 201) {
+    bru.setEnvVar('warehouse_api_id', res.body.id, { persist: false})
+  }
+}
