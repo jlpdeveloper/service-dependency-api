@@ -1,0 +1,37 @@
+meta {
+  name: Users - Auth Db
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{baseUrl}}/teams/:teamId/services/:serviceId
+  body: none
+  auth: inherit
+}
+
+params:path {
+  teamId: {{team_id}}
+  serviceId: {{service_id}}
+}
+
+vars:pre-request {
+  team_id: 
+  service_id: 
+}
+
+assert {
+  res.status: eq 201
+}
+
+script:pre-request {
+  bru.setVar('team_id', bru.getEnvVar('user_team_id'))
+  bru.setVar('service_id', bru.getEnvVar('auth_db_id'))
+  
+  
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
