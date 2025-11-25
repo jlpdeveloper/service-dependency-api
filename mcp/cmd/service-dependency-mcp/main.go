@@ -19,7 +19,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	apiCtx := context.WithValue(ctx, "apiUrl", url)
+	apiCtx := context.WithValue(ctx, "api_url", url)
 	// Create a server with a single tool.
 	server := mcp.NewServer(&mcp.Implementation{Name: "Service Map MCP", Version: "v1.0.0"}, nil)
 	mcp.AddTool(server, &mcp.Tool{Name: "hello_world", Description: "say hi"}, tools.HelloWorld)
