@@ -1,0 +1,32 @@
+meta {
+  name: Warehouse
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/teams
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Warehouse Team"
+  }
+}
+
+assert {
+  res.status: eq 201
+}
+
+script:post-response {
+  if (res.status == 201) {
+    bru.setEnvVar('warehouse_team_id', res.body, { persist: false})
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

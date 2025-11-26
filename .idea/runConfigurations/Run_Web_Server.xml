@@ -3,9 +3,9 @@
     <module name="service-dependency-api" />
     <working_directory value="$PROJECT_DIR$" />
     <envs>
-      <env name="NEO4J_URL" value="neo4j://localhost" />
-      <env name="NEO4J_USERNAME" value="neo4j" />
-      <env name="NEO4J_PASSWORD" value="1234%qwerT" />
+      <env name="DB_PASSWORD" value="1234%qwerT" />
+      <env name="DB_URL" value="neo4j://localhost" />
+      <env name="DB_USERNAME" value="neo4j" />
     </envs>
     <kind value="PACKAGE" />
     <package value="service-dependency-api/cmd/service-dependency-api" />

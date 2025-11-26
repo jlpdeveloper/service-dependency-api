@@ -7,7 +7,7 @@ services:
     env_file:
       - .env
     environment:
-      NEO4J_AUTH: ${NEO4J_USERNAME}/${NEO4J_PASSWORD}
+      NEO4J_AUTH: ${DB_USERNAME}/${DB_PASSWORD}
     healthcheck:
       test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider localhost:7474 || exit 1" ]
       interval: 5s

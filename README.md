@@ -89,9 +89,9 @@ Releases will always have a date; releases without a date are assigned `now()` a
    ```
 3. Set the required environment variables:
    ```sh
-   export NEO4J_URL=bolt://localhost:7687
-   export NEO4J_USERNAME=neo4j
-   export NEO4J_PASSWORD=1234%qwerT
+   export DB_URL=neo4j://localhost:7687
+   export DB_USERNAME=neo4j
+   export DB_PASSWORD=password
    ```
 4. Build and run the application:
    ```sh

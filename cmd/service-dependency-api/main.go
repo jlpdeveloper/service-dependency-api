@@ -21,8 +21,8 @@ func main() {
 	logger := getLogger()
 	slog.SetDefault(logger)
 	driver, err := neo4j.NewDriverWithContext(
-		config.GetConfigValue("NEO4J_URL"),
-		neo4j.BasicAuth(config.GetConfigValue("NEO4J_USERNAME"), config.GetConfigValue("NEO4J_PASSWORD"), ""))
+		config.GetConfigValue("DB_URL"),
+		neo4j.BasicAuth(config.GetConfigValue("DB_USERNAME"), config.GetConfigValue("DB_PASSWORD"), ""))
 	defer func() {
 		closeErr := driver.Close(ctx)
 		if closeErr != nil {

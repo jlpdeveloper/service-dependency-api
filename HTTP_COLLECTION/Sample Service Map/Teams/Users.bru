@@ -1,0 +1,32 @@
+meta {
+  name: Users
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/teams
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Users Team"
+  }
+}
+
+assert {
+  res.status: eq 201
+}
+
+script:post-response {
+  if (res.status == 201) {
+    bru.setEnvVar('user_team_id', res.body, { persist: false})
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
