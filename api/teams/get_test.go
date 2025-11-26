@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"service-dependency-api/repositories"
+	"service-atlas/repositories"
 
 	"github.com/google/uuid"
 )

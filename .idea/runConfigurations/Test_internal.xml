@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Test internal" type="GoTestRunConfiguration" factoryName="Go Test">
-    <module name="service-dependency-api" />
+    <module name="service-atlas" />
     <working_directory value="$PROJECT_DIR$/internal" />
     <root_directory value="$PROJECT_DIR$" />
     <kind value="DIRECTORY" />

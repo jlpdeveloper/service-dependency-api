@@ -3,8 +3,8 @@ package releases
 import (
 	"encoding/json"
 	"net/http"
-	"service-dependency-api/internal"
-	"service-dependency-api/internal/customerrors"
+	"service-atlas/internal"
+	"service-atlas/internal/customerrors"
 	"strconv"
 )
 

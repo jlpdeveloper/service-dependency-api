@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Run Web Server" type="GoApplicationRunConfiguration" factoryName="Go Application">
-    <module name="service-dependency-api" />
+    <module name="service-atlas" />
     <working_directory value="$PROJECT_DIR$" />
     <envs>
       <env name="DB_PASSWORD" value="1234%qwerT" />

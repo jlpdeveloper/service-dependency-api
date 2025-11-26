@@ -2,8 +2,8 @@ package dependencies
 
 import (
 	"net/http"
-	"service-dependency-api/internal"
-	"service-dependency-api/internal/customerrors"
+	"service-atlas/internal"
+	"service-atlas/internal/customerrors"
 )
 
 func (s *ServiceCallsHandler) DeleteDependency(rw http.ResponseWriter, req *http.Request) {

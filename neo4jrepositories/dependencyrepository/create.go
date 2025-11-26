@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
-	"service-dependency-api/internal/customerrors"
-	"service-dependency-api/repositories"
+	"service-atlas/internal/customerrors"
+	"service-atlas/repositories"
 )
 
 func (d *Neo4jDependencyRepository) AddDependency(ctx context.Context, id string, dependency repositories.Dependency) error {

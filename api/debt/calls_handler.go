@@ -1,8 +1,8 @@
 package debt
 
 import (
-	"service-dependency-api/neo4jrepositories/debtrepository"
-	"service-dependency-api/repositories"
+	"service-atlas/neo4jrepositories/debtrepository"
+	"service-atlas/repositories"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )

@@ -5,8 +5,8 @@ import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
-	"service-dependency-api/internal/customerrors"
-	"service-dependency-api/repositories"
+	"service-atlas/internal/customerrors"
+	"service-atlas/repositories"
 	"testing"
 )
 

@@ -2,8 +2,8 @@ package services
 
 import (
 	"context"
-	"service-dependency-api/internal/customerrors"
-	"service-dependency-api/repositories"
+	"service-atlas/internal/customerrors"
+	"service-atlas/repositories"
 	"time"
 )
 

@@ -1,7 +1,6 @@
-# Service Dependency API
+# Service Atlas Backend
 ![Coverage](https://img.shields.io/badge/Coverage-48.6%25-yellow)
-
-![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/jlpdeveloper/service-dependency-api?utm_source=oss&utm_medium=github&utm_campaign=jlpdeveloper%2Fservice-dependency-api&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
+![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/service-atlas/backend?utm_source=oss&utm_medium=github&utm_campaign=service-atlas%2Fbackend&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
 
 A RESTful API service designed to map dependencies between services and provide basic information about services in your ecosystem.
 
@@ -95,8 +94,8 @@ Releases will always have a date; releases without a date are assigned `now()` a
    ```
 4. Build and run the application:
    ```sh
-   go build -o service-dependency-api ./cmd/service-dependency-api
-   ./service-dependency-api
+   go build -o service-atlas ./cmd/service-atlas
+   ./service-atlas
    ```
 
 ## Configuration
