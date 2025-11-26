@@ -1,0 +1,14 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Test neo4j repos short" type="GoTestRunConfiguration" factoryName="Go Test">
+    <module name="service-dependency-api" />
+    <working_directory value="$PROJECT_DIR$/neo4jrepositories" />
+    <go_parameters value="--short" />
+    <root_directory value="$PROJECT_DIR$" />
+    <kind value="DIRECTORY" />
+    <package value="service-dependency-api/internal" />
+    <directory value="$PROJECT_DIR$/neo4jrepositories" />
+    <filePath value="$PROJECT_DIR$" />
+    <framework value="gotest" />
+    <method v="2" />
+  </configuration>
+</component>
