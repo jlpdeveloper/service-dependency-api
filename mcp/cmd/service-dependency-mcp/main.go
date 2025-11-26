@@ -19,15 +19,24 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	apiCtx := context.WithValue(ctx, "api_url", url)
-	// Create a server with a single tool.
+	apiCtx := context.WithValue(ctx, "API_URL", url)
 	server := mcp.NewServer(&mcp.Implementation{Name: "Service Map MCP", Version: "v1.0.0"}, nil)
 	mcp.AddTool(server, &mcp.Tool{Name: "hello_world", Description: "say hi"}, tools.HelloWorld)
+	registerGetServicesByTeam(server)
 	prompts.SetupPrompts(server)
 	// Run the server over stdin/stdout, until the client disconnects.
 	if err := server.Run(apiCtx, &mcp.StdioTransport{}); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func registerGetServicesByTeam(server *mcp.Server) {
+	mcp.AddTool(server, &mcp.Tool{Name: "get_services_by_team", Description: "get services by team"}, tools.GetServicesByTeamTool)
+	server.AddResourceTemplate(&mcp.ResourceTemplate{
+		Name:        "Get Services By Team",
+		MIMEType:    "application/json",
+		URITemplate: "servicemap://teams/{teamId}/services",
+	}, tools.GetServicesByTeamResource)
 }
 
 func getApiUrl() (string, error) {
