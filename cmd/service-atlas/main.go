@@ -9,6 +9,7 @@ import (
 	"os/signal"
 	"service-atlas/api/routes"
 	"service-atlas/internal/config"
+	"service-atlas/neo4jrepositories"
 	"strings"
 	"syscall"
 	"time"
@@ -35,6 +36,11 @@ func main() {
 	}
 
 	err = driver.VerifyConnectivity(ctx)
+	if err != nil {
+		panic(err)
+	}
+	//setup indexes for search
+	err = neo4jrepositories.Startup(ctx, driver)
 	if err != nil {
 		panic(err)
 	}
