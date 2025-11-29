@@ -27,6 +27,8 @@ type ServiceRepository interface {
 	DeleteService(ctx context.Context, id string) error
 	// GetServiceById retrieves a service by its ID.
 	GetServiceById(ctx context.Context, id string) (Service, error)
+	// Search performs a fuzzy search against the Service full-text index and returns matching services ordered by relevance.
+	Search(ctx context.Context, query string) ([]Service, error)
 }
 
 // DependencyRepository defines the methods for interacting with dependencies.
