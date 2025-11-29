@@ -42,6 +42,7 @@ func SetupRouter(driver neo4j.DriverWithContext) http.Handler {
 	router.Route("/services", func(r chi.Router) {
 		r.Get("/", serviceHandler.GetAllServices)
 		r.Post("/", serviceHandler.CreateService)
+		r.Get("/search", serviceHandler.Search)
 
 		r.Route("/{id}", func(r chi.Router) {
 			r.Get("/", serviceHandler.GetById)
