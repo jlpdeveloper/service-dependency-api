@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"log/slog"
 	"net/http"
-	"service-dependency-api/internal"
-	"service-dependency-api/repositories"
+	"service-atlas/internal"
+	"service-atlas/repositories"
 	"time"
 )
 

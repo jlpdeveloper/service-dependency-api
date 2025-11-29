@@ -1,8 +1,8 @@
 package services
 
 import (
-	"service-dependency-api/neo4jrepositories/servicerepository"
-	"service-dependency-api/repositories"
+	"service-atlas/neo4jrepositories/servicerepository"
+	"service-atlas/repositories"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )

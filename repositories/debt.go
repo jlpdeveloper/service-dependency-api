@@ -2,7 +2,7 @@ package repositories
 
 import (
 	"errors"
-	"service-dependency-api/internal"
+	"service-atlas/internal"
 )
 
 type Debt struct {

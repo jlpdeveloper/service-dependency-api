@@ -6,7 +6,7 @@ import (
 	"github.com/google/uuid"
 	"net/http"
 	"net/http/httptest"
-	"service-dependency-api/repositories"
+	"service-atlas/repositories"
 	"strconv"
 	"strings"
 	"testing"

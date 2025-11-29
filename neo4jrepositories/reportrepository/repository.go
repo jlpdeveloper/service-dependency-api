@@ -2,7 +2,7 @@ package reportrepository
 
 import (
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
-	"service-dependency-api/databaseadapter"
+	"service-atlas/databaseadapter"
 )
 
 type Neo4jReportRepository struct {

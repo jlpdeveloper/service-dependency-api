@@ -1,8 +1,9 @@
 package debtrepository
 
 import (
+	"service-atlas/databaseadapter"
+
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
-	"service-dependency-api/databaseadapter"
 )
 
 type Neo4jDebtRepository struct {

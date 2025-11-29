@@ -2,7 +2,7 @@ package debt
 
 import (
 	"context"
-	"service-dependency-api/repositories"
+	"service-atlas/repositories"
 )
 
 type mockDebtRepository struct {

@@ -3,11 +3,12 @@ package releaserepository
 import (
 	"context"
 	"fmt"
-	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 	"net/http"
-	"service-dependency-api/internal/customerrors"
-	"service-dependency-api/repositories"
+	"service-atlas/internal/customerrors"
+	"service-atlas/repositories"
 	"time"
+
+	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
 
 func (r *Neo4jReleaseRepository) GetReleasesByServiceId(ctx context.Context, serviceId string, page, pageSize int) ([]*repositories.Release, error) {

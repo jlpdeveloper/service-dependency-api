@@ -2,8 +2,9 @@ package debtrepository
 
 import (
 	"context"
+	"service-atlas/internal/customerrors"
+
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
-	"service-dependency-api/internal/customerrors"
 )
 
 func (n Neo4jDebtRepository) UpdateStatus(ctx context.Context, id, status string) error {

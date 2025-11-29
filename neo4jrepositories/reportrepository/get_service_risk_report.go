@@ -3,10 +3,11 @@ package reportrepository
 import (
 	"context"
 	"fmt"
-	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
-	"service-dependency-api/internal/customerrors"
-	"service-dependency-api/repositories"
+	"service-atlas/internal/customerrors"
+	"service-atlas/repositories"
 	"sync"
+
+	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
 
 func (n Neo4jReportRepository) GetServiceRiskReport(ctx context.Context, serviceId string) (*repositories.ServiceRiskReport, error) {

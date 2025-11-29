@@ -3,7 +3,7 @@ package servicerepository
 import (
 	"context"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
-	"service-dependency-api/internal/customerrors"
+	"service-atlas/internal/customerrors"
 )
 
 func (d *Neo4jServiceRepository) DeleteService(ctx context.Context, id string) (err error) {

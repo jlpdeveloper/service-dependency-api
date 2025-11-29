@@ -2,10 +2,11 @@ package debtrepository
 
 import (
 	"context"
-	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 	"net/http"
-	"service-dependency-api/internal/customerrors"
-	"service-dependency-api/repositories"
+	"service-atlas/internal/customerrors"
+	"service-atlas/repositories"
+
+	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
 
 func (n Neo4jDebtRepository) GetDebtByServiceId(ctx context.Context, id string, page, pageSize int, onlyResolved bool) ([]repositories.Debt, error) {

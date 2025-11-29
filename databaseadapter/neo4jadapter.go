@@ -3,7 +3,7 @@ package databaseadapter
 import (
 	"context"
 	"log/slog"
-	"service-dependency-api/internal"
+	"service-atlas/internal"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
