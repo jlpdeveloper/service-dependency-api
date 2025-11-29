@@ -19,6 +19,7 @@ func (d *Neo4jServiceRepository) Search(ctx context.Context, query string) ([]re
 		query += "~"
 	}
 	work := func(tx neo4j.ManagedTransaction) (any, error) {
+		localServices := make([]repositories.Service, 0)
 		result, err := tx.Run(ctx, `
             CALL db.index.fulltext.queryNodes($indexName, $q)
             YIELD node, score
@@ -43,9 +44,10 @@ func (d *Neo4jServiceRepository) Search(ctx context.Context, query string) ([]re
 			if !ok {
 				continue
 			}
-			services = append(services, nRepo.MapNodeToService(n))
+			localServices = append(localServices, nRepo.MapNodeToService(n))
 		}
-		return services, nil
+		services = localServices
+		return nil, nil
 	}
 
 	if _, err := d.manager.ExecuteRead(ctx, work); err != nil {
