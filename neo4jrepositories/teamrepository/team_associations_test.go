@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"service-dependency-api/neo4jrepositories"
+	"service-atlas/neo4jrepositories"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
