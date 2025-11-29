@@ -12,6 +12,9 @@ import (
 // and returns matching services ordered by relevance.
 func (d *Neo4jServiceRepository) Search(ctx context.Context, query string) ([]repositories.Service, error) {
 	services := make([]repositories.Service, 0)
+	if query == "" {
+		return services, nil
+	}
 	if string(query[len(query)-1]) != "~" {
 		query += "~"
 	}
