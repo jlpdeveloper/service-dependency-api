@@ -196,3 +196,10 @@ func (repo mockServiceRepository) DeleteService(_ context.Context, id string) er
 	// is idempotent - deleting a non-existent resource is not an error
 	return nil
 }
+
+func (repo mockServiceRepository) Search(ctx context.Context, _ string) ([]repositories.Service, error) {
+	if repo.Err != nil {
+		return nil, repo.Err
+	}
+	return repo.GetAllServices(ctx, 1, 10)
+}
