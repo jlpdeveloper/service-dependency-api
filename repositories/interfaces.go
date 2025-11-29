@@ -29,6 +29,8 @@ type ServiceRepository interface {
 	GetServiceById(ctx context.Context, id string) (Service, error)
 	// Search performs a fuzzy search against the Service full-text index and returns matching services ordered by relevance.
 	Search(ctx context.Context, query string) ([]Service, error)
+	// GetTeamsByServiceId retrieves all teams associated with a service.
+	GetTeamsByServiceId(ctx context.Context, serviceId string) ([]Team, error)
 }
 
 // DependencyRepository defines the methods for interacting with dependencies.
