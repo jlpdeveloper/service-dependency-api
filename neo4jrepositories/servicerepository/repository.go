@@ -1,7 +1,7 @@
 package servicerepository
 
 import (
-	"service-dependency-api/databaseadapter"
+	"service-atlas/databaseadapter"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )

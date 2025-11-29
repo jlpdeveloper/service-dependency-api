@@ -4,10 +4,10 @@ import (
 	"context"
 	"testing"
 
-	nRepo "service-dependency-api/neo4jrepositories"
-	"service-dependency-api/neo4jrepositories/servicerepository"
-	"service-dependency-api/neo4jrepositories/teamrepository"
-	"service-dependency-api/repositories"
+	nRepo "service-atlas/neo4jrepositories"
+	"service-atlas/neo4jrepositories/servicerepository"
+	"service-atlas/neo4jrepositories/teamrepository"
+	"service-atlas/repositories"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )

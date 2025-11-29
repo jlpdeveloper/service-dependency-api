@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"log/slog"
 	"net/http"
-	"service-dependency-api/internal"
-	"service-dependency-api/internal/customerrors"
+	"service-atlas/internal"
+	"service-atlas/internal/customerrors"
 )
 
 func (c *CallsHandler) GetServicesByTeam(rw http.ResponseWriter, r *http.Request) {

@@ -3,9 +3,9 @@ package teamrepository
 import (
 	"context"
 	"net/http"
-	"service-dependency-api/internal/customerrors"
+	"service-atlas/internal/customerrors"
 
-	"service-dependency-api/repositories"
+	"service-atlas/repositories"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )

@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
-	"service-dependency-api/internal/customerrors"
+	"service-atlas/internal/customerrors"
 )
 
 func (d *Neo4jDependencyRepository) DeleteDependency(ctx context.Context, id string, dependsOnID string) error {

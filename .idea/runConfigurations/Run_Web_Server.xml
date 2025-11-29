@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Run Web Server" type="GoApplicationRunConfiguration" factoryName="Go Application">
-    <module name="service-dependency-api" />
+    <module name="service-atlas" />
     <working_directory value="$PROJECT_DIR$" />
     <envs>
       <env name="DB_PASSWORD" value="1234%qwerT" />
@@ -8,7 +8,7 @@
       <env name="DB_USERNAME" value="neo4j" />
     </envs>
     <kind value="PACKAGE" />
-    <package value="service-dependency-api/cmd/service-dependency-api" />
+    <package value="service-atlas/cmd/service-atlas" />
     <directory value="$PROJECT_DIR$" />
     <filePath value="$PROJECT_DIR$/cmd/service-dependency-api/main.go" />
     <method v="2" />

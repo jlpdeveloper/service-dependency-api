@@ -6,7 +6,7 @@ Do not update any files in the HTTP_COLLECTION or _http_docs folders
 
 - `api/` - API endpoints and handlers
 - `cmd/` - Application entry points
-  - `service-dependency-api/` - Main application
+  - `service-atlas/` - Main application
 - `internal/` - Private application code
   - `config/` - Configuration management
 - `HTTP_COLLECTION/` - API request examples (Bruno format)

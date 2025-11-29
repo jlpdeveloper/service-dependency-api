@@ -2,8 +2,8 @@ package teamrepository
 
 import (
 	"context"
-	"service-dependency-api/neo4jrepositories"
-	"service-dependency-api/repositories"
+	"service-atlas/neo4jrepositories"
+	"service-atlas/repositories"
 	"testing"
 	"time"
 

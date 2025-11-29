@@ -6,9 +6,9 @@ import (
 	"errors"
 	"log/slog"
 	"net/http"
-	"service-dependency-api/internal"
-	"service-dependency-api/internal/customerrors"
-	"service-dependency-api/repositories"
+	"service-atlas/internal"
+	"service-atlas/internal/customerrors"
+	"service-atlas/repositories"
 	"time"
 )
 

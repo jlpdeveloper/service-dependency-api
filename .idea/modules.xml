@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/service-dependency-api.iml" filepath="$PROJECT_DIR$/.idea/service-dependency-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/service-atlas.iml" filepath="$PROJECT_DIR$/.idea/service-atlas.iml" />
     </modules>
   </component>
 </project>

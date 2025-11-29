@@ -33,7 +33,7 @@ jobs:
       - name: build
         shell: bash
         run: |
-          go build -o service-dependency-api cmd/service-dependency-api/main.go
+          go build -o service-atlas cmd/service-atlas/main.go
   test:
     needs: [build]
     permissions:

@@ -3,9 +3,9 @@ package dependencies
 import (
 	"encoding/json"
 	"net/http"
-	"service-dependency-api/internal"
-	"service-dependency-api/internal/customerrors"
-	"service-dependency-api/repositories"
+	"service-atlas/internal"
+	"service-atlas/internal/customerrors"
+	"service-atlas/repositories"
 )
 
 func (s *ServiceCallsHandler) CreateDependency(rw http.ResponseWriter, req *http.Request) {

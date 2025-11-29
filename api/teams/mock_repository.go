@@ -2,7 +2,7 @@ package teams
 
 import (
 	"context"
-	"service-dependency-api/repositories"
+	"service-atlas/repositories"
 )
 
 type mockTeamRepository struct {

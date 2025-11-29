@@ -3,8 +3,8 @@ package dependencies
 import (
 	"context"
 	"fmt"
-	"service-dependency-api/internal/customerrors"
-	"service-dependency-api/repositories"
+	"service-atlas/internal/customerrors"
+	"service-atlas/repositories"
 )
 
 type mockDependencyRepository struct {

@@ -3,8 +3,8 @@ package servicerepository
 import (
 	"context"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
-	nRepo "service-dependency-api/neo4jrepositories"
-	"service-dependency-api/repositories"
+	nRepo "service-atlas/neo4jrepositories"
+	"service-atlas/repositories"
 )
 
 func (d *Neo4jServiceRepository) GetAllServices(ctx context.Context, page int, pageSize int) (services []repositories.Service, err error) {

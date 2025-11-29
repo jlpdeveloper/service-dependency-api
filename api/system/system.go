@@ -4,7 +4,7 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"service-dependency-api/internal/config"
+	"service-atlas/internal/config"
 	"time"
 )
 

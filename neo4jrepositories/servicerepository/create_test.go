@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	nRepo "service-dependency-api/neo4jrepositories"
-	"service-dependency-api/repositories"
+	nRepo "service-atlas/neo4jrepositories"
+	"service-atlas/repositories"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )

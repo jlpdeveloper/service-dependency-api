@@ -24,7 +24,7 @@ COPY . .
 # Build the service binary
 RUN --mount=type=cache,target=/go/pkg/mod \
     --mount=type=cache,target=/root/.cache/go-build \
-    go build -ldflags="-s -w" -o /out/service-dependency-api ./cmd/service-dependency-api
+    go build -ldflags="-s -w" -o /out/service-atlas ./cmd/service-atlas
 
 ########################
 # Runtime stage (scratch)
@@ -35,7 +35,7 @@ FROM scratch AS runtime
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 # Copy the statically linked binary
-COPY --from=builder /out/service-dependency-api /service-dependency-api
+COPY --from=builder /out/service-atlas /service-atlas
 
 # Non-root (nobody) user ID commonly available; scratch has no /etc/passwd, but UID works
 USER 65532:65532
@@ -44,5 +44,5 @@ USER 65532:65532
 EXPOSE 8080
 
 # Run it
-ENTRYPOINT ["/service-dependency-api"]
+ENTRYPOINT ["/service-atlas"]
 

@@ -2,7 +2,7 @@ package releases
 
 import (
 	"context"
-	"service-dependency-api/repositories"
+	"service-atlas/repositories"
 	"time"
 )
 

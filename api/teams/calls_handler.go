@@ -1,8 +1,8 @@
 package teams
 
 import (
-	"service-dependency-api/neo4jrepositories/teamrepository"
-	"service-dependency-api/repositories"
+	"service-atlas/neo4jrepositories/teamrepository"
+	"service-atlas/repositories"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )

@@ -1,7 +1,7 @@
 package neo4jrepositories
 
 import (
-	"service-dependency-api/repositories"
+	"service-atlas/repositories"
 	"time"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"

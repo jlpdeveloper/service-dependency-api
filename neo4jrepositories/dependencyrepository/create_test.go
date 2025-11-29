@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"service-dependency-api/internal/customerrors"
-	"service-dependency-api/neo4jrepositories"
-	"service-dependency-api/repositories"
+	"service-atlas/internal/customerrors"
+	"service-atlas/neo4jrepositories"
+	"service-atlas/repositories"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
