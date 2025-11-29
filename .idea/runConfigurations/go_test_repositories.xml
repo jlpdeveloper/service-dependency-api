@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="go test repositories" type="GoTestRunConfiguration" factoryName="Go Test" nameIsGenerated="true">
+    <module name="service-atlas" />
+    <working_directory value="$PROJECT_DIR$/repositories" />
+    <root_directory value="$PROJECT_DIR$" />
+    <kind value="DIRECTORY" />
+    <package value="service-atlas/repositories" />
+    <directory value="$PROJECT_DIR$/repositories" />
+    <filePath value="$PROJECT_DIR$" />
+    <framework value="gotest" />
+    <method v="2" />
+  </configuration>
+</component>
