@@ -2,9 +2,12 @@ package servicerepository
 
 import (
 	"context"
-	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
+	"net/http"
+	"service-atlas/internal/customerrors"
 	nRepo "service-atlas/neo4jrepositories"
 	"service-atlas/repositories"
+
+	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
 
 func (d *Neo4jServiceRepository) GetAllServices(ctx context.Context, page int, pageSize int) (services []repositories.Service, err error) {
@@ -93,4 +96,49 @@ func (d *Neo4jServiceRepository) GetServiceById(ctx context.Context, id string) 
 	}
 
 	return service.(repositories.Service), nil
+}
+
+func (d *Neo4jServiceRepository) GetTeamsByServiceId(ctx context.Context, serviceId string) ([]repositories.Team, error) {
+	//validate service exists
+	_, err := d.GetServiceById(ctx, serviceId)
+	if err != nil {
+		return nil, err
+	}
+	teams := make([]repositories.Team, 0)
+	work := func(tx neo4j.ManagedTransaction) (any, error) {
+		localTeams := make([]repositories.Team, 0)
+		result, err := tx.Run(ctx, `
+			MATCH (s:Service)-[:OWNS]->(t:Team)
+			WHERE s.id = $serviceId
+			RETURN t
+		`, map[string]any{
+			"serviceId": serviceId,
+		})
+		if err != nil {
+			return nil, err
+		}
+		for result.Next(ctx) {
+			record := result.Record()
+			node, ok := record.Get("t")
+			if !ok {
+				continue
+			}
+			n, ok := node.(neo4j.Node)
+			if !ok {
+				return nil, customerrors.HTTPError{
+					Status: http.StatusInternalServerError,
+					Msg:    "Failed to convert query result to Node type",
+				}
+			}
+			t, ok := nRepo.MapNodeToTeam(n)
+			if !ok {
+				continue
+			}
+			localTeams = append(localTeams, t)
+		}
+		teams = localTeams
+		return nil, nil
+	}
+	_, err = d.manager.ExecuteRead(ctx, work)
+	return teams, err
 }

@@ -56,8 +56,14 @@ func (r Neo4jTeamRepository) GetTeam(ctx context.Context, teamId string) (*repos
 				Msg:    "Failed to convert query result to Node type",
 			}
 		}
-
-		return nRepo.MapNodeToTeam(n), nil
+		t, ok := nRepo.MapNodeToTeam(n)
+		if !ok {
+			return nil, customerrors.HTTPError{
+				Status: http.StatusInternalServerError,
+				Msg:    "Failed to convert Node to Team type",
+			}
+		}
+		return t, nil
 	}
 	result, err := r.manager.ExecuteRead(ctx, getTeamTransaction)
 	if err != nil {
@@ -111,7 +117,10 @@ func (r Neo4jTeamRepository) GetTeams(ctx context.Context, page, pageSize int) (
 			if !ok {
 				continue
 			}
-			team := nRepo.MapNodeToTeam(n)
+			team, ok := nRepo.MapNodeToTeam(n)
+			if !ok {
+				continue
+			}
 			teams = append(teams, team)
 		}
 		return teams, nil
