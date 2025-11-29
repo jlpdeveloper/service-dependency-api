@@ -108,7 +108,7 @@ func (d *Neo4jServiceRepository) GetTeamsByServiceId(ctx context.Context, servic
 	work := func(tx neo4j.ManagedTransaction) (any, error) {
 		localTeams := make([]repositories.Team, 0)
 		result, err := tx.Run(ctx, `
-			MATCH (s:Service)-[:OWNS]->(t:Team)
+			MATCH (t:Team)-[r:OWNS]->(s:Service)
 			WHERE s.id = $serviceId
 			RETURN t
 		`, map[string]any{
@@ -121,7 +121,10 @@ func (d *Neo4jServiceRepository) GetTeamsByServiceId(ctx context.Context, servic
 			record := result.Record()
 			node, ok := record.Get("t")
 			if !ok {
-				continue
+				return nil, customerrors.HTTPError{
+					Status: http.StatusInternalServerError,
+					Msg:    "Failed to extract team node from query result",
+				}
 			}
 			n, ok := node.(neo4j.Node)
 			if !ok {
@@ -132,7 +135,10 @@ func (d *Neo4jServiceRepository) GetTeamsByServiceId(ctx context.Context, servic
 			}
 			t, ok := nRepo.MapNodeToTeam(n)
 			if !ok {
-				continue
+				return nil, customerrors.HTTPError{
+					Status: http.StatusInternalServerError,
+					Msg:    "Failed to convert Node to Team type",
+				}
 			}
 			localTeams = append(localTeams, t)
 		}
