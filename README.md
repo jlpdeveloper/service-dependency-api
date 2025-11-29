@@ -1,11 +1,10 @@
-# Service Dependency API
+# Service Atlas Backend
 ![Coverage](https://img.shields.io/badge/Coverage-48.6%25-yellow)
-
-![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/jlpdeveloper/service-dependency-api?utm_source=oss&utm_medium=github&utm_campaign=jlpdeveloper%2Fservice-dependency-api&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
+![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/service-atlas/backend?utm_source=oss&utm_medium=github&utm_campaign=service-atlas%2Fbackend&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
 
 A RESTful API service designed to map dependencies between services and provide basic information about services in your ecosystem.
 
-_Note_ This API was designed as a project to learn Go. If you wish to use it, you can, but you should put it behind an API gateway or something to make it secure. 
+_Note_ This API was designed as a project to learn Go. If you wish to use it, you can, but you should put it behind an API gateway or something to make it secure.
 
 ## Overview
 
@@ -62,7 +61,7 @@ This application supports the recording and tracking of categorized technical de
 
 ### Why track technical debt?
 I think adding technical debt (or code rot) is a useful way to track and quantify issues with services. Things that are in your work tracking software (Jira, etc.)
-may or may not always be picked up in a reasonable timeframe and may not be easily associated with the service in question. 
+may or may not always be picked up in a reasonable timeframe and may not be easily associated with the service in question.
 
 ## Neo4j Data Structure
 Services are created under a `Service` object, while releases are created under a `Release` object.
@@ -95,17 +94,17 @@ Releases will always have a date; releases without a date are assigned `now()` a
    ```
 4. Build and run the application:
    ```sh
-   go build -o service-dependency-api ./cmd/service-dependency-api
-   ./service-dependency-api
+   go build -o service-atlas ./cmd/service-atlas
+   ./service-atlas
    ```
 
 ## Configuration
 
 The application is configured using environment variables:
 
-- `NEO4J_URL`: URL of the Neo4j database (default: none, required)
-- `NEO4J_USERNAME`: Username for Neo4j authentication (default: none, required)
-- `NEO4J_PASSWORD`: Password for Neo4j authentication (default: none, required)
+- `DB_URL`: URL of the Neo4j database (default: none, required)
+- `DB_USERNAME`: Username for Neo4j authentication (default: none, required)
+- `DB_PASSWORD`: Password for Neo4j authentication (default: none, required)
 
 The server listens on port 8080 by default.
 
