@@ -8,7 +8,7 @@
       <env name="DB_USERNAME" value="neo4j" />
     </envs>
     <kind value="PACKAGE" />
-    <package value="service-dependency-api/cmd/service-dependency-api" />
+    <package value="service-atlas/cmd/service-atlas" />
     <directory value="$PROJECT_DIR$" />
     <filePath value="$PROJECT_DIR$/cmd/service-dependency-api/main.go" />
     <method v="2" />
