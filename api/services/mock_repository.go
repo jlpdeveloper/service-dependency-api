@@ -212,18 +212,26 @@ func (repo mockServiceRepository) GetTeamsByServiceId(ctx context.Context, servi
 	teams := make([]repositories.Team, 0)
 
 	for _, v := range d {
-		t := repositories.Team{}
-		if teamId, ok := v["teamId"]; ok {
-			if idStr, ok := teamId.(string); ok && idStr == serviceId {
-				t.Id = idStr
+		// Check if this entry is for the requested service
+		if svcId, ok := v["serviceId"]; ok {
+			if svcIdStr, ok := svcId.(string); ok && svcIdStr == serviceId {
+				t := repositories.Team{}
+				if teamId, ok := v["teamId"]; ok {
+					if idStr, ok := teamId.(string); ok {
+						t.Id = idStr
+					}
+				}
+				if teamName, ok := v["teamName"]; ok {
+					if nameStr, ok := teamName.(string); ok {
+						t.Name = nameStr
+					}
+				}
+				// Only append if we have at least an ID
+				if t.Id != "" {
+					teams = append(teams, t)
+				}
 			}
 		}
-		if teamName, ok := v["teamName"]; ok {
-			if nameStr, ok := teamName.(string); ok {
-				t.Name = nameStr
-			}
-		}
-		teams = append(teams, t)
 	}
 	return teams, nil
 }

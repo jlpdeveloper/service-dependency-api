@@ -3,12 +3,13 @@ package services
 import (
 	"encoding/json"
 	"errors"
-	"github.com/google/uuid"
 	"net/http"
 	"net/http/httptest"
 	"service-atlas/repositories"
 	"strings"
 	"testing"
+
+	"github.com/google/uuid"
 )
 
 // Tests for GetTeamsByServiceId handler
@@ -23,8 +24,9 @@ func TestGetTeamsByServiceId_Success(t *testing.T) {
 					{
 						// mock maps are interpreted by mockServiceRepository.GetTeamsByServiceId
 						// It uses teamId and teamName keys
-						"teamId":   serviceID, // matches requested service id → will be set as team.Id
-						"teamName": "Team One",
+						"teamId":    "team123",
+						"teamName":  "Team One",
+						"serviceId": serviceID,
 					},
 				}
 			},
@@ -57,7 +59,7 @@ func TestGetTeamsByServiceId_Success(t *testing.T) {
 	if len(teams) != 1 {
 		t.Fatalf("expected 1 team, got %d", len(teams))
 	}
-	if teams[0].Id != serviceID { // per mock implementation, Id is set from teamId which we matched to serviceID
+	if teams[0].Id != "team123" {
 		t.Fatalf("unexpected team id: %s", teams[0].Id)
 	}
 	if teams[0].Name != "Team One" {
