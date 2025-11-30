@@ -18,6 +18,7 @@ func Test_mapNodeToTeam(t *testing.T) {
 		wantId      string
 		wantCreated time.Time
 		wantUpdated time.Time
+		ok          bool
 	}{
 		{
 			name: "all properties present with correct types",
@@ -31,6 +32,7 @@ func Test_mapNodeToTeam(t *testing.T) {
 			wantId:      "abc-123",
 			wantCreated: now,
 			wantUpdated: later,
+			ok:          true,
 		},
 		{
 			name: "missing optional properties are zero-valued",
@@ -41,6 +43,7 @@ func Test_mapNodeToTeam(t *testing.T) {
 			wantId:      "",
 			wantCreated: time.Time{},
 			wantUpdated: time.Time{},
+			ok:          false,
 		},
 		{
 			name: "incorrect types are ignored (leave zero values)",
@@ -54,6 +57,7 @@ func Test_mapNodeToTeam(t *testing.T) {
 			wantId:      "",
 			wantCreated: time.Time{},
 			wantUpdated: time.Time{},
+			ok:          false,
 		},
 		{
 			name: "extra properties are ignored",
@@ -68,12 +72,17 @@ func Test_mapNodeToTeam(t *testing.T) {
 			wantId:      "id-1",
 			wantCreated: now,
 			wantUpdated: later,
+			ok:          true,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := MapNodeToTeam(tt.node)
+			got, ok := MapNodeToTeam(tt.node)
+
+			if ok != tt.ok {
+				t.Errorf("Expected ok to be %v, got %v", tt.ok, ok)
+			}
 
 			if got.Name != tt.wantName {
 				t.Errorf("Name: expected %q, got %q", tt.wantName, got.Name)

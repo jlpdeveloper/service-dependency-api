@@ -1,0 +1,49 @@
+meta {
+  name: Get Teams by Service Id
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/services/:id/teams
+  body: none
+  auth: none
+}
+
+params:path {
+  id: {{serviceId}}
+}
+
+docs {
+  # Get Teams by Service Id
+  
+  This endpoint allows you to get a list of teams that own (or are associated with) a particular service
+  
+  ## Parameters
+  | Parameter | Type | Description |
+  |-----------|------|-------------|
+  | id        | string | The unique identifier of the service. |
+  
+  ## Sample Request
+  ```
+  GET {{baseUrl}}/services/5931d4b0-dd0a-4654-85fe-78f42890da0d/teams
+  ```
+  
+  ## Response Body
+  ```json
+  [
+    {
+      "Name": "team 1",
+      "Id": "4931d4b0-dd0a-4654-85fe-78f42890da0d"
+    }
+  ]
+  ```
+  
+  ## Status Codes
+  | Status Code | Description |
+  |-------------|-------------|
+  | 200 OK      | Teams retrieved successfully. |
+  | 400 Bad Request | Invalid id parameter. |
+  | 404 Not Found | Service with the given id not found. |
+  | 500 Internal Server Error | Failed to retrieve teams due to an internal server error. |
+}

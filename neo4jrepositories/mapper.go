@@ -61,34 +61,44 @@ func MapNodeToService(n neo4j.Node) repositories.Service {
 }
 
 // MapNodeToTeam converts a Neo4j node to a Team object
-func MapNodeToTeam(n neo4j.Node) repositories.Team {
+func MapNodeToTeam(n neo4j.Node) (repositories.Team, bool) {
 	team := repositories.Team{}
 
 	// Safely extract name with validation
-	if name, ok := n.Props["name"]; ok {
-		if nameStr, ok := name.(string); ok {
-			team.Name = nameStr
-		}
+	if name, ok := getPropFromNode[string](n, "name"); ok {
+		team.Name = name
+	} else {
+		return team, false
 	}
 
 	// Safely extract ID with validation
-	if id, ok := n.Props["id"]; ok {
-		if idStr, ok := id.(string); ok {
-			team.Id = idStr
-		}
+	if id, ok := getPropFromNode[string](n, "id"); ok {
+		team.Id = id
+	} else {
+		return team, false
 	}
 
 	// Safely extract created date with validation
-	if date, ok := n.Props["created"]; ok {
-		if dateStr, ok := date.(time.Time); ok {
-			team.Created = dateStr
-		}
+	if date, ok := getPropFromNode[time.Time](n, "created"); ok {
+		team.Created = date
+	} else {
+		return team, false
+	}
+	if date, ok := getPropFromNode[time.Time](n, "updated"); ok {
+		team.Updated = date
+	} else {
+		return team, false
 	}
 
-	if date, ok := n.Props["updated"]; ok {
-		if dateStr, ok := date.(time.Time); ok {
-			team.Updated = dateStr
+	return team, true
+}
+
+func getPropFromNode[T string | time.Time](n neo4j.Node, key string) (T, bool) {
+	if value, ok := n.Props[key]; ok {
+		if v, ok := value.(T); ok {
+			return v, true
 		}
+		return *new(T), false
 	}
-	return team
+	return *new(T), false
 }

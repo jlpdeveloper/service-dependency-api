@@ -48,6 +48,7 @@ func SetupRouter(driver neo4j.DriverWithContext) http.Handler {
 			r.Get("/", serviceHandler.GetById)
 			r.Put("/", serviceHandler.UpdateService)
 			r.Delete("/", serviceHandler.DeleteServiceById)
+			r.Get("/teams", serviceHandler.GetTeamsByServiceId)
 
 			r.Get("/dependencies", dependencyHandler.GetDependencies)
 			r.Get("/dependents", dependencyHandler.GetDependents)

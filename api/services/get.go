@@ -1,12 +1,14 @@
 package services
 
 import (
+	"context"
 	"encoding/json"
 	"log/slog"
 	"net/http"
 	"service-atlas/internal"
 	"service-atlas/internal/customerrors"
 	"strconv"
+	"time"
 )
 
 func (u *ServiceCallsHandler) GetAllServices(rw http.ResponseWriter, r *http.Request) {
@@ -70,6 +72,27 @@ func (u *ServiceCallsHandler) GetById(rw http.ResponseWriter, r *http.Request) {
 	err = json.NewEncoder(rw).Encode(service)
 	if err != nil {
 		logger.Debug("Error encoding service json",
+			slog.String("error", err.Error()))
+	}
+}
+
+func (u *ServiceCallsHandler) GetTeamsByServiceId(rw http.ResponseWriter, req *http.Request) {
+	serviceId, ok := internal.GetGuidFromRequestPath("id", req)
+	if !ok {
+		http.Error(rw, "Invalid service ID", http.StatusBadRequest)
+		return
+	}
+	ctxWithTimeout, cancel := context.WithTimeout(req.Context(), 10*time.Second)
+	defer cancel()
+	teams, err := u.Repository.GetTeamsByServiceId(ctxWithTimeout, serviceId)
+	if err != nil {
+		customerrors.HandleError(rw, err)
+		return
+	}
+	rw.Header().Set("Content-Type", "application/json")
+	err = json.NewEncoder(rw).Encode(teams)
+	if err != nil {
+		internal.LoggerFromContext(req.Context()).Debug("Error encoding teams json",
 			slog.String("error", err.Error()))
 	}
 }
