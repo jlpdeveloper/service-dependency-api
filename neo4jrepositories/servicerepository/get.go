@@ -100,9 +100,15 @@ func (d *Neo4jServiceRepository) GetServiceById(ctx context.Context, id string) 
 
 func (d *Neo4jServiceRepository) GetTeamsByServiceId(ctx context.Context, serviceId string) ([]repositories.Team, error) {
 	//validate service exists
-	_, err := d.GetServiceById(ctx, serviceId)
+	svc, err := d.GetServiceById(ctx, serviceId)
 	if err != nil {
 		return nil, err
+	}
+	if svc.Id == "" {
+		return nil, customerrors.HTTPError{
+			Status: 404,
+			Msg:    "Service not found",
+		}
 	}
 	teams := make([]repositories.Team, 0)
 	work := func(tx neo4j.ManagedTransaction) (any, error) {
