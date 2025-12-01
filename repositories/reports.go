@@ -8,5 +8,5 @@ type ServiceRiskReport struct {
 type ServiceDebtReport struct {
 	Name  string `json:"name"`
 	Id    string `json:"id"`
-	Count int    `json:"count"`
+	Count int64  `json:"count"`
 }
