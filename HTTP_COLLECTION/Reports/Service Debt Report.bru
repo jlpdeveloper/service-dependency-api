@@ -11,15 +11,58 @@ get {
 }
 
 docs {
-  # Service Risk Report
+  # Service Debt Report
   
   Creates a json report of the number of debt elements associated with services and ranks them by the most un-remediated debt.
   
-  See the nested example for data structured.
+  See the nested example for data structure.
   
   ## Status Codes
   | Status Code | Description |
   |-------------|-------------|
   | 200 OK      | Success. |
   | 500 Internal Server Error | Failed to create debt due to an internal server error. |
+}
+
+example {
+  name: Sample Debt Report
+  description: This is a sample report based on debt created in the Sample Service Map Folder
+  
+  request: {
+    url: {{baseUrl}}/reports/services/debt
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      content-type: application/json
+      vary: Accept-Encoding
+      date: Mon, 01 Dec 2025 00:37:11 GMT
+      content-length: 158
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        [
+          {
+            "name": "Authentication API",
+            "id": "960f8dbc-3b38-42d0-87e4-35fe17e29436",
+            "count": 2
+          },
+          {
+            "name": "Customer Database",
+            "id": "6aab170f-e87c-4364-9611-f18d501fcc80",
+            "count": 1
+          }
+        ]
+      '''
+    }
+  }
 }
