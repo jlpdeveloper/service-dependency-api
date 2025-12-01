@@ -30,7 +30,7 @@ func (repo mockReportRepository) GetServicesByTeam(_ context.Context, _ string) 
 	return []repositories.Service{}, nil
 }
 
-func (repo mockReportRepository) GetDebtCountByService(ctx context.Context) ([]repositories.ServiceDebtReport, error) {
+func (repo mockReportRepository) GetDebtCountByService(_ context.Context) ([]repositories.ServiceDebtReport, error) {
 	if repo.Err != nil {
 		return nil, repo.Err
 	}
