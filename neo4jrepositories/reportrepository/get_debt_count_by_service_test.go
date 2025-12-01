@@ -134,7 +134,7 @@ func TestNeo4jReportRepository_GetDebtCountByService_FilterAndExclude(t *testing
 	}
 
 	// Convert to map for easy assertions
-	got := make(map[string]int)
+	got := make(map[string]int64)
 	names := make(map[string]string)
 	for _, r := range report {
 		got[r.Id] = r.Count

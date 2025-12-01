@@ -2,6 +2,8 @@ package reportrepository
 
 import (
 	"context"
+	"net/http"
+	"service-atlas/internal/customerrors"
 	"service-atlas/repositories"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
@@ -31,14 +33,14 @@ func (r Neo4jReportRepository) GetDebtCountByService(ctx context.Context) ([]rep
 
 			name, _ := nameVal.(string)
 			id, _ := idVal.(string)
-			var countInt int
-			if c64, ok := countVal.(int64); ok {
-				countInt = int(c64)
+			ctr, ok := countVal.(int64)
+			if !ok {
+				return nil, &customerrors.HTTPError{Status: http.StatusInternalServerError, Msg: "Error getting debt count by service"}
 			}
 			debtReport = append(debtReport, repositories.ServiceDebtReport{
 				Name:  name,
 				Id:    id,
-				Count: countInt,
+				Count: ctr,
 			})
 		}
 		if err := result.Err(); err != nil {
