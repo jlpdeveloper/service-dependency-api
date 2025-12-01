@@ -1,0 +1,25 @@
+meta {
+  name: Service Debt Report
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/reports/services/debt
+  body: none
+  auth: inherit
+}
+
+docs {
+  # Service Risk Report
+  
+  Creates a json report of the number of debt elements associated with services and ranks them by the most un-remediated debt.
+  
+  See the nested example for data structured.
+  
+  ## Status Codes
+  | Status Code | Description |
+  |-------------|-------------|
+  | 200 OK      | Success. |
+  | 500 Internal Server Error | Failed to create debt due to an internal server error. |
+}
