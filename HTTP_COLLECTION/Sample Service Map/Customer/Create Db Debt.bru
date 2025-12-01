@@ -1,0 +1,36 @@
+meta {
+  name: Create Db Debt
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/services/:id/debt
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: {{id}}
+}
+
+body:json {
+  {
+    "title": "db harddrives",
+    "description": "db data is on mechanical drives",
+    "type": "infrastructure"
+  }
+}
+
+vars:pre-request {
+  id: 
+}
+
+assert {
+  res.status: eq 201
+}
+
+script:pre-request {
+  let api_id = bru.getEnvVar('customer_db_id')
+  bru.setVar('id', api_id)
+}

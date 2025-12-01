@@ -1,0 +1,36 @@
+meta {
+  name: Create Code Debt
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/services/:id/debt
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: {{id}}
+}
+
+body:json {
+  {
+    "title": "dotnet 5",
+    "description": "service is several major versions behind",
+    "type": "code"
+  }
+}
+
+vars:pre-request {
+  id: 
+}
+
+assert {
+  res.status: eq 201
+}
+
+script:pre-request {
+  let api_id = bru.getEnvVar('auth_api_id')
+  bru.setVar('id', api_id)
+}

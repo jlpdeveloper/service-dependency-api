@@ -10,8 +10,8 @@ import (
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
 
-func (n Neo4jReportRepository) GetServiceRiskReport(ctx context.Context, serviceId string) (*repositories.ServiceRiskReport, error) {
-	_, err := n.manager.ExecuteRead(ctx, func(tx neo4j.ManagedTransaction) (any, error) {
+func (r Neo4jReportRepository) GetServiceRiskReport(ctx context.Context, serviceId string) (*repositories.ServiceRiskReport, error) {
+	_, err := r.manager.ExecuteRead(ctx, func(tx neo4j.ManagedTransaction) (any, error) {
 		// Check if the service exists
 		checkQuery := `
 			MATCH (s:Service {id: $serviceId})
@@ -51,7 +51,7 @@ func (n Neo4jReportRepository) GetServiceRiskReport(ctx context.Context, service
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		_, dependentErr := n.manager.ExecuteRead(ctx, func(tx neo4j.ManagedTransaction) (any, error) {
+		_, dependentErr := r.manager.ExecuteRead(ctx, func(tx neo4j.ManagedTransaction) (any, error) {
 			//get service dependent
 			cypher := `
 			MATCH (s:Service)-[r:DEPENDS_ON]->(d:Service {id: $serviceId})
@@ -86,7 +86,7 @@ func (n Neo4jReportRepository) GetServiceRiskReport(ctx context.Context, service
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		_, debtErr := n.manager.ExecuteRead(ctx, func(tx neo4j.ManagedTransaction) (any, error) {
+		_, debtErr := r.manager.ExecuteRead(ctx, func(tx neo4j.ManagedTransaction) (any, error) {
 			//get map of debt types
 			cypher := `
 			MATCH (s:Service)-[r:OWNS]->(d:Debt)

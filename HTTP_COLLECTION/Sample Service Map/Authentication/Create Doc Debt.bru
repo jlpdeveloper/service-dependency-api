@@ -1,0 +1,36 @@
+meta {
+  name: Create Doc Debt
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/services/:id/debt
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: {{id}}
+}
+
+body:json {
+  {
+    "title": "oauth documentation",
+    "description": "there is very little oauth documentation",
+    "type": "documentation"
+  }
+}
+
+vars:pre-request {
+  id: 
+}
+
+assert {
+  res.status: eq 201
+}
+
+script:pre-request {
+  let api_id = bru.getEnvVar('auth_api_id')
+  bru.setVar('id', api_id)
+}
