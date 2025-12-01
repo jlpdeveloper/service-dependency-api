@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"net/http"
 	"service-atlas/internal"
+	"service-atlas/internal/customerrors"
 	"time"
 )
 
@@ -14,7 +15,7 @@ func (c *CallsHandler) GetServiceDebtReport(rw http.ResponseWriter, req *http.Re
 	defer cancel()
 	report, err := c.repository.GetDebtCountByService(ctxWithTimeout)
 	if err != nil {
-		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		customerrors.HandleError(rw, err)
 		return
 	}
 	rw.Header().Set("Content-Type", "application/json")
