@@ -1,7 +1,6 @@
 package reports
 
 import (
-	"context"
 	"encoding/json"
 	"errors"
 	"net/http"
@@ -10,30 +9,6 @@ import (
 	"service-atlas/repositories"
 	"testing"
 )
-
-// mockReportRepository is a mock implementation of the ReportRepository interface
-type mockReportRepository struct {
-	Err      error
-	Report   *repositories.ServiceRiskReport
-	Services []repositories.Service
-}
-
-func (repo mockReportRepository) GetServiceRiskReport(_ context.Context, _ string) (*repositories.ServiceRiskReport, error) {
-	if repo.Err != nil {
-		return nil, repo.Err
-	}
-	return repo.Report, nil
-}
-
-func (repo mockReportRepository) GetServicesByTeam(_ context.Context, _ string) ([]repositories.Service, error) {
-	if repo.Err != nil {
-		return nil, repo.Err
-	}
-	if repo.Services != nil {
-		return repo.Services, nil
-	}
-	return []repositories.Service{}, nil
-}
 
 func TestGetServiceRiskReportSuccess(t *testing.T) {
 	// Create a handler with mocked dependencies

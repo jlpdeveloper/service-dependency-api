@@ -61,6 +61,8 @@ type ReportRepository interface {
 	GetServiceRiskReport(ctx context.Context, serviceId string) (*ServiceRiskReport, error)
 	// GetServicesByTeam retrieves all services associated with a team.
 	GetServicesByTeam(ctx context.Context, teamId string) ([]Service, error)
+	// GetDebtCountByService retrieves the number of debt items for each service.
+	GetDebtCountByService(ctx context.Context) ([]ServiceDebtReport, error)
 }
 
 // TeamRepository defines the methods for interacting with teams.

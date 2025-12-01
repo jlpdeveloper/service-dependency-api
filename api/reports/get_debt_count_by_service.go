@@ -1,0 +1,29 @@
+package reports
+
+import (
+	"context"
+	"encoding/json"
+	"log/slog"
+	"net/http"
+	"service-atlas/internal"
+	"time"
+)
+
+func (c *CallsHandler) GetServiceDebtReport(rw http.ResponseWriter, req *http.Request) {
+	ctxWithTimeout, cancel := context.WithTimeout(req.Context(), 10*time.Second)
+	defer cancel()
+	report, err := c.repository.GetDebtCountByService(ctxWithTimeout)
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	rw.Header().Set("Content-Type", "application/json")
+	encoder := json.NewEncoder(rw)
+	err = encoder.Encode(report)
+	if err != nil {
+		logger := internal.LoggerFromContext(req.Context())
+		logger.Debug("Error encoding debt report json",
+			slog.String("error", err.Error()),
+		)
+	}
+}
