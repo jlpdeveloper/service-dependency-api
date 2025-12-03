@@ -1,0 +1,30 @@
+meta {
+  name: Create Release 2
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/services/:serviceId/release
+  body: json
+  auth: none
+}
+
+params:path {
+  serviceId: id
+}
+
+body:json {
+  {
+    "version": "{{$randomSemver}}",
+    "release_date": "{{$randomDateRecent}}"
+  }
+}
+
+vars:pre-request {
+  id: 
+}
+
+script:pre-request {
+  bru.setVar('id', bru.getEnvVar('order_api_id'))
+}
