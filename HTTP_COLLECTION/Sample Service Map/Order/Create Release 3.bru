@@ -11,13 +11,13 @@ post {
 }
 
 params:path {
-  serviceId: id
+  serviceId: {{id}}
 }
 
 body:json {
   {
     "version": "{{$randomSemver}}",
-    "release_date": "{{$randomDateRecent}}"
+    "release_date": "{{randomReleaseDate}}"
   }
 }
 
@@ -27,4 +27,16 @@ vars:pre-request {
 
 script:pre-request {
   bru.setVar('id', bru.getEnvVar('order_api_id'))
+  
+  const now = new Date();
+  const someDaysAgo = new Date(now.getTime() - (15 * 24 * 60 * 60 * 1000));
+  
+  // Generate a random timestamp between 15 days ago and now
+  const randomTimestamp = someDaysAgo.getTime() + 
+    Math.random() * (now.getTime() - someDaysAgo.getTime());
+  
+  const randomDate = new Date(randomTimestamp);
+  
+  // Format as ISO string (YYYY-MM-DDTHH:mm:ssZ)
+  bru.setVar("randomReleaseDate", randomDate.toISOString());
 }

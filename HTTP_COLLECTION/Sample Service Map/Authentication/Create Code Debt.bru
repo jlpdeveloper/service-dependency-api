@@ -31,6 +31,5 @@ assert {
 }
 
 script:pre-request {
-  let api_id = bru.getEnvVar('auth_api_id')
-  bru.setVar('id', api_id)
+  bru.setVar('id', bru.getEnvVar('auth_api_id'))
 }
